@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement.Absolute.Center
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -36,32 +39,37 @@ class MainActivity : ComponentActivity() {
         setContent {
             MoovimTheme {
                 // A surface container using the 'background' color from the theme
-               MainScreen()
+                MainScreen()
             }
         }
     }
 }
 
+
 @Composable
 private fun MainScreen() {
     val navController = rememberNavController()
-    Scaffold(bottomBar = { BottomNavigationBar(navController = navController)}, content = {
-        padding -> Box(modifier = Modifier.padding(padding)) {
-            Navigation(navController = navController)
-    }
-    }, backgroundColor = Color.Black)
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController = navController) },
+        content = { padding ->
+            Box(modifier = Modifier.padding(padding)) {
+                Navigation(navController = navController)
+            }
+        },
+        backgroundColor = Color.Black
+    )
 }
 
 @Composable
-private fun Navigation(navController: NavHostController){
-    NavHost(navController = navController, startDestination = NavigationItem.Home.route ){
-        composable(NavigationItem.Home.route){
-            Screen(NavigationItem.Home.title)
+private fun Navigation(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = NavigationItem.Home.route) {
+        composable(NavigationItem.Home.route) {
+            HomeScreen()
         }
-        composable(NavigationItem.Search.route){
+        composable(NavigationItem.Search.route) {
             Screen(NavigationItem.Search.title)
         }
-        composable(NavigationItem.Routines.route){
+        composable(NavigationItem.Routines.route) {
             Screen(NavigationItem.Routines.title)
         }
     }
@@ -107,11 +115,41 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     MoovimTheme {
         Greeting("Android")
+    }
+}
+
+@Preview
+@Composable
+fun HomeScreen() {
+    val numbers = listOf<Number>(1, 2, 3, 4, 5, 6)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
+
+        Text("Title", color = Color.White)
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            state = rememberLazyListState(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(5) { item ->
+                Card(modifier = Modifier
+                    .height(200.dp)
+                    .width(400.dp)
+                    ) {
+                    Text(item.toString())
+                }
+
+            }
+        }
+
+
     }
 }
 
