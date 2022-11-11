@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
-import com.moovim.nav.graphs.RootNavGraph
+import com.moovim.ui.nav.graphs.RootNavGraph
 import com.moovim.ui.theme.MoovimTheme
 
 class MainActivity : ComponentActivity() {

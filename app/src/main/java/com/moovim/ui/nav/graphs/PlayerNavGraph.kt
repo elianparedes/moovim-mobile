@@ -1,11 +1,11 @@
-package com.moovim.nav.graphs
+package com.moovim.ui.nav.graphs
 
 import androidx.navigation.*
 import androidx.navigation.compose.composable
-import com.moovim.screens.details.ExerciseDetailsScreen
-import com.moovim.screens.details.RoutineDetailsScreen
-import com.moovim.screens.player.AdvancedPlayer
-import com.moovim.screens.player.SimplePlayer
+import com.moovim.ui.screens.details.ExerciseDetailsScreen
+import com.moovim.ui.screens.details.RoutineDetailsScreen
+import com.moovim.ui.screens.player.AdvancedPlayer
+import com.moovim.ui.screens.player.SimplePlayer
 
 fun NavGraphBuilder.playerNavGraph(navController: NavHostController) {
     navigation(

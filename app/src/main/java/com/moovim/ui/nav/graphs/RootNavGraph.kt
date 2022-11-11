@@ -1,10 +1,10 @@
-package com.moovim.nav.graphs
+package com.moovim.ui.nav.graphs
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.moovim.screens.main.MainScreen
+import com.moovim.ui.screens.main.MainScreen
 
 @Composable
 fun RootNavGraph(navController: NavHostController) {

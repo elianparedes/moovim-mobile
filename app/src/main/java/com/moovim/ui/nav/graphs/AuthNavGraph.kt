@@ -1,11 +1,11 @@
-package com.moovim.nav.graphs
+package com.moovim.ui.nav.graphs
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.moovim.Screen
-import com.moovim.screens.auth.LoginScreen
+import com.moovim.ui.screens.auth.LoginScreen
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation(

@@ -1,4 +1,4 @@
-package com.moovim.screens.main
+package com.moovim.ui.screens.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

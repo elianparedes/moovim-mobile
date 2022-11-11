@@ -1,4 +1,4 @@
-package com.moovim.nav
+package com.moovim.ui.nav
 
 import com.moovim.R
 

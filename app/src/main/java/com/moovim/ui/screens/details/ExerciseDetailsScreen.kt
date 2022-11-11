@@ -1,4 +1,4 @@
-package com.moovim.screens.details
+package com.moovim.ui.screens.details
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController

@@ -1,4 +1,4 @@
-package com.moovim.screens.auth
+package com.moovim.ui.screens.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

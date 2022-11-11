@@ -1,4 +1,4 @@
-package com.moovim.screens.details
+package com.moovim.ui.screens.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RoutineDetailsScreen(navController: NavHostController, id: Number) {
+fun HomeScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -23,7 +23,18 @@ fun RoutineDetailsScreen(navController: NavHostController, id: Number) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Rutina $id", color = Color.White)
+
+        Text("Inicio", color = Color.White)
+        Card(modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text("Rutina actual")
+            }
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -47,7 +58,7 @@ fun RoutineDetailsScreen(navController: NavHostController, id: Number) {
                 }
             }
         }
+
+
     }
-
-
 }

@@ -1,13 +1,15 @@
-package com.moovim.screens.main
+package com.moovim.ui.screens.main;
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -15,7 +17,7 @@ import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun SearchScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -23,18 +25,31 @@ fun HomeScreen(navController: NavHostController) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        Text("Buscar", color = Color.White)
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth(),
 
-        Text("Inicio", color = Color.White)
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text("Rutina actual")
+            state = rememberLazyListState(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(10) { id ->
+                Card(
+                    modifier = Modifier
+                        .height(200.dp)
+                        .width(200.dp),
+                    onClick = { navController.navigate("routines/$id") }
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text("Routina $id")
+                    }
+                }
             }
         }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -58,7 +73,5 @@ fun HomeScreen(navController: NavHostController) {
                 }
             }
         }
-
-
     }
 }

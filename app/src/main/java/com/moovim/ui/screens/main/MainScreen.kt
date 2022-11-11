@@ -1,4 +1,4 @@
-package com.moovim.screens.main
+package com.moovim.ui.screens.main
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.size
@@ -14,8 +14,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.moovim.R
-import com.moovim.nav.NavigationItem
-import com.moovim.nav.graphs.MainNavGraph
+import com.moovim.ui.nav.NavigationItem
+import com.moovim.ui.nav.graphs.MainNavGraph
 
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
