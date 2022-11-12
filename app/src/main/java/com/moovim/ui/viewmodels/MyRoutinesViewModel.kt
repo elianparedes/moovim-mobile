@@ -18,12 +18,12 @@ class MyRoutinesViewModel @Inject constructor(
         var state by mutableStateOf(MyRoutinesState())
 
         init {
-            getAllRoutines()
+            getCurrentUserRoutines()
         }
 
-        private fun getAllRoutines(){
+        private fun getCurrentUserRoutines(){
             viewModelScope.launch {
-                val routines = repository.getAllRoutines()
+                val routines = repository.getCurrentUserRoutines()
                 state = state.copy(routines = routines)
             }
         }
