@@ -23,7 +23,6 @@ fun HomeScreen(navController: NavHostController) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
         Text("Inicio", color = Color.White)
         Card(modifier = Modifier
             .fillMaxWidth()

@@ -1,7 +1,6 @@
 package com.moovim.ui.screens.details
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.moovim.Screen
 

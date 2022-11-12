@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.moovim.Screen
 import com.moovim.ui.nav.NavigationItem
 import com.moovim.ui.screens.main.HomeScreen
 import com.moovim.ui.screens.main.RoutinesScreen
