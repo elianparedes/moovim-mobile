@@ -1,4 +1,4 @@
-package com.moovim.data.remote
+package com.moovim.data.remote.dto
 
 
 import com.google.gson.annotations.SerializedName

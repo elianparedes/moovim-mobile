@@ -1,11 +1,11 @@
-package com.moovim.data.remote
+package com.moovim.data.remote.dto
 
 
 import com.google.gson.annotations.SerializedName
 
 data class ResponseDto<T>(
     @SerializedName("content")
-    val content: List<T>,
+    val content: List<T> = emptyList(),
     @SerializedName("direction")
     val direction: String,
     @SerializedName("isLastPage")

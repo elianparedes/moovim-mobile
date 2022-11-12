@@ -1,6 +1,9 @@
 package com.moovim.ui.screens.main
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -17,6 +20,7 @@ import com.moovim.R
 import com.moovim.ui.nav.NavigationItem
 import com.moovim.ui.nav.graphs.MainNavGraph
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
@@ -25,7 +29,10 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         floatingActionButton = { FloatingActionButton(navController = navController) },
         backgroundColor = Color.Black,
     ) {
+        paddingValues -> Column(Modifier.padding(paddingValues)) {
         MainNavGraph(navController = navController)
+    }
+
     }
 }
 

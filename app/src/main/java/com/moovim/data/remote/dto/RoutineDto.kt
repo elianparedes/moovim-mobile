@@ -1,7 +1,8 @@
-package com.moovim.data.remote
+package com.moovim.data.remote.dto
 
 
 import com.google.gson.annotations.SerializedName
+import com.moovim.domain.model.Routine
 
 data class RoutineDto(
     @SerializedName("category")
@@ -17,7 +18,7 @@ data class RoutineDto(
     @SerializedName("isPublic")
     val isPublic: Boolean,
     @SerializedName("metadata")
-    val metadata: Metadata,
+    val metadata: Any,
     @SerializedName("name")
     val name: String,
     @SerializedName("score")
@@ -25,3 +26,11 @@ data class RoutineDto(
     @SerializedName("user")
     val user: UserDto
 )
+
+fun RoutineDto.toRoutine(): Routine {
+    return Routine(
+        id = id,
+        name = name,
+        detail = detail
+    )
+}

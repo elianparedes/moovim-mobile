@@ -1,4 +1,31 @@
 package com.moovim.ui.viewmodels
 
-class MyRoutinesViewModel {
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.moovim.data.repository.RoutinesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class MyRoutinesViewModel @Inject constructor(
+    private val repository: RoutinesRepository
+): ViewModel() {
+
+        var state by mutableStateOf(MyRoutinesState())
+
+        init {
+            getAllRoutines()
+        }
+
+        private fun getAllRoutines(){
+            viewModelScope.launch {
+                val routines = repository.getAllRoutines()
+                state = state.copy(routines = routines)
+            }
+        }
+
 }

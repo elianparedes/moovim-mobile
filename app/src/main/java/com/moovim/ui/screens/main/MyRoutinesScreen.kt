@@ -11,11 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import com.moovim.ui.viewmodels.MyRoutinesViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RoutinesScreen(navController: NavHostController) {
+fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewModel = hiltViewModel()) {
+    val state = viewModel.state
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -23,35 +28,34 @@ fun RoutinesScreen(navController: NavHostController) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
         Text("Mis rutinas", color = Color.White)
 
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxWidth(),
-
-            state = rememberLazyListState(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(10) { id ->
-                Card(
-                    modifier = Modifier
-                        .height(200.dp)
-                        .fillMaxWidth(),
-                    onClick = { navController.navigate("routines/$id") }
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text("Rutina $id")
-                    }
-
-                }
-
+            state.routines.forEach { routine ->
+                RoutineCard(name = routine.name)
             }
         }
 
+    }
+}
+
+@Composable
+fun RoutineCard(name: String){
+    Card(
+        modifier = Modifier
+            .height(200.dp)
+            .fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(name)
+        }
 
     }
 }

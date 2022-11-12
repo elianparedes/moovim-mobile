@@ -1,4 +1,7 @@
 package com.moovim.ui.viewmodels
 
-class MyRoutinesState {
-}
+import com.moovim.domain.model.Routine
+
+data class MyRoutinesState(
+    val routines: List<Routine> = emptyList(),
+)
