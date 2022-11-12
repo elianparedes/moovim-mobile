@@ -1,4 +1,4 @@
-package com.moovim.data.remote.dto
+package com.moovim.data.remote.dto.common
 
 
 import com.google.gson.annotations.SerializedName
@@ -18,4 +18,9 @@ data class ResponseDto<T>(
     val size: Int,
     @SerializedName("totalCount")
     val totalCount: Int
+)
+
+data class TokenDto(
+    @SerializedName("token")
+    val token: String,
 )

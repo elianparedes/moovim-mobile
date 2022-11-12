@@ -1,6 +1,6 @@
 package com.moovim.di
 
-import com.moovim.data.remote.RoutinesApi
+import com.moovim.data.remote.dto.common.Api
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,15 +16,17 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApiModule {
 
+    const val BASE_URL = "https://moovim-api-dev.up.railway.app/api/"
+
     @Provides
     @Singleton
-    fun provideRoutinesApi(): RoutinesApi {
+    fun provideApi(): Api {
         return Retrofit.Builder()
-            .baseUrl(RoutinesApi.BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(
                 OkHttpClient.Builder()
-                .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }).build())
+                .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }).build())
             .build()
             .create()
     }

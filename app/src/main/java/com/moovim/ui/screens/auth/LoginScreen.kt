@@ -13,14 +13,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.moovim.ui.viewmodels.LoginViewModel
+import com.moovim.ui.viewmodels.MyRoutinesViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LoginScreen(
     onClick: () -> Unit,
     onSignUpClick: () -> Unit,
-    onForgotClick: () -> Unit
+    onForgotClick: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
+
+    val state = viewModel.state
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -42,7 +49,9 @@ fun LoginScreen(
         }
         Card(
             onClick = {onSignUpClick()},
-            modifier = Modifier.fillMaxWidth().height(64.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
         ){
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(16.dp)) {
                 Text( text = "Registarse",
@@ -53,7 +62,9 @@ fun LoginScreen(
         }
         Card(
             onClick = {onForgotClick()},
-            modifier = Modifier.fillMaxWidth().height(64.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
         ){
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(16.dp)) {
                 Text( text = "Recuperar contraseña",
@@ -62,6 +73,7 @@ fun LoginScreen(
             }
 
         }
+
     }
 
 }
