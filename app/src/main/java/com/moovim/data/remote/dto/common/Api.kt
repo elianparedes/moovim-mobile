@@ -1,6 +1,6 @@
 package com.moovim.data.remote.dto.common
 
-import com.moovim.data.remote.RoutinesApi
-import com.moovim.data.remote.UserApi
+import com.moovim.data.remote.*
 
-interface Api: RoutinesApi, UserApi
+interface Api : RoutinesApi, CategoriesApi, ExercisesApi, CycleExercisesApi, RoutinesCyclesApi,
+    UserApi

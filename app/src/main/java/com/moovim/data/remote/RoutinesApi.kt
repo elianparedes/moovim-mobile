@@ -1,14 +1,13 @@
 package com.moovim.data.remote
 
-import com.moovim.data.remote.dto.common.ResponseDto
 import com.moovim.data.remote.dto.RoutineDto
+import com.moovim.data.remote.dto.common.ResponseDto
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RoutinesApi {
-
 
     @GET("users/current/routines")
     suspend fun getCurrentUserRoutines(
@@ -27,4 +26,6 @@ interface RoutinesApi {
         @Query("direction") direction: String = "asc"
     ): ResponseDto<RoutineDto>
 
+    @GET("routines/{routineId}")
+    suspend fun getRoutine(@Path("routineId") routineId: Int): RoutineDto
 }

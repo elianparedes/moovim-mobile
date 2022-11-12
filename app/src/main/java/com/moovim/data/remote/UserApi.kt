@@ -20,6 +20,9 @@ interface UserApi {
 
     @FormUrlEncoded
     @POST("users/login")
-    suspend fun login(@Field("username") username: String, @Field("password") password: String): TokenDto
+    suspend fun login(
+        @Field("username") username: String,
+        @Field("password") password: String
+    ): TokenDto
 
 }
