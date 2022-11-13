@@ -33,19 +33,21 @@ fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewMo
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             state.routines.forEach { routine ->
-                RoutineCard(name = routine.name)
+                RoutineCard(name = routine.name, onClick = {navController.navigate("routines/${routine.id}")})
             }
         }
 
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RoutineCard(name: String){
+fun RoutineCard(name: String, onClick: () -> Unit){
     Card(
         modifier = Modifier
             .height(200.dp)
             .fillMaxWidth(),
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

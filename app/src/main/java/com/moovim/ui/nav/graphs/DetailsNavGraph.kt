@@ -12,24 +12,24 @@ fun NavGraphBuilder.detailsNavGraph(navController: NavHostController) {
     ) {
         composable(
             route = DetailsScreen.Routine.route,
-            arguments = listOf(navArgument("id") { type = NavType.IntType })
+            arguments = listOf(navArgument("routineId") { type = NavType.IntType })
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getInt("id");
-            requireNotNull(id)
-            RoutineDetailsScreen(navController, id)
+            val routineId = backStackEntry.arguments?.getInt("routineId");
+            requireNotNull(routineId)
+            RoutineDetailsScreen(navController, routineId)
         }
         composable(
             route = DetailsScreen.Exercise.route,
-            arguments = listOf(navArgument("id") { type = NavType.IntType })
+            arguments = listOf(navArgument("exerciseId") { type = NavType.IntType })
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getInt("id");
-            requireNotNull(id)
-            ExerciseDetailsScreen(navController, id)
+            val exerciseId = backStackEntry.arguments?.getInt("exerciseId");
+            requireNotNull(exerciseId)
+            ExerciseDetailsScreen(navController, exerciseId)
         }
     }
 }
 
 sealed class DetailsScreen(val route: String, var title: String) {
-    object Routine : DetailsScreen(route = "routines/{id}", title = "Rutina")
-    object Exercise : DetailsScreen(route = "exercises/{id}", title = "Ejercicio")
+    object Routine : DetailsScreen(route = "routines/{routineId}", title = "Rutina")
+    object Exercise : DetailsScreen(route = "exercises/{exerciseId}", title = "Ejercicio")
 }

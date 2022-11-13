@@ -7,6 +7,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,12 @@ fun LoginScreen(
 
     val state = viewModel.state
 
+    if (state.isLoggedIn){
+        LaunchedEffect(Unit){
+            onClick()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,7 +41,9 @@ fun LoginScreen(
     )
     {
         Card(
-            onClick = {onClick()},
+            onClick = {
+                viewModel.login("usuario1", "1234567890")
+                      },
             modifier = Modifier.fillMaxWidth()
         ){
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(16.dp)) {
@@ -42,7 +51,6 @@ fun LoginScreen(
                     fontSize = MaterialTheme.typography.h5.fontSize,
                     fontWeight = FontWeight.Bold)
             }
-
         }
         Card(
             onClick = {onSignUpClick()},

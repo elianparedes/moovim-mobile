@@ -17,11 +17,10 @@ class LoginViewModel @Inject constructor(
 
     var state by mutableStateOf(LoginState())
 
-
     fun login(username: String, password: String){
         viewModelScope.launch {
             val token = repository.login(username, password)
-            state = state.copy(token = token)
+            state = state.copy(token = token, isLoggedIn = true)
         }
     }
 
