@@ -20,7 +20,7 @@ class LoginViewModel @Inject constructor(
     fun login(username: String, password: String){
         viewModelScope.launch {
             val token = repository.login(username, password)
-            state = state.copy(token = token)
+            state = state.copy(token = token, isLoggedIn = true)
         }
     }
 
