@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.moovim.Screen
-import com.moovim.ui.screens.auth.LoginScreen
+import com.moovim.ui.screens.auth.*
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation(
@@ -14,8 +14,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     ) {
         composable(route = AuthScreen.Login.route) {
             LoginScreen(onClick = {
-                navController.popBackStack()
-                navController.navigate(Graph.HOME)
+                navController.navigate(AuthScreen.LoginName.route)
             },
                 onSignUpClick = {
                     navController.navigate(AuthScreen.SignUp.route)
@@ -25,16 +24,38 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
                 })
         }
         composable(route = AuthScreen.SignUp.route) {
-            Screen(item = AuthScreen.SignUp.title)
+            SignUpScreen(
+                onContinueClick = {
+                    navController.navigate(AuthScreen.SignUpPassword.route)
+                }
+            )
         }
         composable(route = AuthScreen.PasswordRecovery.route) {
             Screen(item = AuthScreen.PasswordRecovery.title)
+        }
+        composable (route = AuthScreen.SignUpPassword.route){
+            SignUpPasswordScreen()
+        }
+        composable(route = AuthScreen.LoginName.route){
+            LoginNameScreen(onContinueClick = {
+                navController.navigate(AuthScreen.LoginPassword.route)
+            })
+        }
+        composable(route = AuthScreen.LoginPassword.route){
+            LoginPasswordScreen(
+                onContinueClick = {
+                    navController.navigate(Graph.HOME)
+                }
+            )
         }
     }
 }
 
 sealed class AuthScreen(val route: String, var title: String) {
     object Login : AuthScreen(route = "login", "Iniciar Sesión")
+    object LoginName: AuthScreen(route = "loginName", "Ingresar nombre sesión")
+    object LoginPassword: AuthScreen(route = "loginPassword", "Ingresar contraseña sesión")
     object SignUp : AuthScreen(route = "signUp", "Registrarse")
+    object SignUpPassword : AuthScreen(route = "signUpPassword", "Ingresar contraseña")
     object PasswordRecovery : AuthScreen(route = "passwordRecovery", "Recuperar contraseña")
 }
