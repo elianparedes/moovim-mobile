@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.moovim.ui.components.ExerciseCard
+import com.moovim.ui.components.RoutineCard
 import com.moovim.domain.model.Exercise
 import com.moovim.domain.model.Routine
 import com.moovim.ui.screens.main.search.SearchViewModel
