@@ -33,8 +33,8 @@ fun SignUpScreen(
             align(Alignment.Start),
             style = MaterialTheme.typography.body1,
             color = Color.White)
-        InputTextField("Nombre de usuario")
-        InputTextField("Correo electrónico")
+        //InputTextField("Nombre de usuario")
+        //InputTextField("Correo electrónico")
         Spacer(
             modifier = Modifier.weight(1f)
         )
@@ -47,17 +47,4 @@ fun SignUpScreen(
     }
 }
 
-@Composable
-fun InputTextField(labelText: String){
-    var text by remember { mutableStateOf("") }
 
-    OutlinedTextField(
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp),
-        shape = RoundedCornerShape(8.dp),
-        singleLine = true,
-        value = text,
-        onValueChange = { text = it },
-        label = { Text(labelText) },
-        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = Color.White)
-    )
-}

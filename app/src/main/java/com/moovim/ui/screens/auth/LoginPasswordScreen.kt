@@ -6,18 +6,28 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.moovim.ui.components.MoovimButton
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.moovim.ui.components.PasswordTextField
 
 @Composable
 fun LoginPasswordScreen(
-    onContinueClick: () -> Unit,
+    onLoginSuccess: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state
+
+    if (state.isLoggedIn) {
+        LaunchedEffect(Unit) {
+            onLoginSuccess()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,7 +50,7 @@ fun LoginPasswordScreen(
                 .align(Alignment.Start),
             style = MaterialTheme.typography.body1,
             color = Color.White)
-        PasswordTextField("Contraseña")
+        PasswordTextField(state.password, { newValue -> viewModel.onPasswordChange(newValue)}, "Contraseña")
         Spacer(
             modifier = Modifier.weight(1f)
         )
@@ -48,7 +58,7 @@ fun LoginPasswordScreen(
             modifier = Modifier.padding(bottom = 16.dp),
             color = MaterialTheme.colors.background
         ){
-            MoovimButton(onContinueClick, "Iniciar sesión")
+            MoovimButton({viewModel.login(state.user, state.password)}, "Iniciar sesión")
         }
     }
 }

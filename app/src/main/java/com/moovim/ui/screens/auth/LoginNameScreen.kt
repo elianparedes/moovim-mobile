@@ -12,12 +12,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.moovim.ui.components.OutlinedMoovimButton
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.moovim.ui.components.InputTextField
 
 @Composable
 fun LoginNameScreen(
     onContinueClick: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ){
+    val state = viewModel.state
+
     Column(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -36,7 +39,7 @@ fun LoginNameScreen(
             align(Alignment.Start),
             style = MaterialTheme.typography.body1,
             color = Color.White)
-        InputTextField("Nombre de usuario")
+        InputTextField(state.user, { newValue -> viewModel.onUsernameChange(newValue)}, "Nombre de usuario")
         Spacer(
             modifier = Modifier.weight(1f)
         )

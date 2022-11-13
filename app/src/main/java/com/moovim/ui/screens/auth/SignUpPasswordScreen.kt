@@ -36,8 +36,8 @@ fun SignUpPasswordScreen(){
             align(Alignment.Start),
             style = MaterialTheme.typography.body1,
             color = Color.White)
-        PasswordTextField("Contraseña")
-        PasswordTextField("Confirmar contraseña")
+        //PasswordTextField("Contraseña")
+        //PasswordTextField("Confirmar contraseña")
         Spacer(
             modifier = Modifier.weight(1f)
         )
@@ -50,31 +50,3 @@ fun SignUpPasswordScreen(){
     }
 }
 
-@Composable
-fun PasswordTextField(labelText: String){
-    var text by remember { mutableStateOf("") }
-    var passwordVisible by remember {mutableStateOf(false)}
-
-    OutlinedTextField(
-        modifier = Modifier.padding(vertical = 8.dp),
-        shape = RoundedCornerShape(8.dp),
-        singleLine = true,
-        value = text,
-        onValueChange = { text = it },
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        label = { Text(labelText) },
-        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = Color.White),
-        trailingIcon = {
-            val image = if (passwordVisible)
-                R.drawable.ic_round_visibility
-            else R.drawable.ic_round_visibility_off
-
-            val description = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
-
-            IconButton(onClick = {passwordVisible = !passwordVisible}){
-                Icon(painterResource(id = image), description)
-            }
-        }
-    )
-}

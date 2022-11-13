@@ -10,8 +10,6 @@ data class ExerciseDto(
     val detail: String,
     @SerializedName("id")
     val id: Int,
-    @SerializedName("metadata")
-    val metadata: Any,
     @SerializedName("name")
     val name: String,
     @SerializedName("type")
