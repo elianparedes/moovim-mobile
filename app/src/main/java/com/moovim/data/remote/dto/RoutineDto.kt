@@ -17,7 +17,7 @@ data class RoutineDto(
     @SerializedName("isPublic")
     val isPublic: Boolean,
     @SerializedName("metadata")
-    val metadata: MetadataDto,
+    val metadata: RoutineMetadataDto,
     @SerializedName("name")
     val name: String,
     @SerializedName("score")
@@ -26,15 +26,11 @@ data class RoutineDto(
     val user: UserDto
 )
 
-data class MetadataDto(
-    @SerializedName("image")
-    val image: String
-)
-
 fun RoutineDto.toRoutine(): Routine {
     return Routine(
         id = id,
         name = name,
-        detail = detail
+        detail = detail,
+        imageUrl = metadata.image
     )
 }
