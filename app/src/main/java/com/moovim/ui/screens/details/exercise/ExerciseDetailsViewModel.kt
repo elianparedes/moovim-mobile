@@ -16,7 +16,7 @@ import javax.inject.Inject
 class ExerciseDetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val exercisesRepository: ExercisesRepository
-): ViewModel() {
+) : ViewModel() {
 
     var state by mutableStateOf(ExerciseDetailsState())
 
@@ -25,7 +25,17 @@ class ExerciseDetailsViewModel @Inject constructor(
             val exerciseId = savedStateHandle.get<Int>("exerciseId") ?: return@launch
             val getExercise = async { exercisesRepository.getExercise(exerciseId) }
             val exercise = getExercise.await()
-            state = state.copy(name = exercise.name, detail = exercise.detail)
+
+            val getExerciseImages = async { exercisesRepository.getExerciseImages(exerciseId) }
+            val exerciseImages = getExerciseImages.await();
+
+            state = state.copy(
+                name = exercise.name,
+                detail = exercise.detail,
+                pos = exercise.pos,
+                procedure = exercise.procedure,
+                images = exerciseImages
+            )
         }
     }
 

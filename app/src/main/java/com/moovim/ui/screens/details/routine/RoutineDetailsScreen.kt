@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.moovim.domain.model.Cycle
 import com.moovim.domain.model.Exercise
 import com.moovim.ui.screens.details.routine.RoutineDetailsViewModel
@@ -37,6 +38,7 @@ fun RoutineDetailsScreen(
         Column() {
             Text(state.name, color = Color.White)
             Text(state.detail, color = Color.White)
+            AsyncImage(model = state.imageUrl, contentDescription = state.name )
         }
 
         state.cycles.forEach { cycle ->
