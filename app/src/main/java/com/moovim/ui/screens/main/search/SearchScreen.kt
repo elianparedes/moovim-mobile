@@ -1,9 +1,6 @@
 package com.moovim.ui.screens.main;
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -37,7 +34,7 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel = 
             onSearch = {
                 viewModel.search(state.query)
             })
-        RoutinesList(state.resultRoutines)
+        RoutinesList(state.resultRoutines, navController)
     }
 
 }
@@ -83,8 +80,11 @@ fun ExerciseList(exercises: List<Exercise>){
 }
 
 @Composable
-fun RoutinesList(routines: List<Routine>){
-    routines.forEach { routine ->
-        RoutineCard(name = routine.name)
+fun RoutinesList(routines: List<Routine>, navController: NavHostController){
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        routines.forEach { routine ->
+            RoutineCard(name = routine.name, onClick = {navController.navigate("routines/${routine.id}")})
+        }
     }
+
 }

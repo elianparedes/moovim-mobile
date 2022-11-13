@@ -11,11 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.moovim.ui.screens.details.routine.RoutineDetailsViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RoutineDetailsScreen(navController: NavHostController, id: Number) {
+fun RoutineDetailsScreen(
+    navController: NavHostController,
+    routineId: Int,
+    viewModel: RoutineDetailsViewModel = hiltViewModel()
+) {
+
+    val state = viewModel.state
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -23,7 +32,8 @@ fun RoutineDetailsScreen(navController: NavHostController, id: Number) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Rutina $id", color = Color.White)
+        Text(state.name, color = Color.White)
+        Text(state.detail, color = Color.White)
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth(),

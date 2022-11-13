@@ -34,7 +34,9 @@ fun LoginScreen(
     )
     {
         Card(
-            onClick = {onClick()},
+            onClick = {
+                onClick()
+                      },
             modifier = Modifier.fillMaxWidth()
         ){
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(16.dp)) {
@@ -42,7 +44,6 @@ fun LoginScreen(
                     fontSize = MaterialTheme.typography.h5.fontSize,
                     fontWeight = FontWeight.Bold)
             }
-
         }
         Card(
             onClick = {onSignUpClick()},
@@ -58,7 +59,7 @@ fun LoginScreen(
 
         }
         Card(
-            onClick = {onForgotClick()},
+            onClick = {viewModel.login("usuario1", "1234567890")},
             modifier = Modifier
                 .fillMaxWidth()
                 .height(64.dp)
