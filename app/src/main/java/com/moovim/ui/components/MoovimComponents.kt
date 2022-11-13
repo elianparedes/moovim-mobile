@@ -7,16 +7,22 @@ import android.service.autofill.OnClickAction
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.sharp.Star
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -119,12 +125,12 @@ fun RoutineCard(
     author: String,
     rating: Double,
     fav: Boolean,
-    onClick: () -> Unit
+    onClickCard: () -> Unit
 ) {
     Card(
-        onClick = onClick,
+        onClick = onClickCard,
         modifier = Modifier
-            .height(100.dp)
+            .height(120.dp)
             .fillMaxWidth()
             .padding(1.dp),
         backgroundColor = MaterialTheme.colors.secondary,
@@ -153,54 +159,108 @@ fun RoutineCard(
             colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.8F) })
         )
         Column() {
-            Row() {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp, 0.dp, 0.dp, 0.dp),
+                verticalAlignment = Alignment.Top) {
                 Column() {
                     Text(
-                        modifier = Modifier.padding(16.dp, 4.dp, 16.dp, 0.dp),
+                        modifier = Modifier.padding(0.dp, 8.dp, 0.dp , 4.dp),
                         text = title,
                         style = MaterialTheme.typography.h4,
                         color = MaterialTheme.colors.onBackground
                     )
                     Text(
-                        modifier = Modifier.padding(16.dp, 2.dp),
+                        modifier = Modifier.padding(0.dp, 2.dp),
                         text = description,
                         style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.onBackground
                     )
+                    Row( verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = rating.toString(), color = MaterialTheme.colors.primary, style = MaterialTheme.typography.body2 )
+                        Icon(
+                            Icons.Rounded.Star,
+                            null,
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.requiredSize(16.dp)
+                        )
+                    }
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    val aux  = remember {mutableStateOf(false)}
+                    IconToggleButton(
+                        checked = aux.value,
+                        onCheckedChange = {aux.value = !aux.value},
+                    ) {
+                        if(aux.value){
+                            Icon(
+                                painterResource(id = R.drawable.ic_favorite),
+                                null,
+                                tint = MaterialTheme.colors.onPrimary,
+                            )
+                        }
+                        else {
+                            Icon(
+                                painterResource(id = R.drawable.ic_favorite_border),
+                                null,
+                                tint = MaterialTheme.colors.onPrimary,
+                            )
+                        }
+                    }
                 }
             }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(16.dp, 4.dp, 0.dp, 8.dp),
+                verticalAlignment = Alignment.Bottom
             ) {
-                Column(verticalArrangement = Arrangement.Bottom) {
+                Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.requiredSize(16.dp)) {
                     Card(
                         shape = RoundedCornerShape(100),
                         modifier = Modifier
-                            .fillMaxHeight(1F)
-                            .padding(16.dp, 8.dp, 0.dp, 8.dp)
-                            .aspectRatio(1F),
+                            .aspectRatio(1F)
+                            .requiredSize(16.dp)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.images),
                             contentDescription = null,
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(8.dp),
+                            alignment = Alignment.BottomCenter
                         )
                     }
                 }
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.Center
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Bottom
                 ) {
                     Text(
-                        modifier = Modifier.padding(8.dp, 2.dp),
+                        modifier = Modifier.padding(8.dp, 0.dp),
                         text = author,
                         style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.onBackground
                     )
-
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.End
+                ) {
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                    ) {
+                        Icon(
+                            Icons.Rounded.MoreVert,
+                            null,
+                            tint = MaterialTheme.colors.onPrimary,
+                        )
+                    }
                 }
             }
         }
