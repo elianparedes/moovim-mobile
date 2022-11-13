@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.moovim.ui.components.ExerciseCard
+import com.moovim.ui.components.RoutineCard
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -34,6 +36,9 @@ fun SearchScreen(navController: NavHostController) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(10) { id ->
+                RoutineCard(title = "Rutina $id", description = "Alcanza tus objetivos", author = "Kim wexler", rating = 12.2, fav = false) {
+                }
+                /*
                 Card(
                     modifier = Modifier
                         .height(200.dp)
@@ -47,6 +52,8 @@ fun SearchScreen(navController: NavHostController) {
                         Text("Routina $id")
                     }
                 }
+
+                 */
             }
         }
 
@@ -58,6 +65,8 @@ fun SearchScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(10) { id ->
+                ExerciseCard(title = "Ejercicio $id", "Triceps" , onClick ={ navController.navigate("exercises/$id") })
+                /*
                 Card(
                     modifier = Modifier
                         .height(64.dp)
@@ -71,6 +80,8 @@ fun SearchScreen(navController: NavHostController) {
                         Text("Ejercicio $id")
                     }
                 }
+
+                 */
             }
         }
     }
