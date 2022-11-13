@@ -25,9 +25,9 @@ class RoutineDetailsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val routineId = savedStateHandle.get<Int>("routineId") ?: return@launch
-            val routine = async {routinesRepository.getRoutine(routineId) }
-            val result = routine.await();
-            state = state.copy(name = result.name, detail = result.detail)
+            val getRoutine = async {routinesRepository.getRoutine(routineId) }
+            val routine = getRoutine.await();
+            state = state.copy(name = routine.name, detail = routine.detail)
         }
     }
 

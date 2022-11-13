@@ -17,4 +17,8 @@ class ExercisesRepository @Inject constructor(
         return api.getAllExercises(search = query).content.map { it.toExercise() }
     }
 
+    suspend fun getExercise(exerciseId: Int): Exercise {
+        return api.getExercise(exerciseId).toExercise()
+    }
+
 }
