@@ -13,13 +13,17 @@ data class ExerciseDto(
     @SerializedName("name")
     val name: String,
     @SerializedName("type")
-    val type: String
+    val type: String,
+    @SerializedName("metadata")
+    val metadata: ExerciseMetadataDto
 )
 
 fun ExerciseDto.toExercise(): Exercise {
     return Exercise(
         id = id,
         name = name,
-        detail = detail
+        detail = detail,
+        pos = metadata.pos,
+        procedure = metadata.procedure
     )
 }

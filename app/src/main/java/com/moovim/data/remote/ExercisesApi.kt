@@ -1,6 +1,7 @@
 package com.moovim.data.remote
 
 import com.moovim.data.remote.dto.ExerciseDto
+import com.moovim.data.remote.dto.ExerciseImageDto
 import com.moovim.data.remote.dto.common.ResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -19,5 +20,8 @@ interface ExercisesApi {
 
     @GET("exercises/{exerciseId}")
     suspend fun getExercise(@Path("exerciseId") exerciseId: Int): ExerciseDto
+
+    @GET("exercises/{exerciseId}/images")
+    suspend fun getExerciseImages(@Path("exerciseId") exerciseId: Int): ResponseDto<ExerciseImageDto>
 
 }
