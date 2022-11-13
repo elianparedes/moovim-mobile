@@ -11,12 +11,14 @@ class RoutinesRepository @Inject constructor(
     private val api: Api
 ) {
 
-    suspend fun getAllRoutines(): List<Routine> {
-        return api.getAllRoutines().content.map { it.toRoutine() }
+    suspend fun getAllRoutines(query: String? = null): List<Routine> {
+        return api.getAllRoutines(search = query).content.map { it.toRoutine() }
     }
 
     suspend fun getCurrentUserRoutines(): List<Routine> {
         return api.getCurrentUserRoutines().content.map { it.toRoutine() }
     }
+
+
 
 }
