@@ -13,7 +13,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.moovim.ui.screens.main.routines.MyRoutinesViewModel
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewModel = hiltViewModel()) {
     val state = viewModel.state

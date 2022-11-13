@@ -28,4 +28,17 @@ class MyRoutinesViewModel @Inject constructor(
             }
         }
 
+        fun getAllFavouriteRoutines(){
+            viewModelScope.launch {
+                val favouriteRoutines = repository.getAllFavouriteRoutines()
+                state = state.copy(favouriteRoutines = favouriteRoutines)
+            }
+        }
+
+        fun deleteRoutineFromFavourites(routineId: Int){
+            viewModelScope.launch {
+                repository.deleteRoutineFromFavourites(routineId)
+            }
+        }
+
 }

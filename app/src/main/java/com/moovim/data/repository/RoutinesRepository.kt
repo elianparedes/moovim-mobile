@@ -37,4 +37,16 @@ class RoutinesRepository @Inject constructor(
         return cycles
     }
 
+    suspend fun getAllFavouriteRoutines(): List<Routine> {
+        return api.getAllFavouriteRoutines().content.map { it.toRoutine() }
+    }
+
+    suspend fun addRoutineToFavourites(routineId: Int): Unit {
+        return api.addRoutineToFavourites(routineId)
+    }
+
+    suspend fun deleteRoutineFromFavourites(routineId: Int): Unit {
+        return api.deleteRoutineFromFavourites(routineId)
+    }
+
 }

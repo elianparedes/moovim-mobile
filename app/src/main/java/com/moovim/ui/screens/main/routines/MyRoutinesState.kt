@@ -4,4 +4,5 @@ import com.moovim.domain.model.Routine
 
 data class MyRoutinesState(
     val routines: List<Routine> = emptyList(),
+    val favouriteRoutines: List<Routine> = emptyList(),
 )

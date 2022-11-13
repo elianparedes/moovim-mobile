@@ -10,16 +10,12 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.moovim.ui.components.ExerciseCard
-import com.moovim.ui.components.RoutineCard
 import com.moovim.domain.model.Exercise
 import com.moovim.domain.model.Routine
 import com.moovim.ui.screens.main.search.SearchViewModel
@@ -85,7 +81,9 @@ fun ExerciseList(exercises: List<Exercise>){
 fun RoutinesList(routines: List<Routine>, navController: NavHostController){
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         routines.forEach { routine ->
-            RoutineCard(name = routine.name, onClick = {navController.navigate("routines/${routine.id}")})
+            RoutineCard(
+                name = routine.name,
+                onClick = { navController.navigate("routines/${routine.id}") })
         }
     }
 
