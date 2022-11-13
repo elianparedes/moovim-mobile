@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.moovim.domain.model.Cycle
+import com.moovim.domain.model.Exercise
 import com.moovim.ui.screens.details.routine.RoutineDetailsViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -30,34 +32,42 @@ fun RoutineDetailsScreen(
             .fillMaxSize()
             .background(Color.Black)
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        Text(state.name, color = Color.White)
-        Text(state.detail, color = Color.White)
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(),
+        Column() {
+            Text(state.name, color = Color.White)
+            Text(state.detail, color = Color.White)
+        }
 
-            state = rememberLazyListState(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(10) { id ->
-                Card(
-                    modifier = Modifier
-                        .height(64.dp)
-                        .fillMaxWidth(),
-                    onClick = { navController.navigate("exercises/$id") }
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text("Ejercicio $id")
-                    }
-                }
-            }
+        state.cycles.forEach { cycle ->
+            CycleExercisesList(cycle)
         }
     }
+}
 
+@Composable
+private fun CycleExercisesList(cycle: Cycle){
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Text(cycle.name, color = Color.White)
+        cycle.cycleExercises.forEach{
+            cycleExercise ->
+            ExerciseCard(cycleExercise.exercise)
+        }
+    }
+}
 
+@Composable
+private fun ExerciseCard(exercise: Exercise){
+    Card(
+        modifier = Modifier
+            .height(64.dp)
+            .fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(exercise.name)
+        }
+    }
 }

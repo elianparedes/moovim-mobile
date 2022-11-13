@@ -1,8 +1,12 @@
 package com.moovim.data.repository
 
-import com.moovim.data.remote.dto.RoutineDto
+import android.util.Log
 import com.moovim.data.remote.dto.common.Api
+import com.moovim.data.remote.dto.toCycle
+import com.moovim.data.remote.dto.toCycleExercise
+import com.moovim.data.remote.dto.toExercise
 import com.moovim.data.remote.dto.toRoutine
+import com.moovim.domain.model.Cycle
 import com.moovim.domain.model.Routine
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,6 +28,13 @@ class RoutinesRepository @Inject constructor(
         return api.getRoutine(routineId).toRoutine()
     }
 
+    suspend fun getRoutineCycles(routineId: Int): List<Cycle> {
+        val cycles = api.getRoutineCycles(routineId).content.map { it.toCycle() }
 
+        for (cycle in cycles)
+            cycle.cycleExercises = api.getCycleExercises(cycle.id).content.map { it.toCycleExercise() }
+
+        return cycles
+    }
 
 }

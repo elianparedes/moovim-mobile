@@ -10,8 +10,6 @@ data class CycleDto(
     val detail: String,
     @SerializedName("id")
     val id: Int,
-    @SerializedName("metadata")
-    val metadata: Any,
     @SerializedName("name")
     val name: String,
     @SerializedName("order")
@@ -28,5 +26,6 @@ fun CycleDto.toCycle(): Cycle {
         detail = detail,
         repetitions = repetitions,
         order = order,
+        cycleExercises = emptyList()
     )
 }
