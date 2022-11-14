@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import coil.compose.AsyncImage
 import com.moovim.R
 import com.moovim.ui.theme.MoovimTheme
 import com.moovim.ui.theme.Shapes
@@ -113,13 +114,6 @@ fun ExerciseCard(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF181818)
-@Composable
-fun ExerciseCardPreview() {
-    MoovimTheme {
-        ExerciseCard("Ticeps en polea", "Triceps", {})
-    }
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -127,8 +121,10 @@ fun RoutineCard(
     title: String,
     description: String,
     author: String,
-    rating: Double,
+    score: Int,
     fav: Boolean,
+    imageUrl: String,
+    avatarUrl: String,
     onClickCard: () -> Unit
 ) {
     Card(
@@ -141,9 +137,9 @@ fun RoutineCard(
         shape = RoundedCornerShape(8.dp)
 
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.pexels_photo_1117493),
-            contentDescription = "background",
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = "Foto de la rutina",
             contentScale = ContentScale.Crop,
             modifier = Modifier.drawWithCache {
                 val gradient = Brush.horizontalGradient(
@@ -181,7 +177,7 @@ fun RoutineCard(
                         color = MaterialTheme.colors.onBackground
                     )
                     Row( verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = rating.toString(), color = MaterialTheme.colors.primary, style = MaterialTheme.typography.body2 )
+                        Text(text = score.toString(), color = MaterialTheme.colors.primary, style = MaterialTheme.typography.body2 )
                         Icon(
                             Icons.Rounded.Star,
                             null,
@@ -194,7 +190,7 @@ fun RoutineCard(
                     horizontalAlignment = Alignment.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    val aux  = remember {mutableStateOf(false)}
+                    val aux  = remember {mutableStateOf(fav)}
                     IconToggleButton(
                         checked = aux.value,
                         onCheckedChange = {aux.value = !aux.value},
@@ -228,14 +224,25 @@ fun RoutineCard(
                         modifier = Modifier
                             .aspectRatio(1F)
                             .requiredSize(16.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.images),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.size(8.dp),
-                            alignment = Alignment.BottomCenter
-                        )
+                    ){
+                        if (avatarUrl == "") {
+                                AsyncImage(
+                                    model = avatarUrl,
+                                    contentDescription = "Foto de perfil",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.size(8.dp),
+                                    alignment = Alignment.BottomCenter
+                                )
+                        }
+                        else {
+                            Image (
+                                   painterResource(id = R.drawable.ic_round_person),
+                                    contentDescription = "Foto de perfil",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.size(8.dp),
+                                    alignment = Alignment.BottomCenter
+                            )
+                        }
                     }
                 }
                 Column(
@@ -271,11 +278,149 @@ fun RoutineCard(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun UserRoutineCard(
+    title: String,
+    description: String,
+    score: Int,
+    fav: Boolean,
+    imageUrl: String,
+    onClickCard: () -> Unit
+) {
+    Card(
+        onClick = onClickCard,
+        modifier = Modifier
+            .height(120.dp)
+            .fillMaxWidth()
+            .padding(1.dp),
+        backgroundColor = MaterialTheme.colors.secondary,
+        shape = RoundedCornerShape(8.dp)
+
+    ) {
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = "Foto de la rutina",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.drawWithCache {
+                val gradient = Brush.horizontalGradient(
+                    0.0f to Color(
+                        0xFF252525
+                    ), 0.3f to Color(0xE6252525), 1.0f to Color(0x80252525)
+                )
+                onDrawWithContent {
+                    drawContent()
+                    drawRect(gradient,
+                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
+                            setToSaturation(0F)
+                        })
+                    )
+                }
+            },
+            colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.8F) })
+        )
+        Column() {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp, 0.dp, 0.dp, 0.dp),
+                verticalAlignment = Alignment.Top) {
+                Column() {
+                    Text(
+                        modifier = Modifier.padding(0.dp, 8.dp, 0.dp , 4.dp),
+                        text = title,
+                        style = MaterialTheme.typography.h4,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Text(
+                        modifier = Modifier.padding(0.dp, 2.dp),
+                        text = description,
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Row( verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = score.toString(), color = MaterialTheme.colors.primary, style = MaterialTheme.typography.body2 )
+                        Icon(
+                            Icons.Rounded.Star,
+                            null,
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.requiredSize(16.dp)
+                        )
+                    }
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    val aux  = remember {mutableStateOf(fav)}
+                    IconToggleButton(
+                        checked = aux.value,
+                        onCheckedChange = {aux.value = !aux.value},
+                    ) {
+                        if(aux.value){
+                            Icon(
+                                painterResource(id = R.drawable.ic_favorite),
+                                null,
+                                tint = MaterialTheme.colors.onPrimary,
+                            )
+                        }
+                        else {
+                            Icon(
+                                painterResource(id = R.drawable.ic_favorite_border),
+                                null,
+                                tint = MaterialTheme.colors.onPrimary,
+                            )
+                        }
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 4.dp, 0.dp, 8.dp),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    Text(
+                        modifier = Modifier.padding(0.dp, 0.dp),
+                        text = "Creado por ti",
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.End
+                ) {
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                    ) {
+                        Icon(
+                            Icons.Rounded.MoreVert,
+                            null,
+                            tint = MaterialTheme.colors.onPrimary,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true, backgroundColor = 0xFF181818)
 @Composable
 fun RoutineCardPreview() {
     MoovimTheme {
-        RoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler", 4.8, false, {})
+        Column(){
+            RoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler", 0, false,
+                "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg" ,
+                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",{})
+        }
     }
 }
 
