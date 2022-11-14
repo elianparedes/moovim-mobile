@@ -1,11 +1,8 @@
 package com.moovim.ui.screens.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -14,13 +11,15 @@ import com.moovim.ui.components.UserRoutineCard
 import com.moovim.ui.screens.main.routines.MyRoutinesViewModel
 
 @Composable
-fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewModel = hiltViewModel()) {
+fun RoutinesScreen(
+    navController: NavHostController,
+    viewModel: MyRoutinesViewModel = hiltViewModel()
+) {
     val state = viewModel.state
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
