@@ -1,8 +1,6 @@
 package com.moovim.ui.screens.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
@@ -15,13 +13,15 @@ import androidx.navigation.NavHostController
 import com.moovim.ui.screens.main.routines.MyRoutinesViewModel
 
 @Composable
-fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewModel = hiltViewModel()) {
+fun RoutinesScreen(
+    navController: NavHostController,
+    viewModel: MyRoutinesViewModel = hiltViewModel()
+) {
     val state = viewModel.state
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -33,7 +33,9 @@ fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewMo
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             state.userRoutines.forEach { routine ->
-                RoutineCard(name = routine.name, onClick = {navController.navigate("routines/${routine.id}")})
+                RoutineCard(
+                    name = routine.name,
+                    onClick = { navController.navigate("routines/${routine.id}") })
             }
         }
 
@@ -42,7 +44,7 @@ fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewMo
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RoutineCard(name: String, onClick: () -> Unit){
+fun RoutineCard(name: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .height(200.dp)
