@@ -32,6 +32,7 @@ fun RoutineDto.toRoutine(): Routine {
         id = id,
         name = name,
         detail = detail,
+        score = score,
         imageUrl = metadata.image,
         author = user.username,
         avatarUrl = user.avatarUrl
@@ -43,6 +44,7 @@ fun RoutineDto.toUserRoutine(): UserRoutine {
         id = id,
         name = name,
         detail = detail,
+        score = score,
         imageUrl = metadata.image
     )
 }

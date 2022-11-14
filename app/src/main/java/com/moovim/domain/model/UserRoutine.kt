@@ -5,4 +5,5 @@ data class UserRoutine(
     val name: String,
     val detail: String,
     val imageUrl: String,
+    val score: Int
 )
