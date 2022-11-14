@@ -41,4 +41,10 @@ class MyRoutinesViewModel @Inject constructor(
             }
         }
 
+        fun addRoutineReview(routineId: Int, score: Int, review: String){
+            viewModelScope.launch {
+                repository.addRoutineReview(routineId, score, review)
+            }
+        }
+
 }

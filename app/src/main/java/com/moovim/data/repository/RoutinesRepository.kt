@@ -1,13 +1,11 @@
 package com.moovim.data.repository
 
 import android.util.Log
+import com.moovim.data.remote.dto.*
 import com.moovim.data.remote.dto.common.Api
-import com.moovim.data.remote.dto.toCycle
-import com.moovim.data.remote.dto.toCycleExercise
-import com.moovim.data.remote.dto.toExercise
-import com.moovim.data.remote.dto.toRoutine
 import com.moovim.domain.model.Cycle
 import com.moovim.domain.model.Routine
+import com.moovim.domain.model.RoutineReview
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,6 +45,14 @@ class RoutinesRepository @Inject constructor(
 
     suspend fun deleteRoutineFromFavourites(routineId: Int): Unit {
         return api.deleteRoutineFromFavourites(routineId)
+    }
+
+    suspend fun getAllRoutineReviews(routineId: Int): List<RoutineReview> {
+        return api.getAllRoutineReviews(routineId).content.map {it.toRoutineReview()}
+    }
+
+    suspend fun addRoutineReview(routineId: Int, score: Int, review: String){
+        return api.addRoutineReview(routineId, NewRoutineReviewDto(score, review))
     }
 
 }
