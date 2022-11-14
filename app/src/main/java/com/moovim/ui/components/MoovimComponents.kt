@@ -87,7 +87,7 @@ fun ExerciseCard(
                 Text(
                     modifier = Modifier.padding(16.dp, 8.dp),
                     text = group,
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.onBackground
                 )
             }
@@ -276,6 +276,90 @@ fun RoutineCard(
 fun RoutineCardPreview() {
     MoovimTheme {
         RoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler", 4.8, false, {})
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ExerciseRoutineCard(
+    title: String,
+    group: String,
+    repetitions: Int?,
+    duration: Int?,
+    onClickCard: () -> Unit,
+){
+    Card(
+        onClick = onClickCard,
+        modifier = Modifier
+            .height(128.dp)
+            .fillMaxWidth()
+            .padding(1.dp),
+        backgroundColor = MaterialTheme.colors.secondary,
+        shape = RoundedCornerShape(8.dp)
+
+    )
+    {
+        Column(modifier = Modifier.fillMaxHeight()) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp, 4.dp, 0.dp, 8.dp)) {
+                Column() {
+                    Text(
+                        modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 4.dp),
+                        text = title,
+                        style = MaterialTheme.typography.h4,
+                        color = MaterialTheme.colors.onBackground
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(0.dp, 4.dp),
+                        text = group,
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                }
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(16.dp,0.dp,16.dp,16.dp),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                if(repetitions!=null){
+                    Column() {
+                        Row(){
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_replay),
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.onBackground,
+                                modifier = Modifier.padding(8.dp,0.dp)
+                            )
+                            Text(text = repetitions.toString(),color = MaterialTheme.colors.onBackground)
+                        }
+                    }
+                }
+                if(duration!=null){
+                    Column() {
+                        Row(){
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_timer),
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.onBackground,
+                                modifier = Modifier.padding(8.dp,0.dp)
+                            )
+                            Text(text = duration.toString() ,color = MaterialTheme.colors.onBackground)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF181818)
+@Composable
+fun ExerciseRoutineCardPreview() {
+    MoovimTheme {
+        ExerciseRoutineCard("Extension de tricep con polea","Triceps", 12,30,{ })
     }
 }
 
