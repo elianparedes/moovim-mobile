@@ -2,6 +2,7 @@ package com.moovim.ui.screens.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
@@ -13,7 +14,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.moovim.ui.screens.main.routines.MyRoutinesViewModel
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewModel = hiltViewModel()) {
     val state = viewModel.state
@@ -32,7 +32,7 @@ fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewMo
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            state.routines.forEach { routine ->
+            state.userRoutines.forEach { routine ->
                 RoutineCard(name = routine.name, onClick = {navController.navigate("routines/${routine.id}")})
             }
         }
