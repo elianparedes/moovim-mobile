@@ -2,6 +2,7 @@ package com.moovim.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 import com.moovim.domain.model.Routine
+import com.moovim.domain.model.UserRoutine
 
 data class RoutineDto(
     @SerializedName("category")
@@ -28,6 +29,17 @@ data class RoutineDto(
 
 fun RoutineDto.toRoutine(): Routine {
     return Routine(
+        id = id,
+        name = name,
+        detail = detail,
+        imageUrl = metadata.image,
+        author = user.username,
+        avatarUrl = user.avatarUrl
+    )
+}
+
+fun RoutineDto.toUserRoutine(): UserRoutine {
+    return UserRoutine(
         id = id,
         name = name,
         detail = detail,

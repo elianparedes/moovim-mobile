@@ -1,10 +1,8 @@
 package com.moovim.domain.model
 
-data class Routine(
+data class UserRoutine(
     val id: Int,
     val name: String,
     val detail: String,
     val imageUrl: String,
-    val author: String,
-    val avatarUrl: String,
 )

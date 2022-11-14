@@ -23,8 +23,8 @@ class MyRoutinesViewModel @Inject constructor(
 
         private fun getCurrentUserRoutines(){
             viewModelScope.launch {
-                val routines = repository.getCurrentUserRoutines()
-                state = state.copy(routines = routines)
+                val userRoutines = repository.getCurrentUserRoutines()
+                state = state.copy(userRoutines = userRoutines)
             }
         }
 

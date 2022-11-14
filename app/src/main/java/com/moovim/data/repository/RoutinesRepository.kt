@@ -6,6 +6,7 @@ import com.moovim.data.remote.dto.common.Api
 import com.moovim.domain.model.Cycle
 import com.moovim.domain.model.Routine
 import com.moovim.domain.model.RoutineReview
+import com.moovim.domain.model.UserRoutine
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,8 +19,8 @@ class RoutinesRepository @Inject constructor(
         return api.getAllRoutines(search = query).content.map { it.toRoutine() }
     }
 
-    suspend fun getCurrentUserRoutines(): List<Routine> {
-        return api.getCurrentUserRoutines().content.map { it.toRoutine() }
+    suspend fun getCurrentUserRoutines(): List<UserRoutine> {
+        return api.getCurrentUserRoutines().content.map { it.toUserRoutine() }
     }
 
     suspend fun getRoutine(routineId: Int): Routine {

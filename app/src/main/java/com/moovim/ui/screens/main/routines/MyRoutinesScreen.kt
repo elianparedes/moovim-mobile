@@ -32,7 +32,7 @@ fun RoutinesScreen(navController: NavHostController, viewModel: MyRoutinesViewMo
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            state.routines.forEach { routine ->
+            state.userRoutines.forEach { routine ->
                 RoutineCard(name = routine.name, onClick = {navController.navigate("routines/${routine.id}")})
             }
         }
