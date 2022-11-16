@@ -216,21 +216,21 @@ fun RoutineCard(
                             .requiredSize(16.dp)
                     ){
                         if (avatarUrl == "") {
-                                AsyncImage(
-                                    model = avatarUrl,
-                                    contentDescription = "Foto de perfil",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.size(8.dp),
-                                    alignment = Alignment.BottomCenter
-                                )
+                            AsyncImage(
+                                model = avatarUrl,
+                                contentDescription = "Foto de perfil",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(8.dp),
+                                alignment = Alignment.BottomCenter
+                            )
                         }
                         else {
                             Image (
-                                   painterResource(id = R.drawable.ic_round_person),
-                                    contentDescription = "Foto de perfil",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.size(8.dp),
-                                    alignment = Alignment.BottomCenter
+                                painterResource(id = R.drawable.ic_round_person),
+                                contentDescription = "Foto de perfil",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(8.dp),
+                                alignment = Alignment.BottomCenter
                             )
                         }
                     }
@@ -543,7 +543,7 @@ fun WideRoutineCard(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(0.dp, 16.dp)
-                        ) {
+                    ) {
                         Icon(
                             painterResource(id = R.drawable.ic_subject),
                             null,
@@ -846,17 +846,17 @@ fun ObjectiveCard(
                 .padding(24.dp, 16.dp, 0.dp, 0.dp),
             horizontalAlignment = Alignment.Start,
         ) {
-                Text(
-                    modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
-                    text = title,
-                    style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.onBackground
-                )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.onBackground
-                )
+            Text(
+                modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
+                text = title,
+                style = MaterialTheme.typography.h2,
+                color = MaterialTheme.colors.onBackground
+            )
+            Text(
+                text = description,
+                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.onBackground
+            )
         }
     }
 }
