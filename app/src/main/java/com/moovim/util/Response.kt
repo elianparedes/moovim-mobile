@@ -1,6 +1,6 @@
 package com.moovim.util
 
-sealed class Resource<T>(val data: T? = null, val message: String? = null) {
-    class Sucess<T>(data: T?): Resource<T>(data)
-    class Error<T>(message: String, data: T? = null): Resource<T>(data, message)
+sealed class Response<T>(val data: T? = null, val message: String? = null) {
+    class Success<T>(data: T?): Response<T>(data)
+    class Error<T>(message: String, data: T? = null): Response<T>(data, message)
 }

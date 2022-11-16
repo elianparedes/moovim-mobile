@@ -3,9 +3,7 @@ package com.moovim.data.remote
 import com.moovim.data.remote.dto.NewRoutineReviewDto
 import com.moovim.data.remote.dto.RoutineDto
 import com.moovim.data.remote.dto.RoutineReviewDto
-import com.moovim.data.remote.dto.common.ResponseDto
-import com.moovim.data.remote.dto.common.TokenDto
-import com.moovim.domain.model.RoutineReview
+import com.moovim.data.remote.dto.common.ContentPaginationDto
 import retrofit2.http.*
 
 interface RoutinesApi {
@@ -16,7 +14,7 @@ interface RoutinesApi {
         @Query("size") size: Number = 10,
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc"
-    ): ResponseDto<RoutineDto>
+    ): ContentPaginationDto<RoutineDto>
 
     @Headers("No-Auth: true")
     @GET("routines")
@@ -26,7 +24,7 @@ interface RoutinesApi {
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc",
         @Query("search") search: String? = null
-    ): ResponseDto<RoutineDto>
+    ): ContentPaginationDto<RoutineDto>
 
     @GET("routines/{routineId}")
     suspend fun getRoutine(@Path("routineId") routineId: Int): RoutineDto
@@ -35,7 +33,7 @@ interface RoutinesApi {
     suspend fun getAllFavouriteRoutines(
         @Query("page") page: Number = 0,
         @Query("size") size: Number = 10,
-    ): ResponseDto<RoutineDto>
+    ): ContentPaginationDto<RoutineDto>
 
     @POST("favourites/{routineId}")
     suspend fun addRoutineToFavourites(
@@ -53,7 +51,7 @@ interface RoutinesApi {
         @Query("size") size: Number = 10,
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc",
-    ): ResponseDto<RoutineReviewDto>
+    ): ContentPaginationDto<RoutineReviewDto>
 
     @POST("reviews/{routineId}")
     suspend fun addRoutineReview(

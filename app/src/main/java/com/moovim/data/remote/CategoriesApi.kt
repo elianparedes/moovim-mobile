@@ -1,7 +1,7 @@
 package com.moovim.data.remote
 
 import com.moovim.data.remote.dto.CategoryDto
-import com.moovim.data.remote.dto.common.ResponseDto
+import com.moovim.data.remote.dto.common.ContentPaginationDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -14,7 +14,7 @@ interface CategoriesApi {
         @Query("size") size: Number = 10,
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc"
-    ): ResponseDto<CategoryDto>
+    ): ContentPaginationDto<CategoryDto>
 
     @GET("categories/{categoryId}")
     suspend fun getCategory(@Path("categoryId") categoryId: Int): CategoryDto
