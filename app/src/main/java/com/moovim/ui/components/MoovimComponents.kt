@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -115,8 +116,12 @@ fun RoutineCard(
     fav: Boolean,
     imageUrl: String,
     avatarUrl: String,
-    onClickCard: () -> Unit
+    onClickCard: () -> Unit,
+    onShareClick: () -> Unit,
+    onFavClick: () -> Unit,
+    onScoreClick: () -> Unit
 ) {
+    var menuOpen by remember { mutableStateOf(false) }
     Card(
         onClick = onClickCard,
         modifier = Modifier
@@ -139,7 +144,8 @@ fun RoutineCard(
                 )
                 onDrawWithContent {
                     drawContent()
-                    drawRect(gradient,
+                    drawRect(
+                        gradient,
                         colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
                             setToSaturation(0F)
                         })
@@ -149,13 +155,15 @@ fun RoutineCard(
             colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.8F) })
         )
         Column() {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, 0.dp, 0.dp, 0.dp),
-                verticalAlignment = Alignment.Top) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 0.dp, 0.dp, 0.dp),
+                verticalAlignment = Alignment.Top
+            ) {
                 Column() {
                     Text(
-                        modifier = Modifier.padding(0.dp, 8.dp, 0.dp , 4.dp),
+                        modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 4.dp),
                         text = title,
                         style = MaterialTheme.typography.h4,
                         color = MaterialTheme.colors.onBackground
@@ -166,8 +174,12 @@ fun RoutineCard(
                         style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.onBackground
                     )
-                    Row( verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = score.toString(), color = MaterialTheme.colors.primary, style = MaterialTheme.typography.body2 )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = score.toString(),
+                            color = MaterialTheme.colors.primary,
+                            style = MaterialTheme.typography.body2
+                        )
                         Icon(
                             Icons.Rounded.Star,
                             null,
@@ -208,29 +220,32 @@ fun RoutineCard(
                     .padding(16.dp, 4.dp, 0.dp, 8.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
-                Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.requiredSize(16.dp)) {
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier.requiredSize(16.dp)
+                ) {
                     Card(
                         shape = RoundedCornerShape(100),
                         modifier = Modifier
                             .aspectRatio(1F)
                             .requiredSize(16.dp)
-                    ){
+                    ) {
                         if (avatarUrl == "") {
-                            AsyncImage(
-                                model = avatarUrl,
-                                contentDescription = "Foto de perfil",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(8.dp),
-                                alignment = Alignment.BottomCenter
-                            )
+                                AsyncImage(
+                                    model = avatarUrl,
+                                    contentDescription = "Foto de perfil",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.size(8.dp),
+                                    alignment = Alignment.BottomCenter
+                                )
                         }
                         else {
                             Image (
-                                painterResource(id = R.drawable.ic_round_person),
-                                contentDescription = "Foto de perfil",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(8.dp),
-                                alignment = Alignment.BottomCenter
+                                   painterResource(id = R.drawable.ic_round_person),
+                                    contentDescription = "Foto de perfil",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.size(8.dp),
+                                    alignment = Alignment.BottomCenter
                             )
                         }
                     }
@@ -254,13 +269,14 @@ fun RoutineCard(
                     horizontalAlignment = Alignment.End
                 ) {
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {menuOpen = !menuOpen},
                     ) {
                         Icon(
                             Icons.Rounded.MoreVert,
                             null,
                             tint = MaterialTheme.colors.onPrimary,
                         )
+                        RoutineDropdown(menuOpen, {menuOpen = false}, onShareClick, onFavClick, onScoreClick)
                     }
                 }
             }
@@ -268,136 +284,19 @@ fun RoutineCard(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun UserRoutineCard(
-    title: String,
-    description: String,
-    score: Int,
-    fav: Boolean,
-    imageUrl: String,
-    onClickCard: () -> Unit
-) {
-    Card(
-        onClick = onClickCard,
-        modifier = Modifier
-            .height(120.dp)
-            .fillMaxWidth()
-            .padding(1.dp),
-        backgroundColor = MaterialTheme.colors.secondary,
-        shape = RoundedCornerShape(8.dp)
-
-    ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = "Foto de la rutina",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.drawWithCache {
-                val gradient = Brush.horizontalGradient(
-                    0.0f to Color(
-                        0xFF252525
-                    ), 0.3f to Color(0xE6252525), 1.0f to Color(0x80252525)
-                )
-                onDrawWithContent {
-                    drawContent()
-                    drawRect(gradient,
-                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
-                            setToSaturation(0F)
-                        })
-                    )
-                }
-            },
-            colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.8F) })
-        )
-        Column() {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, 0.dp, 0.dp, 0.dp),
-                verticalAlignment = Alignment.Top) {
-                Column() {
-                    Text(
-                        modifier = Modifier.padding(0.dp, 8.dp, 0.dp , 4.dp),
-                        text = title,
-                        style = MaterialTheme.typography.h4,
-                        color = MaterialTheme.colors.onBackground
-                    )
-                    Text(
-                        modifier = Modifier.padding(0.dp, 2.dp),
-                        text = description,
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onBackground
-                    )
-                    Row( verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = score.toString(), color = MaterialTheme.colors.primary, style = MaterialTheme.typography.body2 )
-                        Icon(
-                            Icons.Rounded.Star,
-                            null,
-                            tint = MaterialTheme.colors.primary,
-                            modifier = Modifier.requiredSize(16.dp)
-                        )
-                    }
-                }
-                Column(
-                    horizontalAlignment = Alignment.End,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    val aux  = remember {mutableStateOf(fav)}
-                    IconToggleButton(
-                        checked = aux.value,
-                        onCheckedChange = {aux.value = !aux.value},
-                    ) {
-                        if(aux.value){
-                            Icon(
-                                painterResource(id = R.drawable.ic_favorite),
-                                null,
-                                tint = MaterialTheme.colors.onPrimary,
-                            )
-                        }
-                        else {
-                            Icon(
-                                painterResource(id = R.drawable.ic_favorite_border),
-                                null,
-                                tint = MaterialTheme.colors.onPrimary,
-                            )
-                        }
-                    }
-                }
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, 4.dp, 0.dp, 8.dp),
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    Text(
-                        modifier = Modifier.padding(0.dp, 0.dp),
-                        text = "Creado por ti",
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onBackground
-                    )
-                }
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.End
-                ) {
-                    IconButton(
-                        onClick = { /*TODO*/ },
-                    ) {
-                        Icon(
-                            Icons.Rounded.MoreVert,
-                            null,
-                            tint = MaterialTheme.colors.onPrimary,
-                        )
-                    }
-                }
-            }
+fun RoutineDropdown(expanded: Boolean, onDismissRequest: () -> Unit, onShareClick: () -> Unit,
+                    onFavClick: () -> Unit, onScoreClick: () -> Unit){
+    DropdownMenu(expanded = expanded,
+        onDismissRequest = onDismissRequest) {
+        DropdownMenuItem(onClick = onShareClick) {
+            Text("Compartir")
+        }
+        DropdownMenuItem(onClick = onFavClick){
+            Text("Añadir favoritos")
+        }
+        DropdownMenuItem(onClick = onScoreClick){
+            Text("Puntuar")
         }
     }
 }
@@ -407,9 +306,10 @@ fun UserRoutineCard(
 fun RoutineCardPreview() {
     MoovimTheme {
         Column(){
-            RoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler", 0, false,
+            RoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler", 0,false,
                 "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg" ,
-                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",{})
+                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es"
+                ,{}, {}, {},{})
         }
     }
 }
@@ -422,22 +322,22 @@ fun ExerciseRoutineCard(
     repetitions: Int?,
     duration: Int?,
     onClickCard: () -> Unit,
-){
+) {
     Card(
         onClick = onClickCard,
         modifier = Modifier
             .height(128.dp)
-            .fillMaxWidth()
-            .padding(1.dp),
+            .fillMaxWidth(),
         backgroundColor = MaterialTheme.colors.secondary,
         shape = RoundedCornerShape(8.dp)
-
     )
     {
         Column(modifier = Modifier.fillMaxHeight()) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, 4.dp, 0.dp, 8.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 4.dp, 16.dp, 8.dp)
+            ) {
                 Column() {
                     Text(
                         modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 4.dp),
@@ -462,27 +362,30 @@ fun ExerciseRoutineCard(
                     .padding(16.dp, 0.dp, 16.dp, 16.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
-                if(repetitions!=null){
+                if (repetitions != null) {
                     Column() {
-                        Row(){
+                        Row() {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_replay),
                                 contentDescription = null,
                                 tint = MaterialTheme.colors.onBackground,
-                                modifier = Modifier.padding(8.dp,0.dp)
+                                modifier = Modifier.padding(8.dp, 0.dp)
                             )
-                            Text(text = repetitions.toString(),color = MaterialTheme.colors.onBackground)
+                            Text(
+                                text = repetitions.toString(),
+                                color = MaterialTheme.colors.onBackground
+                            )
                         }
                     }
                 }
-                if(duration!=null){
+                if (duration != null) {
                     Column() {
-                        Row(){
+                        Row() {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_timer),
                                 contentDescription = null,
                                 tint = MaterialTheme.colors.onBackground,
-                                modifier = Modifier.padding(8.dp,0.dp)
+                                modifier = Modifier.padding(8.dp, 0.dp)
                             )
                             Text(text = duration.toString() ,color = MaterialTheme.colors.onBackground)
                         }
@@ -543,7 +446,7 @@ fun WideRoutineCard(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(0.dp, 16.dp)
-                    ) {
+                        ) {
                         Icon(
                             painterResource(id = R.drawable.ic_subject),
                             null,
@@ -667,10 +570,9 @@ fun RoutineDetailedCard(
     Card(
         modifier = Modifier
             .height(240.dp)
-            .fillMaxWidth()
-            .padding(1.dp),
+            .fillMaxWidth(),
         backgroundColor = MaterialTheme.colors.secondary,
-        shape = RoundedCornerShape(0.dp,0.dp,8.dp,8.dp)
+        shape = RoundedCornerShape(0.dp, 0.dp, 8.dp, 8.dp)
 
     ) {
         AsyncImage(
@@ -685,7 +587,8 @@ fun RoutineDetailedCard(
                 )
                 onDrawWithContent {
                     drawContent()
-                    drawRect(gradient,
+                    drawRect(
+                        gradient,
                         colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
                             setToSaturation(0F)
                         })
@@ -720,6 +623,7 @@ fun RoutineDetailedCard(
                         modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
                         text = title,
                         style = MaterialTheme.typography.h2,
+                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colors.onBackground
                     )
                     Text(
@@ -744,7 +648,8 @@ fun RoutineDetailedCard(
                                 .append(" ")
                                 .append(stringResource(id = R.string.routines_exercises_amount_message))
                                 .toString(),
-                            color = MaterialTheme.colors.onBackground, style = MaterialTheme.typography.h6
+                            color = MaterialTheme.colors.onBackground,
+                            style = MaterialTheme.typography.h6
                         )
                     }
                 }
@@ -755,7 +660,10 @@ fun RoutineDetailedCard(
                     .padding(24.dp, 4.dp, 0.dp, 16.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
-                Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.requiredSize(16.dp)) {
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier.requiredSize(16.dp)
+                ) {
                     Card(
                         shape = RoundedCornerShape(100),
                         modifier = Modifier
@@ -803,10 +711,14 @@ fun RoutineDetailedCard(
 @Composable
 fun RoutineDetailedCardPreview() {
     MoovimTheme {
-        Column(){
-            RoutineDetailedCard("Llegar al verano", "Perdida de peso", "Kim Wexler",
-                "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg" ,
-                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",12,{})
+        Column() {
+            RoutineDetailedCard("Llegar al verano",
+                "Perdida de peso",
+                "Kim Wexler",
+                "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg",
+                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",
+                12,
+                {})
         }
     }
 }
@@ -846,17 +758,17 @@ fun ObjectiveCard(
                 .padding(24.dp, 16.dp, 0.dp, 0.dp),
             horizontalAlignment = Alignment.Start,
         ) {
-            Text(
-                modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
-                text = title,
-                style = MaterialTheme.typography.h2,
-                color = MaterialTheme.colors.onBackground
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onBackground
-            )
+                Text(
+                    modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
+                    text = title,
+                    style = MaterialTheme.typography.h2,
+                    color = MaterialTheme.colors.onBackground
+                )
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colors.onBackground
+                )
         }
     }
 }
@@ -937,7 +849,7 @@ fun OutlinedMoovimButton(buttonOnClick: () -> Unit, buttonText: String) {
 }
 
 @Composable
-fun InputTextField(text: String, onValueChangeText: (String) -> Unit, labelText: String){
+fun InputTextField(text: String, onValueChangeText: (String) -> Unit, labelText: String) {
 
     OutlinedTextField(
         modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp),
@@ -952,8 +864,8 @@ fun InputTextField(text: String, onValueChangeText: (String) -> Unit, labelText:
 }
 
 @Composable
-fun PasswordTextField(text: String, onValueChangeText: (String) -> Unit, labelText: String){
-    var passwordVisible by remember {mutableStateOf(false)}
+fun PasswordTextField(text: String, onValueChangeText: (String) -> Unit, labelText: String) {
+    var passwordVisible by remember { mutableStateOf(false) }
 
     OutlinedTextField(
         modifier = Modifier.padding(vertical = 8.dp),
@@ -972,7 +884,7 @@ fun PasswordTextField(text: String, onValueChangeText: (String) -> Unit, labelTe
 
             val description = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
 
-            IconButton(onClick = {passwordVisible = !passwordVisible}){
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(painterResource(id = image), description)
             }
         }
