@@ -17,6 +17,7 @@ fun RootNavGraph(navController: NavHostController) {
         composable(route = Graph.HOME) {
             MainScreen()
         }
+        detailsNavGraph(navController)
     }
 }
 

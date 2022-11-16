@@ -7,6 +7,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.UserRepository
+import com.moovim.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,8 +29,15 @@ class LoginViewModel @Inject constructor(
 
     fun login(username: String, password: String){
         viewModelScope.launch {
-            val token = repository.login(username, password)
-            state = state.copy(token = token, isLoggedIn = true)
+            when (val response = repository.login(username, password)){
+                is Response.Success -> {
+                    state = state.copy(token = response.data, isLoggedIn = true)
+                }
+                is Response.Error -> {
+                    return@launch
+                }
+            }
+
         }
     }
 

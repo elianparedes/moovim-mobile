@@ -7,7 +7,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.moovim.ui.components.RoutineCard
-import com.moovim.ui.components.UserRoutineCard
 import com.moovim.ui.screens.main.routines.MyRoutinesViewModel
 
 @Composable
@@ -28,25 +27,7 @@ fun RoutinesScreen(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            state.userRoutines.forEach { routine ->
-                UserRoutineCard(
-                    title = routine.name, description = routine.detail, score = routine.score,
-                    fav = false, imageUrl = routine.imageUrl,
-                    onClickCard = {navController.navigate("routines/${routine.id}")})
-            }
-            state.favouriteRoutines.forEach{
-                routine ->
-                RoutineCard(
-                    title = routine.name,
-                    description = routine.detail,
-                    author = routine.author,
-                    score = routine.score,
-                    fav = true,
-                    imageUrl = routine.imageUrl,
-                    avatarUrl = routine.avatarUrl,
-                    onClickCard = {navController.navigate("routines/${routine.id}")}
-                )
-            }
+
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.moovim.ui.nav.graphs
 
+import android.content.Intent
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.moovim.ui.screens.details.ExerciseDetailsScreen
@@ -12,6 +13,12 @@ fun NavGraphBuilder.detailsNavGraph(navController: NavHostController) {
     ) {
         composable(
             route = DetailsScreen.Routine.route,
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "moovim.app/{routineId}"
+                    action = Intent.ACTION_VIEW
+                }
+            ),
             arguments = listOf(navArgument("routineId") { type = NavType.IntType })
         ) { backStackEntry ->
             val routineId = backStackEntry.arguments?.getInt("routineId");
