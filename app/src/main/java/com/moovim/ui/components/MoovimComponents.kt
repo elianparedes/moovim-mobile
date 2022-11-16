@@ -111,11 +111,14 @@ fun RoutineCard(
     description: String,
     author: String,
     score: Int,
-    fav: Boolean,
     imageUrl: String,
     avatarUrl: String,
-    onClickCard: () -> Unit
+    onClickCard: () -> Unit,
+    onShareClick: () -> Unit,
+    onFavClick: () -> Unit,
+    onScoreClick: () -> Unit
 ) {
+    var menuOpen by remember { mutableStateOf(false) }
     Card(
         onClick = onClickCard,
         modifier = Modifier
@@ -173,31 +176,6 @@ fun RoutineCard(
                             tint = MaterialTheme.colors.primary,
                             modifier = Modifier.requiredSize(16.dp)
                         )
-                    }
-                }
-                Column(
-                    horizontalAlignment = Alignment.End,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    val aux  = remember {mutableStateOf(fav)}
-                    IconToggleButton(
-                        checked = aux.value,
-                        onCheckedChange = {aux.value = !aux.value},
-                    ) {
-                        if(aux.value){
-                            Icon(
-                                painterResource(id = R.drawable.ic_favorite),
-                                null,
-                                tint = MaterialTheme.colors.onPrimary,
-                            )
-                        }
-                        else {
-                            Icon(
-                                painterResource(id = R.drawable.ic_favorite_border),
-                                null,
-                                tint = MaterialTheme.colors.onPrimary,
-                            )
-                        }
                     }
                 }
             }
@@ -253,16 +231,34 @@ fun RoutineCard(
                     horizontalAlignment = Alignment.End
                 ) {
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {menuOpen = !menuOpen},
                     ) {
                         Icon(
                             Icons.Rounded.MoreVert,
                             null,
                             tint = MaterialTheme.colors.onPrimary,
                         )
+                        RoutineDropdown(menuOpen, {menuOpen = false}, onShareClick, onFavClick, onScoreClick)
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun RoutineDropdown(expanded: Boolean, onDismissRequest: () -> Unit, onShareClick: () -> Unit,
+                    onFavClick: () -> Unit, onScoreClick: () -> Unit){
+    DropdownMenu(expanded = expanded,
+        onDismissRequest = onDismissRequest) {
+        DropdownMenuItem(onClick = onShareClick) {
+            Text("Compartir")
+        }
+        DropdownMenuItem(onClick = onFavClick){
+            Text("Añadir favoritos")
+        }
+        DropdownMenuItem(onClick = onScoreClick){
+            Text("Puntuar")
         }
     }
 }
@@ -273,7 +269,6 @@ fun UserRoutineCard(
     title: String,
     description: String,
     score: Int,
-    fav: Boolean,
     imageUrl: String,
     onClickCard: () -> Unit
 ) {
@@ -336,31 +331,6 @@ fun UserRoutineCard(
                         )
                     }
                 }
-                Column(
-                    horizontalAlignment = Alignment.End,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    val aux  = remember {mutableStateOf(fav)}
-                    IconToggleButton(
-                        checked = aux.value,
-                        onCheckedChange = {aux.value = !aux.value},
-                    ) {
-                        if(aux.value){
-                            Icon(
-                                painterResource(id = R.drawable.ic_favorite),
-                                null,
-                                tint = MaterialTheme.colors.onPrimary,
-                            )
-                        }
-                        else {
-                            Icon(
-                                painterResource(id = R.drawable.ic_favorite_border),
-                                null,
-                                tint = MaterialTheme.colors.onPrimary,
-                            )
-                        }
-                    }
-                }
             }
             Row(
                 modifier = Modifier
@@ -406,9 +376,10 @@ fun UserRoutineCard(
 fun RoutineCardPreview() {
     MoovimTheme {
         Column(){
-            RoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler", 0, false,
+            RoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler", 0,
                 "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg" ,
-                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",{})
+                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es"
+                ,{}, {}, {},{})
         }
     }
 }
