@@ -2,7 +2,7 @@ package com.moovim.data.remote
 
 import com.moovim.data.remote.dto.ExerciseDto
 import com.moovim.data.remote.dto.ExerciseImageDto
-import com.moovim.data.remote.dto.common.ResponseDto
+import com.moovim.data.remote.dto.common.ContentPaginationDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -16,12 +16,12 @@ interface ExercisesApi {
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc",
         @Query("search") search: String? = null
-    ): ResponseDto<ExerciseDto>
+    ): ContentPaginationDto<ExerciseDto>
 
     @GET("exercises/{exerciseId}")
     suspend fun getExercise(@Path("exerciseId") exerciseId: Int): ExerciseDto
 
     @GET("exercises/{exerciseId}/images")
-    suspend fun getExerciseImages(@Path("exerciseId") exerciseId: Int): ResponseDto<ExerciseImageDto>
+    suspend fun getExerciseImages(@Path("exerciseId") exerciseId: Int): ContentPaginationDto<ExerciseImageDto>
 
 }

@@ -7,7 +7,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.moovim.ui.components.RoutineCard
-import com.moovim.ui.components.UserRoutineCard
 import com.moovim.ui.screens.main.routines.MyRoutinesViewModel
 
 @Composable

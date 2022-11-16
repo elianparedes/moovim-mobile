@@ -3,7 +3,6 @@ package com.moovim.ui.screens.main
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
@@ -12,9 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -99,13 +96,15 @@ private fun BottomNavigationBar(navController: NavController) {
                 backgroundColor = Color.Transparent,
                 contentColor = Color.White,
                 elevation = 0.dp,
-                modifier = Modifier.drawWithContent {
-                    val colors = listOf(Color.Transparent, Color(0xFF0F0F0F), Color(0xFF0F0F0F))
-                    drawRect(
-                        brush = Brush.verticalGradient(colors),
-                    )
-                    drawContent()
-                }.padding(top = 48.dp)) {
+                modifier = Modifier
+                    .drawWithContent {
+                        val colors = listOf(Color.Transparent, Color(0xFF0F0F0F), Color(0xFF0F0F0F))
+                        drawRect(
+                            brush = Brush.verticalGradient(colors),
+                        )
+                        drawContent()
+                    }
+                    .padding(top = 48.dp)) {
                 val backStackEntry by navController.currentBackStackEntryAsState();
                 val currentRoute = backStackEntry?.destination?.route
                 items.forEach { item ->
