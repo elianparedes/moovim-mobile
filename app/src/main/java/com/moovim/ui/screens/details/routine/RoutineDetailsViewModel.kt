@@ -28,7 +28,7 @@ class RoutineDetailsViewModel @Inject constructor(
 
             val getRoutine = async {routinesRepository.getRoutine(routineId) }
             val routine = getRoutine.await();
-            state = state.copy(name = routine.name, detail = routine.detail, imageUrl = routine.imageUrl)
+            state = state.copy(name = routine.name, detail = routine.detail, imageUrl = routine.imageUrl, author = routine.author, avatarUrl = routine.avatarUrl)
 
             val getRoutineCycles = async {routinesRepository.getRoutineCycles(routineId)}
             val routineCycles = getRoutineCycles.await()

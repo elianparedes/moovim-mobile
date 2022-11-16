@@ -1,26 +1,21 @@
 package com.moovim.ui.screens.details
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
+import com.moovim.R
 import com.moovim.domain.model.Cycle
 import com.moovim.domain.model.Exercise
 import com.moovim.ui.components.ExerciseRoutineCard
+import com.moovim.ui.components.RoutineDetailedCard
 import com.moovim.ui.screens.details.routine.RoutineDetailsViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -34,35 +29,35 @@ fun RoutineDetailsScreen(
     val state = viewModel.state
     val scrollState = rememberScrollState()
 
-    Box(modifier = Modifier
-        .verticalScroll(scrollState)
-        .fillMaxSize()) {
-        Column(
+    Scaffold(topBar = {
+        RoutineDetailedCard(
+            title = state.name,
+            description = state.detail,
+            author = state.author,
+            imageUrl = state.imageUrl,
+            avatarUrl = state.imageUrl,
+            exercisesCount = 10, onClickArrow = { navController.popBackStack() }
+        )
+    }) { paddingValues ->
+        Box(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            Column() {
-                Text(state.name, color = Color.White)
-                Text(state.detail, color = Color.White)
-                AsyncImage(
-                    model = state.imageUrl,
-                    contentDescription = state.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .height(100.dp)
-                        .fillMaxWidth()
-                        .clip(
-                            RoundedCornerShape(16.dp)
-                        )
-                )
-            }
-
-            state.cycles.forEach { cycle ->
-                CycleExercisesList(cycle)
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
+                state.cycles.forEach { cycle ->
+                    CycleExercisesList(cycle)
+                }
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
+
     }
 
 }
@@ -70,7 +65,19 @@ fun RoutineDetailsScreen(
 @Composable
 private fun CycleExercisesList(cycle: Cycle) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text(cycle.name, color = Color.White)
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(cycle.name, color = Color.White, modifier = Modifier.weight(1f))
+            Icon(
+                painter = painterResource(R.drawable.ic_repetitions),
+                contentDescription = "repetitions_icon"
+            )
+            Text(cycle.repetitions.toString(), color = Color.White)
+        }
+
         cycle.cycleExercises.forEach { cycleExercise ->
             ExerciseRoutineCard(title = cycleExercise.exercise.name,
                 group = cycleExercise.exercise.detail,

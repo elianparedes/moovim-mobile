@@ -1,7 +1,7 @@
 package com.moovim.data.remote
 
 import com.moovim.data.remote.dto.CycleDto
-import com.moovim.data.remote.dto.common.ResponseDto
+import com.moovim.data.remote.dto.common.ContentPaginationDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -15,7 +15,7 @@ interface RoutinesCyclesApi {
         @Query("size") size: Number = 10,
         @Query("orderBy") orderBy: String = "order",
         @Query("direction") direction: String = "asc"
-    ): ResponseDto<CycleDto>
+    ): ContentPaginationDto<CycleDto>
 
     @GET("routines/{routineId}/cycles/{cycleId}")
     suspend fun getRoutineCycle(
