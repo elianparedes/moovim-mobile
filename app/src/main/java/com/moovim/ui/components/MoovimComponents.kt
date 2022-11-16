@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import coil.compose.AsyncImage
 import com.moovim.R
+import com.moovim.Screen
 import com.moovim.ui.theme.MoovimTheme
 
 @Composable
@@ -509,38 +510,18 @@ fun WideRoutineCard(
     imageUrl: String,
     avatarUrl: String,
     exercisesCount: Int,
-    onClickArrow: () -> Unit
+    onClickCard: () -> Unit
 ) {
-    Card(
+    ImageCard(
         modifier = Modifier
             .height(200.dp)
             .fillMaxWidth()
             .padding(1.dp),
         backgroundColor = MaterialTheme.colors.secondary,
-        shape = RoundedCornerShape(8.dp)
-
+        shape = RoundedCornerShape(8.dp),
+        imageUrl = imageUrl,
+        onClickCard = onClickCard
     ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = "Foto de la rutina",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.drawWithCache {
-                val gradient = Brush.horizontalGradient(
-                    0.0f to Color(
-                        0xFF252525
-                    ), 0.3f to Color(0xE6252525), 1.0f to Color(0x80252525)
-                )
-                onDrawWithContent {
-                    drawContent()
-                    drawRect(gradient,
-                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
-                            setToSaturation(0F)
-                        })
-                    )
-                }
-            },
-            colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.8F) })
-        )
         Column() {
             Row(modifier = Modifier
                 .fillMaxWidth()
@@ -627,6 +608,49 @@ fun WideRoutineCard(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ImageCard(
+    modifier: Modifier,
+    backgroundColor : Color,
+    shape: Shape,
+    imageUrl: String,
+    onClickCard: () -> Unit,
+    content: @Composable ()->Unit
+){
+    Card(
+        modifier = modifier,
+        backgroundColor = backgroundColor,
+        shape = shape,
+        onClick = onClickCard
+
+    ) {
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = "Foto de la rutina",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.drawWithCache {
+                val gradient = Brush.horizontalGradient(
+                    0.0f to Color(
+                        0xFF252525
+                    ), 0.3f to Color(0xE6252525), 1.0f to Color(0x80252525)
+                )
+                onDrawWithContent {
+                    drawContent()
+                    drawRect(
+                        gradient,
+                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
+                            setToSaturation(0F)
+                        })
+                    )
+                }
+            },
+            colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.8F) })
+        )
+        content.invoke()
     }
 }
 
@@ -795,6 +819,101 @@ fun WideRoutinePreview() {
             WideRoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler",
                 "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg" ,
                 "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",12,{})
+        }
+    }
+}
+
+@Composable
+fun ObjectiveCard(
+    title: String,
+    description: String,
+    imageUrl: String,
+    onClickCard: () -> Unit
+){
+    ImageCard(
+        modifier = Modifier
+            .height(240.dp)
+            .fillMaxWidth(0.8F),
+        backgroundColor = MaterialTheme.colors.secondary,
+        shape = RoundedCornerShape(8.dp),
+        imageUrl = imageUrl,
+        onClickCard = onClickCard
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(24.dp, 16.dp, 0.dp, 0.dp),
+            horizontalAlignment = Alignment.Start,
+        ) {
+                Text(
+                    modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
+                    text = title,
+                    style = MaterialTheme.typography.h2,
+                    color = MaterialTheme.colors.onBackground
+                )
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colors.onBackground
+                )
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF181818)
+@Composable
+fun ObjectiveCardPreview() {
+    MoovimTheme {
+        Column(){
+            ObjectiveCard(
+                stringResource(id = R.string.obj_tonificacion),stringResource(id = R.string.obj_tonificacion_det),
+                "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",{})
+        }
+    }
+}
+
+@Composable
+fun MusclesCard(
+    title: String,
+    imageUrl: String,
+    onClickCard: () -> Unit
+){
+    ImageCard(
+        modifier = Modifier
+            .height(100.dp)
+            .fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.secondary,
+        shape = RoundedCornerShape(8.dp),
+        imageUrl = imageUrl,
+        onClickCard = onClickCard
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(24.dp, 0.dp, 0.dp, 0.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
+                text = title,
+                style = MaterialTheme.typography.h2,
+                color = MaterialTheme.colors.onBackground
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF181818)
+@Composable
+fun MusclesCardPreview() {
+    MoovimTheme {
+        Column(){
+            MusclesCard(
+                stringResource(id = R.string.muscles_group_tren_sup),
+                "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",{})
         }
     }
 }
