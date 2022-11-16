@@ -81,10 +81,29 @@ fun ExerciseList(exercises: List<Exercise>){
 fun RoutinesList(routines: List<Routine>, navController: NavHostController){
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         routines.forEach { routine ->
-            RoutineCard(
+            MoovimRoutineCard(
                 name = routine.name,
                 onClick = { navController.navigate("routines/${routine.id}") })
         }
     }
 
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun MoovimRoutineCard(name: String, onClick: () -> Unit){
+    Card(
+        modifier = Modifier
+            .height(200.dp)
+            .fillMaxWidth(),
+        onClick = onClick
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(name)
+        }
+
+    }
 }

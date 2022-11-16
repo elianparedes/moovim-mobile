@@ -19,6 +19,7 @@ class MyRoutinesViewModel @Inject constructor(
 
         init {
             getCurrentUserRoutines()
+            getAllFavouriteRoutines()
         }
 
         private fun getCurrentUserRoutines(){
