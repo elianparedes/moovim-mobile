@@ -502,7 +502,7 @@ fun ExerciseRoutineCardPreview() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RoutineDetailedCard(
+fun WideRoutineCard(
     title: String,
     description: String,
     author: String,
@@ -513,11 +513,11 @@ fun RoutineDetailedCard(
 ) {
     Card(
         modifier = Modifier
-            .height(240.dp)
+            .height(200.dp)
             .fillMaxWidth()
             .padding(1.dp),
         backgroundColor = MaterialTheme.colors.secondary,
-        shape = RoundedCornerShape(0.dp,0.dp,8.dp,8.dp)
+        shape = RoundedCornerShape(8.dp)
 
     ) {
         AsyncImage(
@@ -542,25 +542,9 @@ fun RoutineDetailedCard(
             colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.8F) })
         )
         Column() {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp, 4.dp, 0.dp, 0.dp),
-                horizontalArrangement = Arrangement.Start
-            ){
-                IconButton(
-                    onClick = onClickArrow,
-                ) {
-                    Icon(
-                        Icons.Rounded.ArrowBack,
-                        null,
-                        tint = MaterialTheme.colors.onBackground,
-                    )
-                }
-            }
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp, 4.dp, 0.dp, 0.dp),
+                .padding(24.dp, 16.dp, 0.dp, 0.dp),
                 verticalAlignment = Alignment.Top) {
                 Column() {
                     Text(
@@ -575,7 +559,7 @@ fun RoutineDetailedCard(
                         color = MaterialTheme.colors.onBackground
                     )
 
-                    Row( 
+                    Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(0.dp, 16.dp)
                         ) {
@@ -646,6 +630,150 @@ fun RoutineDetailedCard(
     }
 }
 
+@Composable
+fun RoutineDetailedCard(
+    title: String,
+    description: String,
+    author: String,
+    imageUrl: String,
+    avatarUrl: String,
+    exercisesCount: Int,
+    onClickArrow: () -> Unit
+){
+    Card(
+        modifier = Modifier
+            .height(240.dp)
+            .fillMaxWidth()
+            .padding(1.dp),
+        backgroundColor = MaterialTheme.colors.secondary,
+        shape = RoundedCornerShape(0.dp,0.dp,8.dp,8.dp)
+
+    ) {
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = "Foto de la rutina",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.drawWithCache {
+                val gradient = Brush.horizontalGradient(
+                    0.0f to Color(
+                        0xFF252525
+                    ), 0.3f to Color(0xE6252525), 1.0f to Color(0x80252525)
+                )
+                onDrawWithContent {
+                    drawContent()
+                    drawRect(gradient,
+                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
+                            setToSaturation(0F)
+                        })
+                    )
+                }
+            },
+            colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.8F) })
+        )
+        Column() {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp, 4.dp, 0.dp, 0.dp),
+                horizontalArrangement = Arrangement.Start
+            ){
+                IconButton(
+                    onClick = onClickArrow,
+                ) {
+                    Icon(
+                        Icons.Rounded.ArrowBack,
+                        null,
+                        tint = MaterialTheme.colors.onBackground,
+                    )
+                }
+            }
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp, 4.dp, 0.dp, 0.dp),
+                verticalAlignment = Alignment.Top) {
+                Column() {
+                    Text(
+                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
+                        text = title,
+                        style = MaterialTheme.typography.h2,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.onBackground
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(0.dp, 16.dp)
+                    ) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_subject),
+                            null,
+                            tint = MaterialTheme.colors.onBackground,
+                        )
+                        Text(
+                            modifier = Modifier.padding(4.dp,0.dp),
+                            text = StringBuilder()
+                                .append(exercisesCount.toString())
+                                .append(" ")
+                                .append(stringResource(id = R.string.routines_exercises_amount_message))
+                                .toString(),
+                            color = MaterialTheme.colors.onBackground, style = MaterialTheme.typography.h6
+                        )
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp, 4.dp, 0.dp, 16.dp),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.requiredSize(16.dp)) {
+                    Card(
+                        shape = RoundedCornerShape(100),
+                        modifier = Modifier
+                            .aspectRatio(1F)
+                            .requiredSize(16.dp)
+                    ){
+                        if (avatarUrl == "") {
+                            AsyncImage(
+                                model = avatarUrl,
+                                contentDescription = "Foto de perfil",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(8.dp),
+                                alignment = Alignment.BottomCenter
+                            )
+                        }
+                        else {
+                            Image (
+                                painterResource(id = R.drawable.ic_round_person),
+                                contentDescription = "Foto de perfil",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(8.dp),
+                                alignment = Alignment.BottomCenter
+                            )
+                        }
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    Text(
+                        modifier = Modifier.padding(8.dp, 0.dp),
+                        text = author,
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true, backgroundColor = 0xFF181818)
 @Composable
@@ -653,6 +781,18 @@ fun RoutineDetailedCardPreview() {
     MoovimTheme {
         Column(){
             RoutineDetailedCard("Llegar al verano", "Perdida de peso", "Kim Wexler",
+                "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg" ,
+                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",12,{})
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF181818)
+@Composable
+fun WideRoutinePreview() {
+    MoovimTheme {
+        Column(){
+            WideRoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler",
                 "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg" ,
                 "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",12,{})
         }
