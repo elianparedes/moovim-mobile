@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MoovimTheme {
-                Surface(color = MaterialTheme.colors.background) {
+                Surface(color = MaterialTheme.colors.background, modifier = Modifier.fillMaxSize()) {
                     RootNavGraph(navController = rememberNavController())
                 }
 
