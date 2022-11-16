@@ -26,6 +26,7 @@ fun MainNavGraph(navController: NavHostController, paddingValues: PaddingValues)
         composable(NavigationItem.Routines.route) {
             RoutinesScreen(navController)
         }
+        detailsNavGraph(navController)
         playerNavGraph(navController = navController)
     }
 

@@ -15,7 +15,7 @@ fun NavGraphBuilder.detailsNavGraph(navController: NavHostController) {
             route = DetailsScreen.Routine.route,
             deepLinks = listOf(
                 navDeepLink {
-                    uriPattern = "https://moovim.app/{routineId}"
+                    uriPattern = "moovim.app/{routineId}"
                     action = Intent.ACTION_VIEW
                 }
             ),
