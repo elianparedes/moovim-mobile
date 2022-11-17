@@ -1,6 +1,7 @@
 package com.moovim.ui.nav.graphs
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
@@ -11,7 +12,7 @@ import com.moovim.ui.screens.main.routines.RoutinesScreen
 import com.moovim.ui.screens.main.SearchScreen
 
 @Composable
-fun MainNavGraph(navController: NavHostController, paddingValues: PaddingValues) {
+fun MainNavGraph(scaffoldState: ScaffoldState, navController: NavHostController, paddingValues: PaddingValues) {
     NavHost(
         navController = navController,
         startDestination = NavigationItem.Home.route,
@@ -24,7 +25,7 @@ fun MainNavGraph(navController: NavHostController, paddingValues: PaddingValues)
             SearchScreen(navController)
         }
         composable(NavigationItem.Routines.route) {
-            RoutinesScreen(navController)
+            RoutinesScreen(scaffoldState, navController)
         }
         detailsNavGraph(navController)
         playerNavGraph(navController = navController)
