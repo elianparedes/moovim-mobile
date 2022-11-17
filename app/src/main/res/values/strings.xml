@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Moovim</string>
     <string name="routines_exercises_amount_message">ejercicios</string>
+    <string name="obj_tonificacion">Tonificación</string>
+    <string name="obj_tonificacion_det">Rutinas para aumentar el volumen y el tamaño de tus musculos</string>
+    <string name="muscles_group_tren_sup">Tren Superior</string>
 </resources>
