@@ -10,5 +10,6 @@ data class SearchState(
     val query: TextFieldValue = TextFieldValue(),
     val filters: List<String> = emptyList(),
     val isLoading: Boolean = false,
-    val isError: Boolean = false
+    val isError: Boolean = false,
+    val hasAllRoutines: Boolean = false
 )

@@ -28,10 +28,7 @@ import androidx.navigation.NavHostController
 import com.moovim.R
 import com.moovim.domain.model.Exercise
 import com.moovim.domain.model.Routine
-import com.moovim.ui.components.ChipSide
-import com.moovim.ui.components.MusclesCard
-import com.moovim.ui.components.ObjectiveCard
-import com.moovim.ui.components.SwitchChip
+import com.moovim.ui.components.*
 import com.moovim.ui.screens.main.search.SearchViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -61,7 +58,8 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel = 
                 CategoriesScreen(navController)
             } else
             {
-                DiscoverScreen()
+                viewModel.getAllRoutines()
+                DiscoverScreen(state.resultRoutines, navController)
             }
         }
     }
@@ -110,8 +108,8 @@ fun CategoriesScreen(navController: NavHostController){
 }
 
 @Composable
-fun DiscoverScreen(){
-    Text(text = "Pantalla de discover")
+fun DiscoverScreen(routines: List<Routine>, navController: NavHostController){
+        RoutinesList(routines = routines, navController = navController)
 }
 
 @Composable
@@ -185,15 +183,29 @@ fun ExerciseList(exercises: List<Exercise>){
 }
 
 @Composable
-fun RoutinesList(routines: List<Routine>, navController: NavHostController){
-    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+fun RoutinesList(routines: List<Routine>, navController: NavHostController) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.verticalScroll(
+            rememberScrollState()
+        ).padding(0.dp, 16.dp)
+    ) {
         routines.forEach { routine ->
-            MoovimRoutineCard(
-                name = routine.name,
-                onClick = { navController.navigate("routines/${routine.id}") })
-        }
-    }
+            RoutineCard(
+                title = routine.name,
+                description = routine.detail,
+                author = routine.author,
+                score = routine.score,
+                imageUrl = routine.imageUrl,
+                avatarUrl = routine.avatarUrl,
+                onClickCard = { navController.navigate("routines/${routine.id}") },
+                onShareClick = { /*TODO*/ },
+                favText = "Añadir a favoritos",
+                onFavClick = { /*TODO*/ }) {
 
+            }
+        }
+
+    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
