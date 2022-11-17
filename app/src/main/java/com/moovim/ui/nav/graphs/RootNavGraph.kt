@@ -1,17 +1,18 @@
 package com.moovim.ui.nav.graphs
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.moovim.ui.screens.main.MainScreen
 
 @Composable
-fun RootNavGraph(navController: NavHostController) {
+fun RootNavGraph(navController: NavHostController, startDestination: String) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
-        startDestination = Graph.AUTHENTICATION,
+        startDestination = startDestination,
     ) {
         authNavGraph(navController = navController)
         composable(route = Graph.HOME) {

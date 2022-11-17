@@ -23,4 +23,8 @@ class UserRepository @Inject constructor(
         }
     }
 
+    fun isUserLoggedIn(): Boolean {
+        return userSharedPreferences.isUserLoggedIn()
+    }
+
 }

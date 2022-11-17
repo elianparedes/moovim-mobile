@@ -18,4 +18,8 @@ class UserSharedPreferences
         sharedPreferences.edit().putString("token", token).apply()
     }
 
+    fun isUserLoggedIn(): Boolean{
+        return sharedPreferences.contains("token")
+    }
+
 }
