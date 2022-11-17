@@ -102,6 +102,7 @@ fun RoutineCard(
     avatarUrl: String,
     onClickCard: () -> Unit,
     onShareClick: () -> Unit,
+    favText: String,
     onFavClick: () -> Unit,
     onScoreClick: () -> Unit
 ) {
@@ -250,7 +251,7 @@ fun RoutineCard(
                             contentDescription = "Dropdown menu",
                             tint = MaterialTheme.colors.onPrimary,
                         )
-                        RoutineDropdown(menuOpen, {menuOpen = false}, onShareClick, onFavClick, onScoreClick)
+                        RoutineDropdown(menuOpen, {menuOpen = false}, onShareClick, favText, onFavClick, onScoreClick)
                     }
                 }
             }

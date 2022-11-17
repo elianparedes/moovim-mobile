@@ -62,7 +62,6 @@ enum class ChipSide(){
     RIGHT
 }
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwitchChip(

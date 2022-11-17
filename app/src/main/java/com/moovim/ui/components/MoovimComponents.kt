@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.moovim.R
 
 @Composable
-fun RoutineDropdown(expanded: Boolean, onDismissRequest: () -> Unit, onShareClick: () -> Unit,
+fun RoutineDropdown(expanded: Boolean, onDismissRequest: () -> Unit, onShareClick: () -> Unit, favText:String,
                     onFavClick: () -> Unit, onScoreClick: () -> Unit){
     DropdownMenu(expanded = expanded,
         onDismissRequest = onDismissRequest) {
@@ -24,7 +24,7 @@ fun RoutineDropdown(expanded: Boolean, onDismissRequest: () -> Unit, onShareClic
             Text("Compartir")
         }
         DropdownMenuItem(onClick = onFavClick){
-            Text("Añadir favoritos")
+            Text(favText)
         }
         DropdownMenuItem(onClick = onScoreClick){
             Text("Calificar")
