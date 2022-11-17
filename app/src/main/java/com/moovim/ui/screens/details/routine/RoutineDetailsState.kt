@@ -8,5 +8,6 @@ data class RoutineDetailsState(
     val imageUrl: String = String(),
     val author: String = String(),
     val avatarUrl: String = String(),
-    val cycles: List<Cycle> = emptyList()
+    val cycles: List<Cycle> = emptyList(),
+    val isLoading: Boolean = true,
 )

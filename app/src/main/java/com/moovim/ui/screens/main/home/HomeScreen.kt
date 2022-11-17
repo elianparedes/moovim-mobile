@@ -147,10 +147,10 @@ inline fun Skeleton(
     val transition = rememberInfiniteTransition()
 
     val color = transition.animateColor(
-        initialValue = MaterialTheme.colors.secondary,
-        targetValue = MaterialTheme.colors.secondaryVariant,
+        initialValue = Color(0xFF353535),
+        targetValue = Color(0xFF242424),
         animationSpec = infiniteRepeatable(
-            animation = tween(500, easing = LinearEasing),
+            animation = tween(750, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
         )
     )

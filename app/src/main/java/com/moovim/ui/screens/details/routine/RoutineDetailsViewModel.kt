@@ -32,7 +32,7 @@ class RoutineDetailsViewModel @Inject constructor(
 
             val getRoutineCycles = async {routinesRepository.getRoutineCycles(routineId)}
             val routineCycles = getRoutineCycles.await()
-            state = state.copy(cycles = routineCycles)
+            state = state.copy(cycles = routineCycles, isLoading = false)
         }
     }
 
