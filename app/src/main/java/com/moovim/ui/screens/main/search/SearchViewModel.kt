@@ -16,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val routinesRepository: RoutinesRepository,
-    private val exercisesRepository: ExercisesRepository
+    private val exercisesRepository: ExercisesRepository,
+
 ): ViewModel() {
 
     var state by mutableStateOf(SearchState())

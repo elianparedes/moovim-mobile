@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -684,15 +685,16 @@ fun WideRoutinePreview() {
 
 @Composable
 fun ObjectiveCard(
+    modifier: Modifier,
     title: String,
     description: String,
     imageUrl: String,
     onClickCard: () -> Unit
 ){
     ImageCard(
-        modifier = Modifier
+        modifier = modifier
             .height(240.dp)
-            .fillMaxWidth(0.8F),
+            .width(300.dp),
         backgroundColor = MaterialTheme.colors.secondary,
         shape = RoundedCornerShape(8.dp),
         imageUrl = imageUrl,
@@ -712,6 +714,7 @@ fun ObjectiveCard(
                     color = MaterialTheme.colors.onBackground
                 )
                 Text(
+                    modifier= Modifier.padding(0.dp,0.dp,16.dp,0.dp),
                     text = description,
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.onBackground
@@ -726,20 +729,22 @@ fun ObjectiveCardPreview() {
     MoovimTheme {
         Column(){
             ObjectiveCard(
-                stringResource(id = R.string.obj_tonificacion),stringResource(id = R.string.obj_tonificacion_det),
-                "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",{})
+                modifier = Modifier,
+                stringArrayResource(id = R.array.objectives_titles)[0],stringArrayResource(id = R.array.objectives_descriptions)[0],
+                stringArrayResource(id = R.array.objectives_image_url)[0],{})
         }
     }
 }
 
 @Composable
 fun MusclesCard(
+    modifier: Modifier,
     title: String,
     imageUrl: String,
     onClickCard: () -> Unit
 ){
     ImageCard(
-        modifier = Modifier
+        modifier = modifier
             .height(100.dp)
             .fillMaxWidth(),
         backgroundColor = MaterialTheme.colors.secondary,
@@ -758,7 +763,7 @@ fun MusclesCard(
             Text(
                 modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
                 text = title,
-                style = MaterialTheme.typography.h2,
+                style = MaterialTheme.typography.h4,
                 color = MaterialTheme.colors.onBackground
             )
         }
@@ -771,7 +776,8 @@ fun MusclesCardPreview() {
     MoovimTheme {
         Column(){
             MusclesCard(
-                stringResource(id = R.string.muscles_group_tren_sup),
+                modifier = Modifier,
+                stringArrayResource(id = R.array.muscles_titles)[0],
                 "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",{})
         }
     }
