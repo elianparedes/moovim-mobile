@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
 import com.moovim.domain.model.UserRoutine
+import com.moovim.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,20 +26,26 @@ class HomeViewModel @Inject constructor(
 
     private fun getRoutines() {
         viewModelScope.launch {
-            val routines = routinesRepository.getCurrentUserRoutines()
+            when(val response = routinesRepository.getCurrentUserRoutines()){
+                is Response.Success -> {
+                    if (response.data != null){
+                        val routines = response.data
+                        state = state.copy(routines = routines, isLoading = false)
+                        onRoutineSelect(routines[0].id, 0)
+                    }
 
-            state = state.copy(
-                routines = routines
-            )
+                }
 
-            onRoutineSelect(routines[0].id, 0)
+                is Response.Error -> {
+                    state = state.copy(isError = true)
+                }
+            }
+
         }
-
     }
 
     fun onRoutineSelect(routineId: Int, routineIndex: Int) {
         viewModelScope.launch {
-
             val routine = state.routines[routineIndex]
 
             state = state.copy(
@@ -47,12 +54,19 @@ class HomeViewModel @Inject constructor(
             )
 
             state = state.copy(isLoading = true)
-            val cycles = routinesRepository.getRoutineCycles(routineId)
+            when (val response = routinesRepository.getRoutineCycles(routineId)){
+                is Response.Success -> {
+                    if (response.data != null){
+                        state = state.copy(
+                            cycles = response.data, isLoading = false
+                        )
+                    }
+                }
 
-            state = state.copy(
-                cycles = cycles
-            )
-            state = state.copy(isLoading = false)
+                is Response.Error -> {
+                    state = state.copy(isError = false, isLoading = false)
+                }
+            }
         }
     }
 

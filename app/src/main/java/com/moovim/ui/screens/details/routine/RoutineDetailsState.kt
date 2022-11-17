@@ -10,4 +10,5 @@ data class RoutineDetailsState(
     val avatarUrl: String = String(),
     val cycles: List<Cycle> = emptyList(),
     val isLoading: Boolean = true,
+    val isError : Boolean = false,
 )

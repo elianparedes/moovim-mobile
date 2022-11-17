@@ -1,5 +1,6 @@
 package com.moovim.ui.screens.main.search
 
+import android.graphics.text.TextRunShaper
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.ExercisesRepository
 import com.moovim.data.repository.RoutinesRepository
+import com.moovim.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.security.PrivateKey
@@ -27,9 +29,18 @@ class SearchViewModel @Inject constructor(
 
     fun search(query: TextFieldValue){
         viewModelScope.launch {
-            val routines = routinesRepository.getAllRoutines(query.text)
-            //val exercises = exercisesRepository.getAllExercises(query.text)
-            state = state.copy(resultRoutines = routines)
+            state = state.copy(isLoading = true)
+
+            when(val response = routinesRepository.getAllRoutines(query.text)){
+                is Response.Success -> {
+                    if (response.data != null)
+                        state = state.copy(resultRoutines = response.data, isLoading = false)
+                }
+
+                is Response.Error -> {
+                    state = state.copy(isError = true)
+                }
+            }
         }
     }
 

@@ -11,4 +11,5 @@ data class HomeState(
     val cycles: List<Cycle> = emptyList(),
     val routines: List<Routine> = emptyList(),
     val isLoading: Boolean = true,
+    val isError: Boolean = false,
 )

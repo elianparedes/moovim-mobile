@@ -11,5 +11,7 @@ data class SimplePlayerState(
     val cycles: List<Cycle> = emptyList(),
     val paused: Boolean = true,
     val currentCycleExercise: CycleExercise? = null,
-    val isPlaylistVisible: Boolean = false
+    val isPlaylistVisible: Boolean = false,
+    val isLoading: Boolean = true,
+    val isError: Boolean = false
 )

@@ -7,5 +7,7 @@ data class ExerciseDetailsState(
     val detail: String = String(),
     val images: List<ExerciseImage> = emptyList(),
     val pos: String = String(),
-    val procedure: String = String()
+    val procedure: String = String(),
+    val isError: Boolean = false,
+    val isLoading: Boolean = true,
 )

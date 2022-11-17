@@ -8,7 +8,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
+import com.moovim.domain.model.Cycle
 import com.moovim.domain.model.Routine
+import com.moovim.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -25,14 +27,30 @@ class RoutineDetailsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val routineId = savedStateHandle.get<Int>("routineId") ?: return@launch
+            when(val response = routinesRepository.getRoutineDetails(routineId)){
+                is Response.Success -> {
+                    val routineDetails = response.data
 
-            val getRoutine = async {routinesRepository.getRoutine(routineId) }
-            val routine = getRoutine.await();
-            state = state.copy(name = routine.name, detail = routine.detail, imageUrl = routine.imageUrl, author = routine.author, avatarUrl = routine.avatarUrl)
+                    if (routineDetails != null) {
+                        val routine = routineDetails.routine
+                        val cycles = routineDetails.cycles
 
-            val getRoutineCycles = async {routinesRepository.getRoutineCycles(routineId)}
-            val routineCycles = getRoutineCycles.await()
-            state = state.copy(cycles = routineCycles, isLoading = false)
+                        state = state.copy(
+                            name = routine.name,
+                            detail = routine.detail,
+                            imageUrl = routine.imageUrl,
+                            author = routine.author,
+                            avatarUrl = routine.avatarUrl,
+                            cycles = cycles,
+                            isLoading = false
+                        )
+                    }
+                }
+
+                is Response.Error -> {
+                    state = state.copy(isError = true, isLoading = false)
+                }
+            }
         }
     }
 
