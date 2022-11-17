@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.moovim.ui.components.WideRoutineCard
 import com.moovim.ui.screens.details.CycleExercisesList
+import com.moovim.ui.screens.details.SkeletonExerciseCardLoader
 import com.moovim.ui.screens.main.home.HomeViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -111,16 +112,10 @@ fun HomeScreen(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    Skeleton { color ->
+                    Skeleton { loading ->
                         Spacer(modifier = Modifier.height(24.dp))
                         listOf(1, 2, 3, 4, 5, 6, 7, 8).forEach {
-                            Box(
-                                modifier = Modifier
-                                    .height(128.dp)
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(color)
-                            )
+                            SkeletonExerciseCardLoader(loading = loading)
                         }
                     }
 
@@ -147,8 +142,8 @@ inline fun Skeleton(
     val transition = rememberInfiniteTransition()
 
     val color = transition.animateColor(
-        initialValue = Color(0xFF353535),
-        targetValue = Color(0xFF242424),
+        initialValue = Color(0xFF414141),
+        targetValue = Color(0xFF2C2C2C),
         animationSpec = infiniteRepeatable(
             animation = tween(750, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse

@@ -1,9 +1,6 @@
 package com.moovim.ui.screens.details
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,7 +18,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.moovim.R
 import com.moovim.domain.model.Cycle
-import com.moovim.domain.model.Exercise
 import com.moovim.ui.components.ExerciseRoutineCard
 import com.moovim.ui.components.RoutineDetailedCard
 import com.moovim.ui.screens.details.routine.RoutineDetailsViewModel
@@ -38,8 +34,8 @@ fun RoutineDetailsScreen(
     val state = viewModel.state
     val scrollState = rememberScrollState()
 
-    Crossfade(targetState = state.isLoading ) { isLoading ->
-        if (isLoading){
+    Crossfade(targetState = state.isLoading) { isLoading ->
+        if (isLoading) {
             SkeletonLoader()
         } else {
             Scaffold(topBar = {
@@ -132,18 +128,51 @@ private fun SkeletonLoader() {
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(32.dp))
                 listOf(1, 2, 3, 4, 5, 6, 7, 8).forEach {
+                    SkeletonExerciseCardLoader(loading = loading)
+                }
+            }
+        }
+
+    }
+}
+
+@Composable
+fun SkeletonExerciseCardLoader(loading: Color) {
+    Card(
+        modifier = Modifier
+            .height(128.dp)
+            .fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.secondary,
+        shape = RoundedCornerShape(8.dp)
+    )
+    {
+        Column(modifier = Modifier.fillMaxHeight()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 4.dp, 16.dp, 8.dp)
+            ) {
+                Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Box(
                         modifier = Modifier
-                            .height(128.dp)
-                            .fillMaxWidth()
+                            .padding(0.dp, 8.dp, 0.dp, 4.dp)
                             .clip(RoundedCornerShape(8.dp))
+                            .fillMaxWidth(0.7f)
+                            .height(20.dp)
+                            .background(loading)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .padding(0.dp, 4.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .fillMaxWidth(0.4f)
+                            .height(16.dp)
                             .background(loading)
                     )
                 }
             }
         }
-
     }
 }
