@@ -5,6 +5,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -63,19 +64,21 @@ fun RoutineDetailsScreen(
 }
 
 @Composable
-private fun CycleExercisesList(cycle: Cycle) {
+fun CycleExercisesList(cycle: Cycle) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(cycle.name, color = Color.White, modifier = Modifier.weight(1f))
+            Text(cycle.name, color = Color.White, modifier = Modifier.weight(1f), style = MaterialTheme.typography.h6)
             Icon(
                 painter = painterResource(R.drawable.ic_repetitions),
-                contentDescription = "repetitions_icon"
+                contentDescription = "repetitions_icon",
+                modifier = Modifier.size(20.dp)
             )
-            Text(cycle.repetitions.toString(), color = Color.White)
+            Text(cycle.repetitions.toString(), color = Color.White, style = MaterialTheme.typography.h6)
         }
 
         cycle.cycleExercises.forEach { cycleExercise ->
