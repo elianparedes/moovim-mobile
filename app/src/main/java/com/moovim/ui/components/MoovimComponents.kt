@@ -1,6 +1,7 @@
 package com.moovim.ui.components
 
 import android.view.MotionEvent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -20,13 +22,16 @@ fun RoutineDropdown(expanded: Boolean, onDismissRequest: () -> Unit, onShareClic
                     onFavClick: () -> Unit, onScoreClick: () -> Unit){
     DropdownMenu(expanded = expanded,
         onDismissRequest = onDismissRequest) {
-        DropdownMenuItem(onClick = onShareClick) {
+        DropdownMenuItem(onClick = {onShareClick()
+                                    onDismissRequest() }){
             Text("Compartir")
         }
-        DropdownMenuItem(onClick = onFavClick){
+        DropdownMenuItem(onClick = {onFavClick()
+                                    onDismissRequest()}){
             Text(favText)
         }
-        DropdownMenuItem(onClick = onScoreClick){
+        DropdownMenuItem(onClick = {onScoreClick()
+                                    onDismissRequest()}){
             Text("Calificar")
         }
     }
@@ -47,7 +52,9 @@ fun RatingBar(
         mutableStateOf(false)
     }
     Card(
-        modifier = Modifier.background(color = MaterialTheme.colors.surface).clip(RoundedCornerShape(32.dp))
+        elevation = 0.dp,
+        modifier = Modifier
+            .background(color = MaterialTheme.colors.background)
     ) {
         Column(
             modifier = Modifier.padding(32.dp),
@@ -76,7 +83,8 @@ fun RatingBar(
                                     }
                                 }
                                 true
-                            }.size(32.dp),
+                            }
+                            .size(36.dp),
                         tint = MaterialTheme.colors.primary
                     )
                 }
@@ -84,4 +92,31 @@ fun RatingBar(
             MoovimButtonModifier(Modifier.padding(top = 16.dp), onPublishClick, "Publicar")
         }
     }
+}
+
+@Composable
+fun MoovimSnackbar(
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
+){
+    SnackbarHost(
+        hostState = snackbarHostState,
+        snackbar = {snackbarData ->
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = 8.dp
+                    ){
+                        Text(text = snackbarData.message, style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 32.dp))
+                    }
+
+                }
+            },
+        modifier = modifier
+    )
 }

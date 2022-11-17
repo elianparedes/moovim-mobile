@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.ExercisesRepository
+import com.moovim.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -21,21 +22,39 @@ class ExerciseDetailsViewModel @Inject constructor(
     var state by mutableStateOf(ExerciseDetailsState())
 
     init {
+        getExerciseDetails()
+    }
+
+    private fun getExerciseDetails() {
         viewModelScope.launch {
+            state = state.copy(isLoading = true)
+
             val exerciseId = savedStateHandle.get<Int>("exerciseId") ?: return@launch
-            val getExercise = async { exercisesRepository.getExercise(exerciseId) }
-            val exercise = getExercise.await()
+            when(val response = exercisesRepository.getExerciseDetails(exerciseId)){
+                is Response.Success -> {
+                    val exerciseDetails = response.data
 
-            val getExerciseImages = async { exercisesRepository.getExerciseImages(exerciseId) }
-            val exerciseImages = getExerciseImages.await();
+                    if (exerciseDetails != null) {
+                        val exercise = exerciseDetails.exercise
+                        val images = exerciseDetails.images
 
-            state = state.copy(
-                name = exercise.name,
-                detail = exercise.detail,
-                pos = exercise.pos,
-                procedure = exercise.procedure,
-                images = exerciseImages
-            )
+                        state = state.copy(
+                            name = exercise.name,
+                            detail = exercise.detail,
+                            pos = exercise.pos,
+                            procedure = exercise.procedure,
+                            images = images,
+                            isLoading = false
+                        )
+                    }
+                }
+
+                is Response.Error -> {
+                    state = state.copy(isError = true, isLoading = false)
+                }
+            }
+
+
         }
     }
 
