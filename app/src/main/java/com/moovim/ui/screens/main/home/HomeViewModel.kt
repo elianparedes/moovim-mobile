@@ -42,13 +42,7 @@ class HomeViewModel @Inject constructor(
             val routine = state.routines[routineIndex]
 
             state = state.copy(
-                selectedRoutine = UserRoutine(
-                    id = routine.id,
-                    name = routine.name,
-                    detail = routine.detail,
-                    imageUrl = routine.imageUrl,
-                    score = routine.score
-                ),
+                selectedRoutine = routine,
                 selectedRoutineMenuIndex = routineIndex
             )
 
