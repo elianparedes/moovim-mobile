@@ -10,16 +10,26 @@ class UserSharedPreferences
     private val sharedPreferences: SharedPreferences
 ) {
 
+    private val userCurrentRoutineKey = "current_routine_id"
+    private val userTokenKey = "token"
+
     fun getUserToken(): String? {
-        return sharedPreferences.getString("token", null)
+        return sharedPreferences.getString(userTokenKey, null)
     }
 
     fun setUserToken(token: String) {
-        sharedPreferences.edit().putString("token", token).apply()
+        sharedPreferences.edit().putString(userTokenKey, token).apply()
     }
 
     fun isUserLoggedIn(): Boolean{
-        return sharedPreferences.contains("token")
+        return sharedPreferences.contains(userTokenKey)
     }
 
+    fun getUserCurrentRoutineId(): Int{
+        return sharedPreferences.getInt(userCurrentRoutineKey, -1)
+    }
+
+    fun setUserCurrentRoutineId(routineId: Int) {
+        sharedPreferences.edit().putInt(userCurrentRoutineKey, routineId).apply()
+    }
 }

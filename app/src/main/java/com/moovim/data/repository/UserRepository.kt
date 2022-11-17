@@ -27,4 +27,12 @@ class UserRepository @Inject constructor(
         return userSharedPreferences.isUserLoggedIn()
     }
 
+    fun getUserCurrentRoutineId(): Int{
+        return userSharedPreferences.getUserCurrentRoutineId()
+    }
+
+    fun setUserCurrentRoutineId(routineId: Int){
+        return userSharedPreferences.setUserCurrentRoutineId(routineId)
+    }
+
 }
