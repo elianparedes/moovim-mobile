@@ -22,7 +22,7 @@ class MyRoutinesViewModel @Inject constructor(
             getAllFavouriteRoutines()
         }
 
-        private fun getCurrentUserRoutines(){
+        fun getCurrentUserRoutines(){
             viewModelScope.launch {
                 val userRoutines = repository.getCurrentUserRoutines()
                 state = state.copy(userRoutines = userRoutines)
@@ -39,6 +39,12 @@ class MyRoutinesViewModel @Inject constructor(
         fun deleteRoutineFromFavourites(routineId: Int){
             viewModelScope.launch {
                 repository.deleteRoutineFromFavourites(routineId)
+            }
+        }
+
+        fun addRoutineFromFavourites(routineId: Int){
+            viewModelScope.launch {
+                repository.addRoutineToFavourites(routineId)
             }
         }
 

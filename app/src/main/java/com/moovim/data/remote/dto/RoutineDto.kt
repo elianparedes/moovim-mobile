@@ -39,12 +39,14 @@ fun RoutineDto.toRoutine(): Routine {
     )
 }
 
-fun RoutineDto.toUserRoutine(): UserRoutine {
-    return UserRoutine(
+fun RoutineDto.toUserRoutine(): Routine {
+    return Routine(
         id = id,
         name = name,
         detail = detail,
         score = score,
-        imageUrl = metadata.image
+        imageUrl = metadata.image,
+        author = "",
+        avatarUrl = ""
     )
 }
