@@ -2,24 +2,21 @@ package com.moovim.ui.screens.main.routines
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.moovim.ui.components.ChipSide
-import com.moovim.ui.components.RatingBar
-import com.moovim.ui.components.RoutineCard
-import com.moovim.ui.components.SwitchChip
+import com.moovim.ui.components.*
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RoutinesScreen(
+    scaffoldState: ScaffoldState,
     navController: NavHostController,
     viewModel: MyRoutinesViewModel = hiltViewModel()
 ) {
@@ -28,6 +25,13 @@ fun RoutinesScreen(
     var selectedId: Int by remember {mutableStateOf(0)}
     var score by remember { mutableStateOf(1) }
     var chipSide by rememberSaveable { mutableStateOf(ChipSide.LEFT) }
+    val coroutineScope = rememberCoroutineScope()
+
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +56,8 @@ fun RoutinesScreen(
                     score = routine.score,
                     imageUrl = routine.imageUrl,
                     avatarUrl = routine.avatarUrl,
-                    onClickCard = { navController.navigate("routines/${routine.id}")},
+                    onClickCard = {
+                        navController.navigate("routines/${routine.id}")},
                     onShareClick = { /*TODO*/ },
                     favText = "Añadir a favoritos",
                     onFavClick = { viewModel.addRoutineFromFavourites(routine.id)},
@@ -79,15 +84,36 @@ fun RoutinesScreen(
             }
         }
         if (popupControl) {
-            Popup(
-                alignment = Alignment.Center,
-                onDismissRequest = {popupControl=false}
-            ) {
-                RatingBar(rating = score, onScoreChange = {newScore -> score=newScore}
-                    , onPublishClick = { viewModel.addRoutineReview(selectedId, score, "")
-                                        popupControl = false}
-                )
+            LaunchedEffect(Unit) {
+                sheetState.show()
+                popupControl=false
             }
         }
+
     }
+
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetContent = {
+            Column(
+            modifier = Modifier.padding(bottom=40.dp).fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+            RatingBar(rating = score, onScoreChange = {newScore -> score=newScore}
+                , onPublishClick = {
+                    viewModel.addRoutineReview(selectedId, score, "")
+                    coroutineScope.launch {
+                        sheetState.hide()
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            message = "This is your message",
+                        )
+                    }
+                }
+            )
+        } },
+        modifier = Modifier.fillMaxSize()
+    ) {}
 }
+
+

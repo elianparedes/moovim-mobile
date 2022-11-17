@@ -10,6 +10,7 @@ import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
@@ -21,6 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.moovim.R
+import com.moovim.ui.components.MoovimSnackbar
 import com.moovim.ui.nav.NavigationItem
 import com.moovim.ui.nav.graphs.MainNavGraph
 import com.moovim.ui.theme.NoRippleTheme
@@ -28,14 +30,17 @@ import com.moovim.ui.theme.NoRippleTheme
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
+    val scaffoldState = rememberScaffoldState()
     Scaffold(
         bottomBar = { BottomNavigationBar(navController = navController) },
         floatingActionButton = { FloatingActionButton(navController = navController) },
         backgroundColor = MaterialTheme.colors.background,
-        isFloatingActionButtonDocked = true
+        isFloatingActionButtonDocked = true,
+        scaffoldState = scaffoldState,
+        snackbarHost = {MoovimSnackbar(snackbarHostState = scaffoldState.snackbarHostState)}
     ) { paddingValues ->
         Box {
-            MainNavGraph(navController = navController, paddingValues = paddingValues)
+            MainNavGraph(scaffoldState, navController = navController, paddingValues = paddingValues)
         }
 
     }
