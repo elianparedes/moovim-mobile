@@ -260,6 +260,7 @@ fun RoutineCard(
 
 }
 
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExerciseRoutineCard(
@@ -288,14 +289,14 @@ fun ExerciseRoutineCard(
                     Text(
                         modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 4.dp),
                         text = title,
-                        style = MaterialTheme.typography.h4,
+                        style = MaterialTheme.typography.h5,
                         color = MaterialTheme.colors.onBackground
                     )
 
                     Text(
                         modifier = Modifier.padding(0.dp, 4.dp),
                         text = group,
-                        style = MaterialTheme.typography.h6,
+                        style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.onBackground
                     )
                 }
@@ -363,7 +364,7 @@ fun WideRoutineCard(
 ) {
     ImageCard(
         modifier = Modifier
-            .height(200.dp)
+            .height(232.dp)
             .fillMaxWidth()
             .padding(1.dp),
         backgroundColor = MaterialTheme.colors.secondary,
@@ -374,7 +375,7 @@ fun WideRoutineCard(
         Column() {
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp, 16.dp, 0.dp, 0.dp),
+                .padding(16.dp, 16.dp, 16.dp, 0.dp),
                 verticalAlignment = Alignment.Top) {
                 Column() {
                     Text(
@@ -392,7 +393,7 @@ fun WideRoutineCard(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(0.dp, 16.dp)
-                        ) {
+                    ) {
                         Icon(
                             painterResource(id = R.drawable.ic_subject),
                             null,
@@ -413,7 +414,7 @@ fun WideRoutineCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp, 4.dp, 0.dp, 16.dp),
+                    .padding(16.dp, 4.dp, 16.dp, 16.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
                 Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.requiredSize(16.dp)) {
