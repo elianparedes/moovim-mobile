@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.moovim.ui.nav.NavigationItem
 import com.moovim.ui.screens.main.HomeScreen
-import com.moovim.ui.screens.main.RoutinesScreen
+import com.moovim.ui.screens.main.routines.RoutinesScreen
 import com.moovim.ui.screens.main.SearchScreen
 
 @Composable
