@@ -1,7 +1,14 @@
 package com.moovim.ui.components
 
+import android.media.Rating
+import android.view.MotionEvent
+import android.widget.RatingBar
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,12 +19,15 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,6 +37,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import coil.compose.AsyncImage
 import com.moovim.R
 import com.moovim.ui.theme.MoovimTheme
@@ -37,6 +49,17 @@ fun MoovimButton(buttonOnClick: () -> Unit, buttonText: String) {
         modifier = Modifier
             .padding(horizontal = 24.dp)
             .fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        onClick = buttonOnClick,
+    ) {
+        Text(buttonText)
+    }
+}
+
+@Composable
+fun MoovimButtonModifier(modifier: Modifier, buttonOnClick: () -> Unit, buttonText: String) {
+    Button(
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         onClick = buttonOnClick,
     ) {
@@ -195,46 +218,62 @@ fun RoutineCard(
                     .padding(16.dp, 4.dp, 0.dp, 8.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
-                Column(
-                    verticalArrangement = Arrangement.Bottom,
-                    modifier = Modifier.requiredSize(16.dp)
-                ) {
-                    Card(
-                        shape = RoundedCornerShape(100),
-                        modifier = Modifier
-                            .aspectRatio(1F)
-                            .requiredSize(16.dp)
+                if (author != "") {
+                    Column(
+                        verticalArrangement = Arrangement.Bottom,
+                        modifier = Modifier.requiredSize(16.dp)
                     ) {
-                        if (avatarUrl == "") {
-                            AsyncImage(
-                                model = avatarUrl,
-                                contentDescription = "Foto de perfil",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(8.dp),
-                                alignment = Alignment.BottomCenter
-                            )
-                        } else {
-                            Image(
-                                painterResource(id = R.drawable.ic_round_person),
-                                contentDescription = "Foto de perfil",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(8.dp),
-                                alignment = Alignment.BottomCenter
-                            )
+                        Card(
+                            shape = RoundedCornerShape(100),
+                            modifier = Modifier
+                                .aspectRatio(1F)
+                                .requiredSize(16.dp)
+                        ) {
+                            if (avatarUrl == "") {
+                                AsyncImage(
+                                    model = avatarUrl,
+                                    contentDescription = "Foto de perfil",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.size(8.dp),
+                                    alignment = Alignment.BottomCenter
+                                )
+                            } else {
+                                Image(
+                                    painterResource(id = R.drawable.ic_round_person),
+                                    contentDescription = "Foto de perfil",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.size(8.dp),
+                                    alignment = Alignment.BottomCenter
+                                )
+                            }
                         }
                     }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.Bottom
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(8.dp, 0.dp),
+                            text = author,
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.onBackground
+                        )
+                    }
                 }
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    Text(
-                        modifier = Modifier.padding(8.dp, 0.dp),
-                        text = author,
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onBackground
-                    )
+                else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.Bottom
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(4.dp, 0.dp),
+                            text = "Creado por ti",
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.onBackground
+                        )
+                    }
                 }
                 Column(
                     modifier = Modifier
@@ -247,7 +286,7 @@ fun RoutineCard(
                     ) {
                         Icon(
                             Icons.Rounded.MoreVert,
-                            null,
+                            contentDescription = "Dropdown menu",
                             tint = MaterialTheme.colors.onPrimary,
                         )
                         RoutineDropdown(menuOpen, {menuOpen = false}, onShareClick, onFavClick, onScoreClick)
@@ -256,6 +295,7 @@ fun RoutineCard(
             }
         }
     }
+
 }
 
 @Composable
@@ -270,20 +310,73 @@ fun RoutineDropdown(expanded: Boolean, onDismissRequest: () -> Unit, onShareClic
             Text("Añadir favoritos")
         }
         DropdownMenuItem(onClick = onScoreClick){
-            Text("Puntuar")
+            Text("Calificar")
         }
     }
 }
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun RatingBar(
+    rating: Int,
+    onScoreChange: (Int) -> Unit,
+    onPublishClick: () -> Unit
+) {
+    var ratingState by remember {
+        mutableStateOf(rating)
+    }
+
+    var selected by remember {
+        mutableStateOf(false)
+    }
+    Card(
+        modifier = Modifier.background(color = MaterialTheme.colors.surface).clip(RoundedCornerShape(32.dp))
+    ) {
+        Column(
+            modifier = Modifier.padding(32.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                for (i in 1..5) {
+                    Icon(
+                        painter = if (i <= ratingState) painterResource(id = R.drawable.ic_baseline_star) else
+                            painterResource(id = R.drawable.ic_baseline_star_border),
+                        contentDescription = "star",
+                        modifier = Modifier
+                            .pointerInteropFilter {
+                                when (it.action) {
+                                    MotionEvent.ACTION_DOWN -> {
+                                        selected = true
+                                        ratingState = i
+                                        onScoreChange(ratingState)
+                                    }
+                                    MotionEvent.ACTION_UP -> {
+                                        selected = false
+                                    }
+                                }
+                                true
+                            }.size(32.dp),
+                        tint = MaterialTheme.colors.primary
+                    )
+                }
+            }
+            MoovimButtonModifier(Modifier.padding(top = 16.dp), onPublishClick, "Publicar")
+        }
+    }
+}
+
+
 
 @Preview(showBackground = true, backgroundColor = 0xFF181818)
 @Composable
 fun RoutineCardPreview() {
     MoovimTheme {
         Column(){
-            RoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler", 0,
-                "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg" ,
-                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es"
-                ,{}, {}, {},{})
+            //RatingBar(rating=1, {})
         }
     }
 }
@@ -707,6 +800,21 @@ fun OutlinedMoovimButton(buttonOnClick: () -> Unit, buttonText: String) {
         modifier = Modifier
             .padding(horizontal = 24.dp)
             .fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        onClick = buttonOnClick,
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = MaterialTheme.colors.background, contentColor = Color.White
+        ),
+        border = BorderStroke(1.dp, Color.White)
+    ) {
+        Text(buttonText)
+    }
+}
+
+@Composable
+fun OutlinedMoovimButtonModifier(modifier: Modifier, buttonOnClick: () -> Unit, buttonText: String) {
+    OutlinedButton(
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         onClick = buttonOnClick,
         colors = ButtonDefaults.outlinedButtonColors(
