@@ -2,6 +2,7 @@ package com.moovim.data.repository
 
 import com.moovim.data.local.UserSharedPreferences
 import com.moovim.data.remote.dto.common.Api
+import com.moovim.data.remote.dto.common.toToken
 import com.moovim.data.remote.dto.toUser
 import com.moovim.domain.model.User
 import com.moovim.util.Result
@@ -17,13 +18,13 @@ class UserRepository @Inject constructor(
 ) {
 
     suspend fun login(username: String, password: String): Result<String> {
-        return try {
-            val token = api.login(username, password).token
-            userSharedPreferences.setUserToken(token)
-            Result.Success(token)
-        } catch (e: Exception){
-            Result.Error("Authentication failed",0)
-        }
+        val response = handleApiResponse({
+            api.login(username, password)
+        }, {it.toToken()})
+
+        if (response is Result.Success) response.data?.let { userSharedPreferences.setUserToken(it) }
+
+        return response
     }
 
     fun isUserLoggedIn(): Boolean {

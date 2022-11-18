@@ -1,6 +1,5 @@
 package com.moovim.data.remote.dto.common
 
-
 import com.google.gson.annotations.SerializedName
 
 data class ContentPaginationDto<T>(
@@ -24,3 +23,7 @@ data class TokenDto(
     @SerializedName("token")
     val token: String,
 )
+
+fun TokenDto.toToken(): String {
+    return token
+}
