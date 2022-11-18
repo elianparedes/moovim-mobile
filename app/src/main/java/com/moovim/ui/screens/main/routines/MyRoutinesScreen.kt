@@ -2,7 +2,9 @@ package com.moovim.ui.screens.main.routines
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,6 +38,7 @@ fun RoutinesScreen(
     var chipSide by rememberSaveable { mutableStateOf(ChipSide.LEFT) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -46,6 +49,7 @@ fun RoutinesScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
+            .verticalScroll(scrollState)
             .padding(top = 32.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
