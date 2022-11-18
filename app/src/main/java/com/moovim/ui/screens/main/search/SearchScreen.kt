@@ -100,8 +100,8 @@ fun AuxCategoriesScreen(
                 viewModel.categoryChange(null)
                 navController.navigate("search")
             })
-        SwitchChip(left = "Categorias",
-            right = "Descubrir",
+            SwitchChip(left = stringResource(id = R.string.categories),
+            right = stringResource(id = R.string.discover),
             onLeft = { viewModel.state = state.copy(chipSide = ChipSide.LEFT)},
             onRight = {viewModel.state = state.copy(chipSide = ChipSide.RIGHT)},
             chipSide = state.chipSide)
@@ -247,7 +247,7 @@ fun SearchInput(value: TextFieldValue, onValueChange: (TextFieldValue) -> Unit, 
         onValueChange = onValueChange,
         label = {
             Text(
-                text = "Buscar rutinas"
+                text = stringResource(id = R.string.search_message)
             )
         },
         keyboardOptions = KeyboardOptions(
@@ -296,12 +296,11 @@ fun RoutinesList(routines: List<Routine>, navController: NavHostController, view
                 avatarUrl = routine.avatarUrl,
                 onClickCard = { navController.navigate("routines/${routine.id}") },
                 onShareClick = { shareRoutine(context, routine.id) },
-                favText = "Añadir a favoritos",
                 onFavClick = { viewModel.addRoutineFromFavourites(routine.id)},
                 onScoreClick = { viewModel.openDisplay()
-                                viewModel.updateSelectedReviewId(routine.id)})
+                                viewModel.updateSelectedReviewId(routine.id)},
+                favText = stringResource(id = R.string.add_to_fav))
         }
-
     }
 }
 

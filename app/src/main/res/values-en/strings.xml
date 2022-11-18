@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="routines_exercises_amount_message">exercises</string>
+    <string name="current_routine_title">Current routine</string>
+    <string name="created_by_you">Made by you</string>
+    <string name="discover">Discover</string>
+    <string name="discover_msg">Routines made by other users</string>
+    <string name="categories">Categories</string>
+    <string name="objectives">Objectives</string>
+    <string name="muscles">Muscles groups</string>
+    <string name="date_asc">Older</string>
+    <string name="date_desc">Latest</string>
+    <string name="score_asc">Less popular</string>
+    <string name="score_desc">More popular</string>
+    <string name="difficulty_asc">Easiest</string>
+    <string name="difficulty_desc">Hardest</string>
+    <string name="category_asc">Ascendant category</string>
+    <string name="category_desc">Descendant category</string>
+    <string name="no_cycles_message">This routine doesn´t have cycles</string>
+    <string name="no_exercises_message">This cycle doesn´t have exercises</string>
+    <string name="exercise_sec">Sec</string>
+    <string name="exercise_reps">Reps</string>
+    <string name="filters">Filters</string>
+
+    <string-array name="objectives_descriptions">
+        <item>Routines to achieve a chieseled and toned body</item>
+        <item>Routines to improve your muscles and aerobic endurance</item>
+        <item>Routines to increase the volume and size of your muscles</item>
+        <item>Routines to stretch and relax your muscles</item>
+    </string-array>
+
+    <string-array name="objectives_titles">
+        <item>Toning</item>
+        <item>Endurance</item>
+        <item>Muscle growth</item>
+        <item>Relaxation</item>
+    </string-array>
+
+    <string-array name="muscles_titles">
+        <item>Pectorals</item>
+        <item>Back</item>
+        <item>Shoulders</item>
+        <item>Triceps</item>
+        <item>Biceps</item>
+        <item>Legs</item>
+        <item>Calves</item>
+        <item>Abs</item>
+    </string-array>
+    <string name="search_message">Search routines</string>
+    <string name="add_to_fav">Add to favourites</string>
+    <string name="share">Share</string>
+    <string name="rate">Rate</string>
+
+</resources>
