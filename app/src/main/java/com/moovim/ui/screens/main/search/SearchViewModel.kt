@@ -18,11 +18,11 @@ class SearchViewModel @Inject constructor(
     private val routinesRepository: RoutinesRepository,
     private val exercisesRepository: ExercisesRepository,
 
-): ViewModel() {
+    ) : ViewModel() {
 
     var state by mutableStateOf(SearchState())
 
-    fun onQueryChange(query: TextFieldValue){
+    fun onQueryChange(query: TextFieldValue) {
         state = state.copy(query = query);
     }
 

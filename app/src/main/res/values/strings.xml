@@ -2,7 +2,9 @@
     <string name="app_name">Moovim</string>
     
     <string name="routines_exercises_amount_message">ejercicios</string>
-    
+    <string name="current_routine_title">Rutina actual</string>
+    <string name="created_by_you">Creado por tí</string>
+
     <string name="discover">Descubrir</string>
     <string name="discover_msg">Rutinas creadas por otros usuarios</string>
     <string name="categories">Categorías</string>
@@ -17,6 +19,9 @@
     <string name="difficulty_desc">Más dificiles</string>
     <string name="category_asc">Categoria ascendente</string>
     <string name="category_desc">Categoria descendente</string>
+
+    <string name="no_cycles_message">Esta rutina no contiene ciclos.</string>
+    <string name="no_exercises_message">Este ciclo no contiene ejercicios.</string>
     
     <string-array name="objectives_titles">
         <item>Tonificación</item>

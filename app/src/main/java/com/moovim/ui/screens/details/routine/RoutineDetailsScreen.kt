@@ -1,5 +1,6 @@
 package com.moovim.ui.screens.details
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,12 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.moovim.R
 import com.moovim.domain.model.Cycle
 import com.moovim.ui.components.ExerciseRoutineCard
+import com.moovim.ui.components.NoContentCard
 import com.moovim.ui.components.RoutineDetailedCard
 import com.moovim.ui.screens.details.routine.RoutineDetailsViewModel
 import com.moovim.ui.screens.main.Skeleton
@@ -44,7 +47,7 @@ fun RoutineDetailsScreen(
                     description = state.detail,
                     author = state.author,
                     imageUrl = state.imageUrl,
-                    avatarUrl = state.imageUrl,
+                    avatarUrl = state.avatarUrl,
                     exercisesCount = 10, onClickArrow = { navController.popBackStack() }
                 )
             }) { paddingValues ->
@@ -60,10 +63,15 @@ fun RoutineDetailsScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        state.cycles.forEach { cycle ->
-                            CycleExercisesList(cycle)
+                        if (state.cycles.isNotEmpty())
+                        {
+                            state.cycles.forEach { cycle ->
+                                CycleExercisesList(cycle)
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                        } else {
+                            NoContentCard(stringResource(R.string.no_cycles_message))
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
 
@@ -77,7 +85,6 @@ fun RoutineDetailsScreen(
 @Composable
 fun CycleExercisesList(cycle: Cycle) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -103,13 +110,18 @@ fun CycleExercisesList(cycle: Cycle) {
             )
         }
 
-        cycle.cycleExercises.forEach { cycleExercise ->
-            ExerciseRoutineCard(title = cycleExercise.exercise.name,
-                group = cycleExercise.exercise.detail,
-                repetitions = cycleExercise.repetitions,
-                duration = cycleExercise.duration,
-                {})
+        if (cycle.cycleExercises.isNotEmpty()) {
+            cycle.cycleExercises.forEach { cycleExercise ->
+                ExerciseRoutineCard(title = cycleExercise.exercise.name,
+                    group = cycleExercise.exercise.detail,
+                    repetitions = cycleExercise.repetitions,
+                    duration = cycleExercise.duration,
+                    {})
+            }
+        } else {
+            NoContentCard(stringResource(R.string.no_exercises_message))
         }
+
     }
 }
 
@@ -154,7 +166,10 @@ fun SkeletonExerciseCardLoader(loading: Color) {
                     .fillMaxWidth()
                     .padding(16.dp, 4.dp, 16.dp, 8.dp)
             ) {
-                Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     Box(
                         modifier = Modifier
                             .padding(0.dp, 8.dp, 0.dp, 4.dp)

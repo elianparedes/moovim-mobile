@@ -1,6 +1,7 @@
 package com.moovim.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -11,11 +12,8 @@ import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -24,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.*
 import coil.compose.AsyncImage
 import com.moovim.R
 import com.moovim.ui.theme.MoovimTheme
@@ -223,8 +220,7 @@ fun RoutineCard(
                             color = MaterialTheme.colors.onBackground
                         )
                     }
-                }
-                else {
+                } else {
                     Column(
                         modifier = Modifier
                             .fillMaxHeight(),
@@ -245,14 +241,21 @@ fun RoutineCard(
                     horizontalAlignment = Alignment.End
                 ) {
                     IconButton(
-                        onClick = {menuOpen = !menuOpen},
+                        onClick = { menuOpen = !menuOpen },
                     ) {
                         Icon(
                             Icons.Rounded.MoreVert,
                             contentDescription = "Dropdown menu",
                             tint = MaterialTheme.colors.onPrimary,
                         )
-                        RoutineDropdown(menuOpen, {menuOpen = false}, onShareClick, favText, onFavClick, onScoreClick)
+                        RoutineDropdown(
+                            menuOpen,
+                            { menuOpen = false },
+                            onShareClick,
+                            favText,
+                            onFavClick,
+                            onScoreClick
+                        )
                     }
                 }
             }
@@ -335,7 +338,10 @@ fun ExerciseRoutineCard(
                                 tint = MaterialTheme.colors.onBackground,
                                 modifier = Modifier.padding(8.dp, 0.dp)
                             )
-                            Text(text = duration.toString() ,color = MaterialTheme.colors.onBackground)
+                            Text(
+                                text = duration.toString(),
+                                color = MaterialTheme.colors.onBackground
+                            )
                         }
                     }
                 }
@@ -348,7 +354,7 @@ fun ExerciseRoutineCard(
 @Composable
 fun ExerciseRoutineCardPreview() {
     MoovimTheme {
-        ExerciseRoutineCard("Extension de tricep con polea","Triceps", 12,30,{ })
+        ExerciseRoutineCard("Extension de tricep con polea", "Triceps", 12, 30, { })
     }
 }
 
@@ -567,9 +573,9 @@ fun ExerciseDetailedRoutineCardPreview() {
 fun WideRoutineCard(
     title: String,
     description: String,
-    author: String,
+    author: String? = null,
     imageUrl: String,
-    avatarUrl: String,
+    avatarUrl: String? = null,
     exercisesCount: Int,
     onClickCard: () -> Unit
 ) {
@@ -583,14 +589,16 @@ fun WideRoutineCard(
         imageUrl = imageUrl,
         onClickCard = onClickCard
     ) {
-        Column() {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, 16.dp, 16.dp, 0.dp),
-                verticalAlignment = Alignment.Top) {
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 16.dp, 16.dp, 0.dp),
+                verticalAlignment = Alignment.Top
+            ) {
                 Column() {
                     Text(
-                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
+                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
                         text = title,
                         style = MaterialTheme.typography.h2,
                         color = MaterialTheme.colors.onBackground
@@ -611,13 +619,14 @@ fun WideRoutineCard(
                             tint = MaterialTheme.colors.onBackground,
                         )
                         Text(
-                            modifier = Modifier.padding(4.dp,0.dp),
+                            modifier = Modifier.padding(4.dp, 0.dp),
                             text = StringBuilder()
                                 .append(exercisesCount.toString())
                                 .append(" ")
                                 .append(stringResource(id = R.string.routines_exercises_amount_message))
                                 .toString(),
-                            color = MaterialTheme.colors.onBackground, style = MaterialTheme.typography.h6
+                            color = MaterialTheme.colors.onBackground,
+                            style = MaterialTheme.typography.h6
                         )
                     }
                 }
@@ -628,25 +637,20 @@ fun WideRoutineCard(
                     .padding(16.dp, 4.dp, 16.dp, 16.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
-                Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.requiredSize(16.dp)) {
-                    Card(
-                        shape = RoundedCornerShape(100),
-                        modifier = Modifier
-                            .aspectRatio(1F)
-                            .requiredSize(16.dp)
-                    ){
-                        if (avatarUrl == "") {
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier.requiredSize(16.dp)
+                ) {
+                    if (avatarUrl != null && author != null) {
+                        Card(
+                            shape = RoundedCornerShape(100),
+                            modifier = Modifier
+                                .aspectRatio(1F)
+                                .requiredSize(16.dp)
+                        ) {
+
                             AsyncImage(
                                 model = avatarUrl,
-                                contentDescription = "Foto de perfil",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(8.dp),
-                                alignment = Alignment.BottomCenter
-                            )
-                        }
-                        else {
-                            Image (
-                                painterResource(id = R.drawable.ic_round_person),
                                 contentDescription = "Foto de perfil",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.size(8.dp),
@@ -662,7 +666,7 @@ fun WideRoutineCard(
                 ) {
                     Text(
                         modifier = Modifier.padding(8.dp, 0.dp),
-                        text = author,
+                        text = author ?: stringResource(R.string.created_by_you),
                         style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.onBackground
                     )
@@ -676,12 +680,12 @@ fun WideRoutineCard(
 @Composable
 fun ImageCard(
     modifier: Modifier,
-    backgroundColor : Color,
+    backgroundColor: Color,
     shape: Shape,
     imageUrl: String,
     onClickCard: () -> Unit,
-    content: @Composable ()->Unit
-){
+    content: @Composable () -> Unit
+) {
     Card(
         modifier = modifier,
         backgroundColor = backgroundColor,
@@ -724,7 +728,7 @@ fun RoutineDetailedCard(
     avatarUrl: String,
     exercisesCount: Int,
     onClickArrow: () -> Unit
-){
+) {
     Card(
         modifier = Modifier
             .height(240.dp)
@@ -761,7 +765,7 @@ fun RoutineDetailedCard(
                     .fillMaxWidth()
                     .padding(8.dp, 4.dp, 0.dp, 0.dp),
                 horizontalArrangement = Arrangement.Start
-            ){
+            ) {
                 IconButton(
                     onClick = onClickArrow,
                 ) {
@@ -772,13 +776,15 @@ fun RoutineDetailedCard(
                     )
                 }
             }
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp, 4.dp, 0.dp, 0.dp),
-                verticalAlignment = Alignment.Top) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp, 4.dp, 0.dp, 0.dp),
+                verticalAlignment = Alignment.Top
+            ) {
                 Column() {
                     Text(
-                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
+                        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
                         text = title,
                         style = MaterialTheme.typography.h2,
                         fontWeight = FontWeight.Bold,
@@ -800,7 +806,7 @@ fun RoutineDetailedCard(
                             tint = MaterialTheme.colors.onBackground,
                         )
                         Text(
-                            modifier = Modifier.padding(4.dp,0.dp),
+                            modifier = Modifier.padding(4.dp, 0.dp),
                             text = StringBuilder()
                                 .append(exercisesCount.toString())
                                 .append(" ")
@@ -827,8 +833,8 @@ fun RoutineDetailedCard(
                         modifier = Modifier
                             .aspectRatio(1F)
                             .requiredSize(16.dp)
-                    ){
-                        if (avatarUrl == "") {
+                    ) {
+                        if (avatarUrl != "") {
                             AsyncImage(
                                 model = avatarUrl,
                                 contentDescription = "Foto de perfil",
@@ -836,9 +842,8 @@ fun RoutineDetailedCard(
                                 modifier = Modifier.size(8.dp),
                                 alignment = Alignment.BottomCenter
                             )
-                        }
-                        else {
-                            Image (
+                        } else {
+                            Image(
                                 painterResource(id = R.drawable.ic_round_person),
                                 contentDescription = "Foto de perfil",
                                 contentScale = ContentScale.Crop,
@@ -885,10 +890,14 @@ fun RoutineDetailedCardPreview() {
 @Composable
 fun WideRoutinePreview() {
     MoovimTheme {
-        Column(){
-            WideRoutineCard("Llegar al verano", "Perdida de peso", "Kim Wexler",
-                "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg" ,
-                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",12,{})
+        Column() {
+            WideRoutineCard("Llegar al verano",
+                "Perdida de peso",
+                "Kim Wexler",
+                "https://img.asmedia.epimg.net/resizer/X7QOAazpF59aDH6sTt2LayXuRaQ=/644x362/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/ZZ5YGKHKCBCHHML6FISOF4HJWA.jpg",
+                "https://static.wikia.nocookie.net/breakingbad/images/c/c1/4x11_-_Huell.png/revision/latest/scale-to-width-down/350?cb=20130913100459&path-prefix=es",
+                12,
+                {})
         }
     }
 }
@@ -900,7 +909,7 @@ fun ObjectiveCard(
     description: String,
     imageUrl: String,
     onClickCard: () -> Unit
-){
+) {
     ImageCard(
         modifier = modifier
             .height(240.dp)
@@ -917,18 +926,18 @@ fun ObjectiveCard(
                 .padding(24.dp, 16.dp, 0.dp, 0.dp),
             horizontalAlignment = Alignment.Start,
         ) {
-                Text(
-                    modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
-                    text = title,
-                    style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.onBackground
-                )
-                Text(
-                    modifier= Modifier.padding(0.dp,0.dp,16.dp,0.dp),
-                    text = description,
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.onBackground
-                )
+            Text(
+                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
+                text = title,
+                style = MaterialTheme.typography.h2,
+                color = MaterialTheme.colors.onBackground
+            )
+            Text(
+                modifier = Modifier.padding(0.dp, 0.dp, 16.dp, 0.dp),
+                text = description,
+                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.onBackground
+            )
         }
     }
 }
@@ -937,11 +946,13 @@ fun ObjectiveCard(
 @Composable
 fun ObjectiveCardPreview() {
     MoovimTheme {
-        Column(){
+        Column() {
             ObjectiveCard(
                 modifier = Modifier,
-                stringArrayResource(id = R.array.objectives_titles)[0],stringArrayResource(id = R.array.objectives_descriptions)[0],
-                stringArrayResource(id = R.array.objectives_image_url)[0],{})
+                stringArrayResource(id = R.array.objectives_titles)[0],
+                stringArrayResource(id = R.array.objectives_descriptions)[0],
+                stringArrayResource(id = R.array.objectives_image_url)[0],
+                {})
         }
     }
 }
@@ -952,7 +963,7 @@ fun MusclesCard(
     title: String,
     imageUrl: String,
     onClickCard: () -> Unit
-){
+) {
     ImageCard(
         modifier = modifier
             .height(100.dp)
@@ -971,7 +982,7 @@ fun MusclesCard(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                modifier = Modifier.padding(0.dp, 0.dp, 0.dp , 8.dp),
+                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
                 text = title,
                 style = MaterialTheme.typography.h4,
                 color = MaterialTheme.colors.onBackground
@@ -984,13 +995,28 @@ fun MusclesCard(
 @Composable
 fun MusclesCardPreview() {
     MoovimTheme {
-        Column(){
+        Column() {
             MusclesCard(
                 modifier = Modifier,
                 stringArrayResource(id = R.array.muscles_titles)[0],
-                "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",{})
+                "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                {})
         }
     }
 }
+
+@Composable
+fun NoContentCard(message: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colors.surface)
+            .padding(vertical = 32.dp, horizontal = 16.dp)
+    ) {
+        Text(message, color = Color.White)
+    }
+}
+
 
 

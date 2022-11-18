@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
+import com.moovim.data.repository.UserRepository
 import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val userRepository: UserRepository,
     private val routinesRepository: RoutinesRepository
 ) : ViewModel() {
 
@@ -21,7 +23,6 @@ class HomeViewModel @Inject constructor(
     init {
         getRoutines()
     }
-
 
     private fun getRoutines() {
         viewModelScope.launch {
@@ -34,12 +35,10 @@ class HomeViewModel @Inject constructor(
                     }
 
                 }
-
                 is Result.Error -> {
                     state = state.copy(isError = true)
                 }
             }
-
         }
     }
 
@@ -52,6 +51,8 @@ class HomeViewModel @Inject constructor(
                 selectedRoutineMenuIndex = routineIndex
             )
 
+            userRepository.setUserCurrentRoutineId(routineId)
+
             state = state.copy(isLoading = true)
             when (val response = routinesRepository.getRoutineCycles(routineId)){
                 is Result.Success -> {
@@ -61,7 +62,6 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                 }
-
                 is Result.Error -> {
                     state = state.copy(isError = false, isLoading = false)
                 }
