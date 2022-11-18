@@ -42,69 +42,79 @@ fun SimplePlayer(
 
     val state = viewModel.state
 
-    Scaffold(
-        topBar = { TopBar() },
-        bottomBar = {
-            BottomPlayerBar(
-                { paused -> viewModel.setPaused(paused) },
-                state.paused,
-                { viewModel.skipNext() },
-                { viewModel.skipPrevious() },
-                { viewModel.restartTimer() },
-                { visible -> viewModel.setPlaylistVisible(visible) },
-                state.isPlaylistVisible
-            )
-        }
-    ) { paddingValues ->
+    if (state.currentCycle != null) {
+        Scaffold(
+            topBar = { TopBar(state.currentCycle.name) },
+            bottomBar = {
+                BottomPlayerBar(
+                    { paused -> viewModel.setPaused(paused) },
+                    state.paused,
+                    { viewModel.skipNext() },
+                    { viewModel.skipPrevious() },
+                    { viewModel.restartTimer() },
+                    { visible -> viewModel.setPlaylistVisible(visible) },
+                    state.isPlaylistVisible
+                )
+            }
+        ) { paddingValues ->
 
-        AnimatedVisibility(visible = !state.isPlaylistVisible, enter = fadeIn(), exit = fadeOut()) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.Bottom),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .background(MaterialTheme.colors.background)
+            AnimatedVisibility(
+                visible = !state.isPlaylistVisible,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.Bottom),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .background(MaterialTheme.colors.background)
+                ) {
 
-                TimeIndicator(size = 400, stroke = 8, progress = state.progress, time = state.time)
+                    TimeIndicator(
+                        size = 400,
+                        stroke = 8,
+                        progress = state.progress,
+                        time = state.time
+                    )
 
-                if (state.currentCycleExercise != null) {
-                    AnimatedContent(targetState = state.currentCycleExercise, transitionSpec = {
-                        // Compare the incoming number with the previous number.
-                        if (targetState.order > initialState.order) {
-                            // If the target number is larger, it slides up and fades in
-                            // while the initial (smaller) number slides up and fades out.
-                            slideInHorizontally { width -> width } + fadeIn() with
-                                    slideOutHorizontally { width -> -width } + fadeOut()
-                        } else {
-                            // If the target number is smaller, it slides down and fades in
-                            // while the initial number slides down and fades out.
-                            slideInHorizontally { width -> -width } + fadeIn() with
-                                    slideOutHorizontally { width -> width } + fadeOut()
-                        }.using(
-                            // Disable clipping since the faded slide-in/out should
-                            // be displayed out of bounds.
-                            SizeTransform(clip = false)
-                        )
-                    }) { targetCycleExercise ->
-                        ExerciseRoutineCard(
-                            title = targetCycleExercise.exercise.name,
-                            group = targetCycleExercise.exercise.detail,
-                            repetitions = targetCycleExercise.repetitions,
-                            duration = targetCycleExercise.duration,
-                            onClickCard = {})
+                    if (state.currentExercise != null) {
+                        AnimatedContent(targetState = state.currentExercise, transitionSpec = {
+                            // Compare the incoming number with the previous number.
+                            if (targetState.order > initialState.order) {
+                                // If the target number is larger, it slides up and fades in
+                                // while the initial (smaller) number slides up and fades out.
+                                slideInHorizontally { width -> width } + fadeIn() with
+                                        slideOutHorizontally { width -> -width } + fadeOut()
+                            } else {
+                                // If the target number is smaller, it slides down and fades in
+                                // while the initial number slides down and fades out.
+                                slideInHorizontally { width -> -width } + fadeIn() with
+                                        slideOutHorizontally { width -> width } + fadeOut()
+                            }.using(
+                                // Disable clipping since the faded slide-in/out should
+                                // be displayed out of bounds.
+                                SizeTransform(clip = false)
+                            )
+                        }) { targetCycleExercise ->
+                            ExerciseRoutineCard(
+                                title = targetCycleExercise.exercise.name,
+                                group = targetCycleExercise.exercise.detail,
+                                repetitions = targetCycleExercise.repetitions,
+                                duration = targetCycleExercise.duration,
+                                onClickCard = {})
 
+                        }
                     }
                 }
+
             }
 
+
         }
-
-
     }
-
 }
 
 
@@ -271,7 +281,7 @@ private fun BottomPlayerBar(
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(title: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -279,7 +289,7 @@ fun TopBar() {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Calentamiento", style = MaterialTheme.typography.h3)
+        Text(text = title, style = MaterialTheme.typography.h3)
     }
 
 }

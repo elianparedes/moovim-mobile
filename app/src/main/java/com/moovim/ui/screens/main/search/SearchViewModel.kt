@@ -1,6 +1,5 @@
 package com.moovim.ui.screens.main.search
 
-import android.graphics.text.TextRunShaper
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,10 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.ExercisesRepository
 import com.moovim.data.repository.RoutinesRepository
-import com.moovim.util.Response
+import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.security.PrivateKey
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,14 +32,14 @@ class SearchViewModel @Inject constructor(
                 state = state.copy(isLoading = true)
 
                 when (val response = routinesRepository.getAllRoutines()) {
-                    is Response.Success -> {
+                    is Result.Success -> {
                         if (response.data != null) {
                             state = state.copy(resultRoutines = response.data, isLoading = false)
                             state = state.copy(hasAllRoutines = true)
                         }
                     }
 
-                    is Response.Error -> {
+                    is Result.Error -> {
                         state = state.copy(isError = true)
                     }
                 }
@@ -54,14 +52,14 @@ class SearchViewModel @Inject constructor(
                 state = state.copy(isLoading = true)
 
                 when (val response = routinesRepository.getAllRoutines(categoryId = categoryId)) {
-                    is Response.Success -> {
+                    is Result.Success -> {
                         if (response.data != null) {
                             state = state.copy(resultRoutines = response.data, isLoading = false)
                             state = state.copy(hasAllRoutines = true)
                         }
                     }
 
-                    is Response.Error -> {
+                    is Result.Error -> {
                         state = state.copy(isError = true)
                     }
                 }
@@ -73,18 +71,15 @@ class SearchViewModel @Inject constructor(
             state = state.copy(isLoading = true)
 
             when(val response = routinesRepository.getAllRoutines(query.text)){
-                is Response.Success -> {
-                    if (response.data != null) {
+                is Result.Success -> {
+                    if (response.data != null)
                         state = state.copy(resultRoutines = response.data, isLoading = false)
                         state = state.copy(hasAllRoutines = false)
                     }
-                }
-
-                is Response.Error -> {
+                is Result.Error -> {
                     state = state.copy(isError = true)
+                }
                 }
             }
         }
     }
-
-}

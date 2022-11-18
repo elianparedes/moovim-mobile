@@ -4,6 +4,7 @@ import com.moovim.data.remote.dto.NewRoutineReviewDto
 import com.moovim.data.remote.dto.RoutineDto
 import com.moovim.data.remote.dto.RoutineReviewDto
 import com.moovim.data.remote.dto.common.ContentPaginationDto
+import retrofit2.Response
 import retrofit2.http.*
 
 interface RoutinesApi {
@@ -25,7 +26,7 @@ interface RoutinesApi {
         @Query("direction") direction: String = "asc",
         @Query("search") search: String? = null,
         @Query("categoryId") categoryId: Int? = null
-    ): ContentPaginationDto<RoutineDto>
+    ): Response<ContentPaginationDto<RoutineDto>>
 
     @GET("routines/{routineId}")
     suspend fun getRoutine(@Path("routineId") routineId: Int): RoutineDto
@@ -39,12 +40,12 @@ interface RoutinesApi {
     @POST("favourites/{routineId}")
     suspend fun addRoutineToFavourites(
         @Path("routineId") routineId: Int
-    )
+    ): Response<Int>
 
     @DELETE("favourites/{routineId}")
     suspend fun deleteRoutineFromFavourites(
         @Path("routineId") routineId: Int
-    )
+    ): Response<Int>
 
     @GET("reviews/{routineId}")
     suspend fun getAllRoutineReviews(
@@ -58,5 +59,5 @@ interface RoutinesApi {
     suspend fun addRoutineReview(
         @Path("routineId") routineId: Int,
         @Body routineReview: NewRoutineReviewDto
-    ) /* TODO: POST RoutineReview response */
+    ): Response<Int>
 }
