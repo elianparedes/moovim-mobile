@@ -20,9 +20,10 @@ fun RoutinesScreen(
     navController: NavHostController,
     viewModel: MyRoutinesViewModel = hiltViewModel()
 ) {
+
     val state = viewModel.state
     var popupControl by remember { mutableStateOf(false) }
-    var selectedId: Int by remember {mutableStateOf(0)}
+    var selectedId: Int by remember { mutableStateOf(0) }
     var score by remember { mutableStateOf(1) }
     var chipSide by rememberSaveable { mutableStateOf(ChipSide.LEFT) }
     val coroutineScope = rememberCoroutineScope()
@@ -36,57 +37,96 @@ fun RoutinesScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(16.dp),
+            .padding(top = 32.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        Text(text = "Mis Rutinas", style = MaterialTheme.typography.h3)
         SwitchChip(
-            left = "Mis rutinas",
+            left = "Creado por ti",
             right = "Favoritos",
-            onLeft = { chipSide =  ChipSide.LEFT },
-            onRight = { chipSide =  ChipSide.RIGHT  },
+            onLeft = { chipSide = ChipSide.LEFT },
+            onRight = { chipSide = ChipSide.RIGHT },
             chipSide = chipSide
         )
-        if(chipSide == ChipSide.LEFT){
+        if (chipSide == ChipSide.LEFT) {
             viewModel.getCurrentUserRoutines()
-            for (routine in state.userRoutines){
-                RoutineCard(
-                    title = routine.name,
-                    description = routine.detail,
-                    author = routine.author,
-                    score = routine.score,
-                    imageUrl = routine.imageUrl,
-                    avatarUrl = routine.avatarUrl,
-                    onClickCard = {
-                        navController.navigate("routines/${routine.id}")},
-                    onShareClick = { /*TODO*/ },
-                    favText = "Añadir a favoritos",
-                    onFavClick = { viewModel.addRoutineFromFavourites(routine.id)},
-                    onScoreClick = { popupControl = true
-                        selectedId = routine.id })
+            if (viewModel.state.userRoutines.isEmpty()) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Vaya! No hay nada por aquí...", style = MaterialTheme.typography.h2,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    Text(
+                        text = "Crea tu primer rutina para disfrutar de Moovim al máximo.",
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            } else {
+                for (routine in state.userRoutines) {
+                    RoutineCard(
+                        title = routine.name,
+                        description = routine.detail,
+                        author = routine.author,
+                        score = routine.score,
+                        imageUrl = routine.imageUrl,
+                        avatarUrl = routine.avatarUrl,
+                        onClickCard = {
+                            navController.navigate("routines/${routine.id}")
+                        },
+                        onShareClick = { /*TODO*/ },
+                        favText = "Añadir a favoritos",
+                        onFavClick = { viewModel.addRoutineFromFavourites(routine.id) },
+                        onScoreClick = {
+                            popupControl = true
+                            selectedId = routine.id
+                        })
+                }
             }
-        }else
-        {
+        } else {
             viewModel.getAllFavouriteRoutines()
-            for (routine in state.favouriteRoutines){
-                RoutineCard(
-                    title = routine.name,
-                    description = routine.detail,
-                    author = routine.author,
-                    score = routine.score,
-                    imageUrl = routine.imageUrl,
-                    avatarUrl = routine.avatarUrl,
-                    onClickCard = { navController.navigate("routines/${routine.id}")},
-                    onShareClick = { /*TODO*/ },
-                    favText = "Quitar de favoritos",
-                    onFavClick = { viewModel.deleteRoutineFromFavourites(routine.id)},
-                    onScoreClick = { popupControl = true
-                        selectedId = routine.id })
+            if (viewModel.state.favouriteRoutines.isEmpty()) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Vaya! No hay nada por aquí...", style = MaterialTheme.typography.h2,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    Text(
+                        text = "Agrega una rutina a Favoritos para poder acceder a ella más facilmente.",
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            } else {
+                for (routine in state.favouriteRoutines) {
+                    RoutineCard(
+                        title = routine.name,
+                        description = routine.detail,
+                        author = routine.author,
+                        score = routine.score,
+                        imageUrl = routine.imageUrl,
+                        avatarUrl = routine.avatarUrl,
+                        onClickCard = { navController.navigate("routines/${routine.id}") },
+                        onShareClick = { /*TODO*/ },
+                        favText = "Quitar de favoritos",
+                        onFavClick = { viewModel.deleteRoutineFromFavourites(routine.id) },
+                        onScoreClick = {
+                            popupControl = true
+                            selectedId = routine.id
+                        })
+                }
             }
         }
         if (popupControl) {
             LaunchedEffect(Unit) {
                 sheetState.show()
-                popupControl=false
+                popupControl = false
             }
         }
 
@@ -96,24 +136,33 @@ fun RoutinesScreen(
         sheetState = sheetState,
         sheetContent = {
             Column(
-            modifier = Modifier.padding(bottom=40.dp).fillMaxWidth(),
+                modifier = Modifier.padding(bottom = 40.dp).fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-            RatingBar(rating = score, onScoreChange = {newScore -> score=newScore}
-                , onPublishClick = {
-                    viewModel.addRoutineReview(selectedId, score, "")
-                    coroutineScope.launch {
-                        sheetState.hide()
-                        scaffoldState.snackbarHostState.showSnackbar(
-                            message = "This is your message",
-                        )
+                RatingBar(
+                    rating = score,
+                    onScoreChange = { newScore -> score = newScore },
+                    onPublishClick = {
+                        coroutineScope.launch {
+                            viewModel.addRoutineReview(selectedId, score, "")
+                            var snackbarMessage: String = ""
+                            if (viewModel.state.isError) {
+                                snackbarMessage = "Error al agregar favoritos"
+                            } else {
+                                snackbarMessage = "Agregado a favoritos"
+                            }
+                            sheetState.hide()
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                message = snackbarMessage,
+                            )
+                        }
                     }
-                }
-            )
-        } },
+                )
+            }
+        },
         modifier = Modifier.fillMaxSize()
     ) {}
-}
 
+}
 
