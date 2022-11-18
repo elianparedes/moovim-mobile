@@ -1,6 +1,8 @@
 package com.moovim.ui.screens.main;
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
@@ -10,8 +12,10 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -63,8 +67,7 @@ fun AuxCategoriesScreen(navController: NavHostController, viewModel: SearchViewM
             onRight = {viewModel.state = state.copy(chipSide = ChipSide.RIGHT)},
             chipSide = state.chipSide)
         if(state.chipSide ==  ChipSide.LEFT){
-            Column( modifier = Modifier
-                .verticalScroll(rememberScrollState())) {
+            Column( modifier = Modifier) {
                 CategoriesScreen(
                     navController = navController,
                     categoryChanged = { categoryId ->
@@ -77,7 +80,7 @@ fun AuxCategoriesScreen(navController: NavHostController, viewModel: SearchViewM
         {
             viewModel.getAllRoutines()
             Column( modifier = Modifier
-                .verticalScroll(rememberScrollState())) {
+            ) {
                 OrderByChips(navController = navController, viewModel=viewModel, onCategory = false)
                 DiscoverScreen(state.resultRoutines, navController)
             }
@@ -110,11 +113,13 @@ fun CategoriesScreen(navController: NavHostController, categoryChanged: (Int) ->
     )
     val muscles: Array<String> = stringArrayResource(id = R.array.muscles_titles)
 
+    Text(text = stringResource(id = R.string.objectives), modifier = Modifier.padding(0.dp,16.dp,0.dp,0.dp))
     Column(modifier = Modifier
         .padding(0.dp, 16.dp)
         .fillMaxWidth()
+        .verticalScroll(rememberScrollState())
         ) {
-        Text(text = stringResource(id = R.string.objectives))
+
         ObjectivesList(objectives = objectives,navController,categoryChanged)
         //TODO: Descomentar al implementar listas de ejercicios y vistas de detalle de los mismos
         /*
@@ -139,7 +144,10 @@ fun CategoriesScreen(navController: NavHostController, categoryChanged: (Int) ->
 @Composable
 fun DiscoverScreen(routines: List<Routine>, navController: NavHostController){
         Text(text = stringResource(id = R.string.discover_msg), modifier = Modifier.padding(vertical = 16.dp))
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         RoutinesList(routines = routines, navController = navController)
+    }
+
 }
 
 @Composable
@@ -241,73 +249,166 @@ fun RoutinesList(routines: List<Routine>, navController: NavHostController) {
 @Composable
 fun OrderByChips(navController: NavHostController, viewModel: SearchViewModel = hiltViewModel(), onCategory: Boolean){
     val state = viewModel.state
-
-    Row() {
-        FilterChip(
-            selected= state.orderBy=="date" && state.direction=="asc",
-            onClick = { viewModel.orderByChange("date", "asc") },
-            leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange") },
-        ) {
-            Text( text = stringResource(id = R.string.date_asc) )
+Column(modifier = Modifier.padding(vertical = 8.dp)) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        IconToggleButton(checked = state.filter, onCheckedChange = { viewModel.state = state.copy(filter = !state.filter)} ) {
+            Icon(painter = painterResource(id = R.drawable.ic_filter_list), contentDescription = null)
         }
-        FilterChip(
-            selected= state.orderBy=="date" && state.direction=="desc",
-            onClick = { viewModel.orderByChange("date","desc") },
-            leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange") },
-        ) {
-            Text( text = stringResource(id = R.string.date_desc) )
-        }
+        Text(stringResource(id = R.string.filters), modifier = Modifier.padding(8.dp))
     }
-    Row() {
-        FilterChip(
-            selected= state.orderBy=="score" && state.direction=="desc",
-            onClick = { viewModel.orderByChange("score","desc") },
-            leadingIcon = { Icon(Icons.Rounded.Favorite, "Favorite") },
-        ) {
-            Text( text = stringResource(id = R.string.score_desc) )
-        }
-        FilterChip(
-            selected= state.orderBy=="score" && state.direction=="asc",
-            onClick = { viewModel.orderByChange("score","asc") },
-            leadingIcon = { Icon(Icons.Rounded.Favorite, "Favorite") },
-        ) {
-            Text( text = stringResource(id = R.string.score_asc) )
-        }
-    }
-    Row() {
-        FilterChip(
-            selected= state.orderBy=="difficulty" && state.direction=="asc",
-            onClick = { viewModel.orderByChange("difficulty","asc") },
-            leadingIcon = { Icon(Icons.Rounded.Warning, "Warning") },
-        ) {
-            Text( text = stringResource(id = R.string.difficulty_asc) )
-        }
-        FilterChip(
-            selected= state.orderBy=="difficulty" && state.direction=="desc",
-            onClick = { viewModel.orderByChange("difficulty","desc") },
-            leadingIcon = { Icon(Icons.Rounded.Warning, "Warning") },
-        ) {
-            Text( text = stringResource(id = R.string.difficulty_desc) )
-        }
-    }
-    if(!onCategory) {
+    if(state.filter){
         Row() {
             FilterChip(
-                selected = state.orderBy == "category" && state.direction == "asc",
-                onClick = { viewModel.orderByChange("category", "asc") },
-                leadingIcon = { Icon(Icons.Rounded.Info, "Info") },
+                modifier = Modifier.padding(0.dp,0.dp,4.dp,0.dp),
+                selected= state.orderBy=="date" && state.direction=="desc",
+                onClick = { viewModel.orderByChange("date","desc") },
+                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",Modifier.size(24.dp).padding(4.dp)) },
+                colors = ChipDefaults.outlinedFilterChipColors(
+                    backgroundColor = Color.Transparent,
+                    contentColor = Color.White,
+                    selectedBackgroundColor = Color.White,
+                    selectedContentColor = Color.Black,
+                    selectedLeadingIconColor = Color.Black,
+                    leadingIconColor = Color.White
+                ),
+                border = BorderStroke(1.dp,MaterialTheme.colors.secondaryVariant),
             ) {
-                Text(text = stringResource(id = R.string.category_asc))
+                Text( text = stringResource(id = R.string.date_desc) )
             }
             FilterChip(
-                selected = state.orderBy == "category" && state.direction == "desc",
-                onClick = { viewModel.orderByChange("category", "desc") },
-                leadingIcon = { Icon(Icons.Rounded.Info, "Info") },
+                modifier = Modifier.padding(),
+                selected= state.orderBy=="date" && state.direction=="asc",
+                onClick = { viewModel.orderByChange("date", "asc") },
+                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",Modifier.size(24.dp).padding(4.dp)) },
+                colors = ChipDefaults.outlinedFilterChipColors(
+                    backgroundColor = Color.Transparent,
+                    contentColor = Color.White,
+                    selectedBackgroundColor = Color.White,
+                    selectedContentColor = Color.Black,
+                    selectedLeadingIconColor = Color.Black,
+                    leadingIconColor = Color.White
+                ),
+                border = BorderStroke(1.dp,MaterialTheme.colors.secondaryVariant),
             ) {
-                Text(text = stringResource(id = R.string.category_desc))
+                Text( text = stringResource(id = R.string.date_asc) )
+            }
+        }
+        Row() {
+            FilterChip(
+                modifier = Modifier.padding(0.dp,0.dp,4.dp,0.dp),
+                selected= state.orderBy=="score" && state.direction=="desc",
+                onClick = { viewModel.orderByChange("score","desc") },
+                leadingIcon = { Icon(Icons.Rounded.Star ,"Favorite",Modifier.size(24.dp).padding(4.dp)) },
+                colors = ChipDefaults.outlinedFilterChipColors(
+                    backgroundColor = Color.Transparent,
+                    contentColor = Color.White,
+                    selectedBackgroundColor = Color.White,
+                    selectedContentColor = Color.Black,
+                    selectedLeadingIconColor = Color.Black,
+                    leadingIconColor = Color.White
+                ),
+                border = BorderStroke(1.dp,MaterialTheme.colors.secondaryVariant),
+            ) {
+                Text( text = stringResource(id = R.string.score_desc) )
+            }
+            FilterChip(
+                modifier = Modifier.padding(),
+                selected= state.orderBy=="score" && state.direction=="asc",
+                onClick = { viewModel.orderByChange("score","asc") },
+                leadingIcon = { Icon(Icons.Rounded.Star, "Favorite",Modifier.size(24.dp).padding(4.dp)) },
+                colors = ChipDefaults.outlinedFilterChipColors(
+                    backgroundColor = Color.Transparent,
+                    contentColor = Color.White,
+                    selectedBackgroundColor = Color.White,
+                    selectedContentColor = Color.Black,
+                    selectedLeadingIconColor = Color.Black,
+                    leadingIconColor = Color.White
+                ),
+                border = BorderStroke(1.dp,MaterialTheme.colors.secondaryVariant),
+            ) {
+                Text( text = stringResource(id = R.string.score_asc) )
+            }
+        }
+        Row() {
+            FilterChip(
+                modifier = Modifier.padding(0.dp,0.dp,4.dp,0.dp),
+                selected= state.orderBy=="difficulty" && state.direction=="asc",
+                onClick = { viewModel.orderByChange("difficulty","asc") },
+                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",Modifier.size(24.dp).padding(4.dp)) },
+                colors = ChipDefaults.outlinedFilterChipColors(
+                    backgroundColor = Color.Transparent,
+                    contentColor = Color.White,
+                    selectedBackgroundColor = Color.White,
+                    selectedContentColor = Color.Black,
+                    selectedLeadingIconColor = Color.Black,
+                    leadingIconColor = Color.White
+                ),
+                border = BorderStroke(1.dp,MaterialTheme.colors.secondaryVariant),
+            ) {
+                Text( text = stringResource(id = R.string.difficulty_asc) )
+            }
+            FilterChip(
+                modifier = Modifier.padding(),
+                selected= state.orderBy=="difficulty" && state.direction=="desc",
+                onClick = { viewModel.orderByChange("difficulty","desc") },
+                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",Modifier.size(24.dp).padding(4.dp)) },
+                colors = ChipDefaults.outlinedFilterChipColors(
+                    backgroundColor = Color.Transparent,
+                    contentColor = Color.White,
+                    selectedBackgroundColor = Color.White,
+                    selectedContentColor = Color.Black,
+                    selectedLeadingIconColor = Color.Black,
+                    leadingIconColor = Color.White
+                ),
+                border = BorderStroke(1.dp,MaterialTheme.colors.secondaryVariant),
+            ) {
+                Text( text = stringResource(id = R.string.difficulty_desc) )
+            }
+        }
+        if(!onCategory) {
+            Row() {
+                FilterChip(
+                    modifier = Modifier.padding(0.dp,0.dp,2.dp,0.dp),
+                    selected = state.orderBy == "category" && state.direction == "asc",
+                    onClick = { viewModel.orderByChange("category", "asc") },
+                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",Modifier.size(24.dp).padding(4.dp)) },
+                    colors = ChipDefaults.outlinedFilterChipColors(
+                        backgroundColor = Color.Transparent,
+                        contentColor = Color.White,
+                        selectedBackgroundColor = Color.White,
+                        selectedContentColor = Color.Black,
+                        selectedLeadingIconColor = Color.Black,
+                        leadingIconColor = Color.White
+                    ),
+                    border = BorderStroke(1.dp,MaterialTheme.colors.secondaryVariant),
+                ) {
+                    Text(text = stringResource(id = R.string.category_asc))
+                }
+                FilterChip(
+                    modifier = Modifier.padding(),
+                    selected = state.orderBy == "category" && state.direction == "desc",
+                    onClick = { viewModel.orderByChange("category", "desc") },
+                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",Modifier.size(24.dp).padding(4.dp)) },
+                    colors = ChipDefaults.outlinedFilterChipColors(
+                        backgroundColor = Color.Transparent,
+                        contentColor = Color.White,
+                        selectedBackgroundColor = Color.White,
+                        selectedContentColor = Color.Black,
+                        selectedLeadingIconColor = Color.Black,
+                        leadingIconColor = Color.White
+                    ),
+                    border = BorderStroke(1.dp,MaterialTheme.colors.secondaryVariant),
+                ) {
+                    Text(text = stringResource(id = R.string.category_desc))
+                }
             }
         }
     }
+}
+
 }
 
 

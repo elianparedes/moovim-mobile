@@ -16,7 +16,7 @@ class RoutinesRepository @Inject constructor(
     private val api: Api
 ) {
 
-    suspend fun getAllRoutines(query: String? = null, categoryId: Int? = null, orderBy: String = "date", direction: String = "asc"): Result<List<Routine>> {
+    suspend fun getAllRoutines(query: String? = null, categoryId: Int? = null, orderBy: String = "date", direction: String = "desc"): Result<List<Routine>> {
         return handleApiResponse({
             api.getAllRoutines(search = query, categoryId = categoryId, orderBy = orderBy, direction = direction)
         }, { data -> data.content.map { it.toRoutine() } })
