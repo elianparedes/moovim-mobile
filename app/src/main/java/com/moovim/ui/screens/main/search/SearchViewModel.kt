@@ -70,7 +70,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             state = state.copy(isLoading = true)
 
-            when(val response = routinesRepository.getAllRoutines(query.text)){
+            when(val response = routinesRepository.getAllRoutines(query.text,orderBy = state.orderBy,direction = state.direction)){
                 is Result.Success -> {
                     if (response.data != null)
                         state = state.copy(resultRoutines = response.data, isLoading = false)
@@ -82,4 +82,9 @@ class SearchViewModel @Inject constructor(
                 }
             }
         }
+
+    fun orderByChange(orderBy: String, direction: String){
+        state = state.copy(orderBy = orderBy, direction = direction)
+        search(state.query)
+    }
     }
