@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -222,6 +223,7 @@ fun ExerciseList(exercises: List<Exercise>){
 
 @Composable
 fun RoutinesList(routines: List<Routine>, navController: NavHostController) {
+    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier
             .padding(0.dp, 16.dp)
@@ -235,7 +237,7 @@ fun RoutinesList(routines: List<Routine>, navController: NavHostController) {
                 imageUrl = routine.imageUrl,
                 avatarUrl = routine.avatarUrl,
                 onClickCard = { navController.navigate("routines/${routine.id}") },
-                onShareClick = { /*TODO*/ },
+                onShareClick = { shareRoutine(context, routine.id) },
                 favText = stringResource(id = R.string.add_to_fav),
                 onFavClick = { /*TODO*/ }) {
 

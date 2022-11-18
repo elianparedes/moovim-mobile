@@ -1,5 +1,7 @@
 package com.moovim.ui.screens.main.routines
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -8,8 +10,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.moovim.R
@@ -31,6 +35,7 @@ fun RoutinesScreen(
     var score by remember { mutableStateOf(1) }
     var chipSide by rememberSaveable { mutableStateOf(ChipSide.LEFT) }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -95,7 +100,7 @@ fun RoutinesScreen(
                         onClickCard = {
                             navController.navigate("routines/${routine.id}")
                         },
-                        onShareClick = { /*TODO*/ },
+                        onShareClick = { shareRoutine(context, routine.id) },
                         favText = "Añadir a favoritos",
                         onFavClick = { viewModel.addRoutineFromFavourites(routine.id) },
                         onScoreClick = {
@@ -131,7 +136,7 @@ fun RoutinesScreen(
                         imageUrl = routine.imageUrl,
                         avatarUrl = routine.avatarUrl,
                         onClickCard = { navController.navigate("routines/${routine.id}") },
-                        onShareClick = { /*TODO*/ },
+                        onShareClick = { shareRoutine(context, routine.id) },
                         favText = "Quitar de favoritos",
                         onFavClick = { viewModel.deleteRoutineFromFavourites(routine.id) },
                         onScoreClick = {

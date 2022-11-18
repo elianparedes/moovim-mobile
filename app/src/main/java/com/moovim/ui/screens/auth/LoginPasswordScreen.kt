@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +26,8 @@ fun LoginPasswordScreen(
             onLoginSuccess()
         }
     }
-
+    val color : Color = MaterialTheme.colors.primary
+    var textFieldColor: Color by remember { mutableStateOf(color) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +50,16 @@ fun LoginPasswordScreen(
                 .align(Alignment.Start),
             style = MaterialTheme.typography.body1,
             color = Color.White)
-        PasswordTextField(state.password, { newValue -> viewModel.onPasswordChange(newValue)}, "Contraseña")
+        PasswordTextField(state.password, { newValue -> viewModel.onPasswordChange(newValue)},
+            "Contraseña", textFieldColor)
+        if (state.isError){
+            textFieldColor = MaterialTheme.colors.error
+            Text(
+                text = state.errorMessage,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.body2,
+            )
+        }
         Spacer(
             modifier = Modifier.weight(1f)
         )
@@ -62,3 +71,4 @@ fun LoginPasswordScreen(
         }
     }
 }
+

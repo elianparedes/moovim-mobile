@@ -33,22 +33,17 @@ class LoginViewModel @Inject constructor(
                     state = state.copy(token = response.data, isLoggedIn = true)
                 }
                 is Result.Error -> {
+                    if (response.code == 4) {
+                        state = state.copy(errorMessage = "Usuario o contraseña inválidos")
+                    }
+                    else {
+                        state = state.copy(errorMessage = "Sin conexión")
+                    }
+                    state = state.copy(isError = true)
                     return@launch
                 }
             }
 
-        }
-    }
-
-    fun logout(){
-        viewModelScope.launch {
-            when (val response = repository.logout()){
-                is Result.Success -> {
-                    state = state.copy(token = "", isLoggedIn = false)
-                }
-                is Result.Error -> {
-                }
-            }
         }
     }
 

@@ -24,7 +24,7 @@ interface UserApi {
     suspend fun login(
         @Field("username") username: String,
         @Field("password") password: String
-    ): TokenDto
+    ): Response<TokenDto>
 
     @POST("users/logout")
     suspend fun logout() : Response<Unit>
