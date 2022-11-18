@@ -5,7 +5,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,12 +12,14 @@ import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.moovim.R
+import com.moovim.ui.components.NoContentCard
 import com.moovim.ui.components.WideRoutineCard
 import com.moovim.ui.screens.details.CycleExercisesList
 import com.moovim.ui.screens.details.SkeletonExerciseCardLoader
@@ -49,7 +50,7 @@ fun HomeScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Box() {
+            Box {
                 IconButton(onClick = {
                     expanded = true
                 }) {
@@ -84,28 +85,24 @@ fun HomeScreen(
                     }
                 }
 
-
             }
 
             if (state.selectedRoutine != null) {
-                Column() {
-                    Text("Rutina actual", style = MaterialTheme.typography.body2)
+                Column {
+                    Text(stringResource(R.string.current_routine_title), style = MaterialTheme.typography.body2)
                     Text(state.selectedRoutine.name, style = MaterialTheme.typography.h3)
                 }
             }
 
         }
 
-
-
         if (state.selectedRoutine != null) {
             WideRoutineCard(
                 title = state.selectedRoutine.name,
                 description = state.selectedRoutine.detail,
-                author = state.selectedRoutine.name,
                 imageUrl = state.selectedRoutine.imageUrl,
-                avatarUrl = "",
-                exercisesCount = 10, { }
+                exercisesCount = 10,
+                onClickCard = {}
             )
 
             if (state.isLoading) {
@@ -120,13 +117,16 @@ fun HomeScreen(
                     }
 
                 }
-            } else state.cycles.forEach { cycle ->
-                CycleExercisesList(cycle)
+            } else {
+                if (state.cycles.isNotEmpty()) {
+                    state.cycles.forEach { cycle ->
+                        CycleExercisesList(cycle)
+                    }
+                } else {
+                    NoContentCard(stringResource(R.string.no_cycles_message))
+                }
             }
-
         }
-
-
 
         Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
     }
