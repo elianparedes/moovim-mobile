@@ -37,71 +37,11 @@ fun AuxSearchScreen(navController: NavHostController, viewModel: SearchViewModel
             onSearch = {
                 viewModel.search(state.query)
             })
-        Row() {
-            FilterChip(
-                selected= state.orderBy=="date" && state.direction=="asc",
-                onClick = { viewModel.orderByChange("date", "asc") },
-                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange") },
-            ) {
-                Text( text = stringResource(id = R.string.date_asc) )
-            }
-            FilterChip(
-                selected= state.orderBy=="date" && state.direction=="desc",
-                onClick = { viewModel.orderByChange("date","desc") },
-                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange") },
-            ) {
-                Text( text = stringResource(id = R.string.date_desc) )
-            }
+        Column( modifier = Modifier
+            .verticalScroll(rememberScrollState())) {
+            OrderByChips(navController = navController, viewModel=viewModel, onCategory = state.categoryId!=null)
+            RoutinesList(state.resultRoutines, navController)
         }
-        Row() {
-            FilterChip(
-                selected= state.orderBy=="score" && state.direction=="desc",
-                onClick = { viewModel.orderByChange("score","desc") },
-                leadingIcon = { Icon(Icons.Rounded.Favorite, "Favorite") },
-            ) {
-                Text( text = stringResource(id = R.string.score_desc) )
-            }
-            FilterChip(
-                selected= state.orderBy=="score" && state.direction=="asc",
-                onClick = { viewModel.orderByChange("score","asc") },
-                leadingIcon = { Icon(Icons.Rounded.Favorite, "Favorite") },
-            ) {
-                Text( text = stringResource(id = R.string.score_asc) )
-            }
-        }
-        Row() {
-            FilterChip(
-                selected= state.orderBy=="difficulty" && state.direction=="asc",
-                onClick = { viewModel.orderByChange("difficulty","asc") },
-                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning") },
-            ) {
-                Text( text = stringResource(id = R.string.difficulty_asc) )
-            }
-            FilterChip(
-                selected= state.orderBy=="difficulty" && state.direction=="desc",
-                onClick = { viewModel.orderByChange("difficulty","desc") },
-                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning") },
-            ) {
-                Text( text = stringResource(id = R.string.difficulty_desc) )
-            }
-        }
-        Row() {
-            FilterChip(
-                selected= state.orderBy=="category" && state.direction=="asc",
-                onClick = { viewModel.orderByChange("category","asc") },
-                leadingIcon = { Icon(Icons.Rounded.Info, "Info") },
-            ) {
-                Text( text = stringResource(id = R.string.category_asc) )
-            }
-            FilterChip(
-                selected= state.orderBy=="category" && state.direction=="desc",
-                onClick = { viewModel.orderByChange("category","desc") },
-                leadingIcon = { Icon(Icons.Rounded.Info, "Info") },
-            ) {
-                Text( text = stringResource(id = R.string.category_desc) )
-            }
-        }
-        RoutinesList(state.resultRoutines, navController)
     }
 }
 
@@ -114,6 +54,7 @@ fun AuxCategoriesScreen(navController: NavHostController, viewModel: SearchViewM
             onValueChange = { newValue -> viewModel.onQueryChange(newValue) },
             onSearch = {
                 viewModel.search(state.query)
+                viewModel.categoryChange(null)
                 navController.navigate("search")
             })
         SwitchChip(left = "Categorias",
@@ -122,14 +63,24 @@ fun AuxCategoriesScreen(navController: NavHostController, viewModel: SearchViewM
             onRight = {viewModel.state = state.copy(chipSide = ChipSide.RIGHT)},
             chipSide = state.chipSide)
         if(state.chipSide ==  ChipSide.LEFT){
-            CategoriesScreen(navController = navController, getRoutinesByCategory = { categoryId ->
-                viewModel.getRoutinesByCategory(categoryId)
-                navController.navigate("search")
-            })
+            Column( modifier = Modifier
+                .verticalScroll(rememberScrollState())) {
+                CategoriesScreen(
+                    navController = navController,
+                    categoryChanged = { categoryId ->
+                        viewModel.categoryChange(categoryId)
+                        viewModel.onQueryChange(TextFieldValue())
+                        navController.navigate("search")
+                    })
+            }
         } else
         {
             viewModel.getAllRoutines()
-            DiscoverScreen(state.resultRoutines, navController)
+            Column( modifier = Modifier
+                .verticalScroll(rememberScrollState())) {
+                OrderByChips(navController = navController, viewModel=viewModel, onCategory = false)
+                DiscoverScreen(state.resultRoutines, navController)
+            }
         }
 
     }
@@ -145,7 +96,7 @@ data class Objectives(
 
 
 @Composable
-fun CategoriesScreen(navController: NavHostController, getRoutinesByCategory: (Int) -> Unit){
+fun CategoriesScreen(navController: NavHostController, categoryChanged: (Int) -> Unit){
 
     val objectivesTitles: Array<String> = stringArrayResource(id = R.array.objectives_titles)
     val objectivesDescriptions: Array<String> = stringArrayResource(id = R.array.objectives_descriptions)
@@ -162,9 +113,9 @@ fun CategoriesScreen(navController: NavHostController, getRoutinesByCategory: (I
     Column(modifier = Modifier
         .padding(0.dp, 16.dp)
         .fillMaxWidth()
-        .verticalScroll(rememberScrollState())) {
+        ) {
         Text(text = stringResource(id = R.string.objectives))
-        ObjectivesList(objectives = objectives,navController,getRoutinesByCategory)
+        ObjectivesList(objectives = objectives,navController,categoryChanged)
         //TODO: Descomentar al implementar listas de ejercicios y vistas de detalle de los mismos
         /*
         Row(modifier = Modifier
@@ -265,9 +216,6 @@ fun ExerciseList(exercises: List<Exercise>){
 fun RoutinesList(routines: List<Routine>, navController: NavHostController) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier
-            .verticalScroll(
-                rememberScrollState()
-            )
             .padding(0.dp, 16.dp)
     ) {
         routines.forEach { routine ->
@@ -288,6 +236,80 @@ fun RoutinesList(routines: List<Routine>, navController: NavHostController) {
 
     }
 }
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun OrderByChips(navController: NavHostController, viewModel: SearchViewModel = hiltViewModel(), onCategory: Boolean){
+    val state = viewModel.state
+
+    Row() {
+        FilterChip(
+            selected= state.orderBy=="date" && state.direction=="asc",
+            onClick = { viewModel.orderByChange("date", "asc") },
+            leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange") },
+        ) {
+            Text( text = stringResource(id = R.string.date_asc) )
+        }
+        FilterChip(
+            selected= state.orderBy=="date" && state.direction=="desc",
+            onClick = { viewModel.orderByChange("date","desc") },
+            leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange") },
+        ) {
+            Text( text = stringResource(id = R.string.date_desc) )
+        }
+    }
+    Row() {
+        FilterChip(
+            selected= state.orderBy=="score" && state.direction=="desc",
+            onClick = { viewModel.orderByChange("score","desc") },
+            leadingIcon = { Icon(Icons.Rounded.Favorite, "Favorite") },
+        ) {
+            Text( text = stringResource(id = R.string.score_desc) )
+        }
+        FilterChip(
+            selected= state.orderBy=="score" && state.direction=="asc",
+            onClick = { viewModel.orderByChange("score","asc") },
+            leadingIcon = { Icon(Icons.Rounded.Favorite, "Favorite") },
+        ) {
+            Text( text = stringResource(id = R.string.score_asc) )
+        }
+    }
+    Row() {
+        FilterChip(
+            selected= state.orderBy=="difficulty" && state.direction=="asc",
+            onClick = { viewModel.orderByChange("difficulty","asc") },
+            leadingIcon = { Icon(Icons.Rounded.Warning, "Warning") },
+        ) {
+            Text( text = stringResource(id = R.string.difficulty_asc) )
+        }
+        FilterChip(
+            selected= state.orderBy=="difficulty" && state.direction=="desc",
+            onClick = { viewModel.orderByChange("difficulty","desc") },
+            leadingIcon = { Icon(Icons.Rounded.Warning, "Warning") },
+        ) {
+            Text( text = stringResource(id = R.string.difficulty_desc) )
+        }
+    }
+    if(!onCategory) {
+        Row() {
+            FilterChip(
+                selected = state.orderBy == "category" && state.direction == "asc",
+                onClick = { viewModel.orderByChange("category", "asc") },
+                leadingIcon = { Icon(Icons.Rounded.Info, "Info") },
+            ) {
+                Text(text = stringResource(id = R.string.category_asc))
+            }
+            FilterChip(
+                selected = state.orderBy == "category" && state.direction == "desc",
+                onClick = { viewModel.orderByChange("category", "desc") },
+                leadingIcon = { Icon(Icons.Rounded.Info, "Info") },
+            ) {
+                Text(text = stringResource(id = R.string.category_desc))
+            }
+        }
+    }
+}
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

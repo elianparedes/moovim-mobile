@@ -14,5 +14,7 @@ data class SearchState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val hasAllRoutines: Boolean = false,
-    val chipSide: ChipSide = ChipSide.LEFT
+    val chipSide: ChipSide = ChipSide.LEFT,
+    val categoryId: Int? = null,
+    val orderChanged: Boolean = true,
 )
