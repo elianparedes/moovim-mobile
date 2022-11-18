@@ -50,4 +50,7 @@
         <item>Abdominales</item>
     </string-array>
 
+    <string name="exercise_sec">Seg</string>
+    <string name="exercise_reps">Reps</string>
+
 </resources>

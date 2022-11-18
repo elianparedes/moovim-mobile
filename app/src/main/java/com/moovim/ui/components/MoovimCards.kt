@@ -354,6 +354,216 @@ fun ExerciseRoutineCardPreview() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
+fun WideExerciseRoutineCard(
+    title: String,
+    group: String,
+    repetitions: Int?,
+    duration: Int?,
+    onClickCard: () -> Unit,
+) {
+    Card(
+        onClick = onClickCard,
+        modifier = Modifier
+            .height(180.dp)
+            .fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.secondary,
+        shape = RoundedCornerShape(8.dp)
+    )
+    {
+        Column(modifier = Modifier.fillMaxHeight()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 4.dp, 16.dp, 8.dp)
+            ) {
+                Column() {
+                    Text(
+                        modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 4.dp),
+                        text = title,
+                        style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.onBackground
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(0.dp, 4.dp),
+                        text = group,
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                }
+            }
+            Divider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colors.secondaryVariant)
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(16.dp, 0.dp, 16.dp, 16.dp),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                if (repetitions != null) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Row() {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_replay),
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.onBackground,
+                                modifier = Modifier.padding(8.dp, 0.dp)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.exercise_reps),
+                                color = MaterialTheme.colors.onBackground
+                            )
+                        }
+                        Row(horizontalArrangement = Arrangement.Center){
+                            Text(text = repetitions.toString() ,color = MaterialTheme.colors.onBackground, modifier = Modifier.padding(vertical = 8.dp))
+                        }
+                    }
+                }
+                if (duration != null) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Row() {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_timer),
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.onBackground,
+                                modifier = Modifier.padding(8.dp, 0.dp)
+                            )
+                            Text(text = stringResource(id = R.string.exercise_sec),color = MaterialTheme.colors.onBackground)
+                        }
+                        Row(horizontalArrangement = Arrangement.Center){
+                            Text(text = duration.toString() ,color = MaterialTheme.colors.onBackground,modifier = Modifier.padding(vertical = 8.dp))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF181818)
+@Composable
+fun WideExerciseRoutineCardPreview() {
+    MoovimTheme {
+        WideExerciseRoutineCard("Extension de tricep con polea","Triceps", 12,30,{ })
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ExerciseDetailedRoutineCard(
+    title: String,
+    group: String,
+    repetitions: Int?,
+    duration: Int?,
+    onClickCard: () -> Unit,
+) {
+    Card(
+        onClick = onClickCard,
+        modifier = Modifier
+            .fillMaxHeight(0.5F)
+            .fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.secondary,
+        shape = RoundedCornerShape(8.dp)
+    )
+    {
+        Column(modifier = Modifier.fillMaxHeight()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 4.dp, 16.dp, 8.dp)
+            ) {
+                Column() {
+                    Text(
+                        modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 4.dp),
+                        text = title,
+                        style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Text(
+                        modifier = Modifier.padding(0.dp, 4.dp),
+                        text = group,
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                }
+            }
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.6F)
+                .padding(vertical = 8.dp)
+            ) {
+                Card(
+                    backgroundColor = MaterialTheme.colors.secondaryVariant,
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(0.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.tricepspressdownn),
+                        contentDescription = null,
+                    )
+                }
+
+            }
+            //Divider(modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp), color = MaterialTheme.colors.secondaryVariant)
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(16.dp, 0.dp, 16.dp, 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (repetitions != null) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Row() {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_replay),
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.onBackground,
+                                modifier = Modifier.padding(8.dp, 0.dp)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.exercise_reps),
+                                color = MaterialTheme.colors.onBackground
+                            )
+                        }
+                        Row(horizontalArrangement = Arrangement.Center){
+                            Text(text = repetitions.toString() ,color = MaterialTheme.colors.onBackground, modifier = Modifier.padding(vertical = 8.dp))
+                        }
+                    }
+                }
+                if (duration != null) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Row() {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_timer),
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.onBackground,
+                                modifier = Modifier.padding(8.dp, 0.dp)
+                            )
+                            Text(text = stringResource(id = R.string.exercise_sec),color = MaterialTheme.colors.onBackground)
+                        }
+                        Row(horizontalArrangement = Arrangement.Center){
+                            Text(text = duration.toString() ,color = MaterialTheme.colors.onBackground,modifier = Modifier.padding(vertical = 8.dp))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF181818)
+@Composable
+fun ExerciseDetailedRoutineCardPreview() {
+    MoovimTheme {
+        ExerciseDetailedRoutineCard("Extension de tricep con polea","Triceps", 12,30,{ })
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
 fun WideRoutineCard(
     title: String,
     description: String,
