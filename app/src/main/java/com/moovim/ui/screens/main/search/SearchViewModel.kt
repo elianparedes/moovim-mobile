@@ -27,15 +27,15 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getAllRoutines(){
-        if(!state.hasAllRoutines) {
+        if(!state.hasAllRoutines || state.orderChanged) {
             viewModelScope.launch {
                 state = state.copy(isLoading = true)
 
-                when (val response = routinesRepository.getAllRoutines()) {
+                when (val response = routinesRepository.getAllRoutines(orderBy = state.orderBy, direction = state.direction, categoryId = state.categoryId)) {
                     is Result.Success -> {
                         if (response.data != null) {
                             state = state.copy(resultRoutines = response.data, isLoading = false)
-                            state = state.copy(hasAllRoutines = true)
+                            state = state.copy(hasAllRoutines = true, orderChanged = false)
                         }
                     }
 
@@ -66,24 +66,39 @@ class SearchViewModel @Inject constructor(
             }
     }
 
-    fun search(query: TextFieldValue){
-        viewModelScope.launch {
-            state = state.copy(isLoading = true)
+    fun search(query: TextFieldValue) {
+        if (query.text.isEmpty()) {
+            getAllRoutines()
+        } else {
+            viewModelScope.launch {
+                state = state.copy(isLoading = true)
 
-            when(val response = routinesRepository.getAllRoutines(query.text,orderBy = state.orderBy,direction = state.direction)){
-                is Result.Success -> {
-                    if (response.data != null)
-                        state = state.copy(resultRoutines = response.data, isLoading = false)
+                when (val response = routinesRepository.getAllRoutines(
+                    query.text,
+                    categoryId = state.categoryId,
+                    orderBy = state.orderBy,
+                    direction = state.direction
+                )) {
+                    is Result.Success -> {
+                        if (response.data != null)
+                            state = state.copy(resultRoutines = response.data, isLoading = false)
                         state = state.copy(hasAllRoutines = false)
                     }
-                is Result.Error -> {
-                    state = state.copy(isError = true) }
+                    is Result.Error -> {
+                        state = state.copy(isError = true)
+                    }
                 }
             }
         }
+    }
 
     fun orderByChange(orderBy: String, direction: String){
-        state = state.copy(orderBy = orderBy, direction = direction)
+        state = state.copy(orderBy = orderBy, direction = direction, orderChanged = true)
+        search(state.query)
+    }
+
+    fun categoryChange(categoryId: Int?){
+        state = state.copy(categoryId = categoryId, orderChanged = true)
         search(state.query)
     }
 }
