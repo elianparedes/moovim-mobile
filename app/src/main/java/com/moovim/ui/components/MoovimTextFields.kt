@@ -15,7 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.moovim.R
 
 @Composable
-fun InputTextField(text: String, onValueChangeText: (String) -> Unit, labelText: String) {
+fun InputTextField(text: String, onValueChangeText: (String) -> Unit, labelText: String,
+                   textFieldColor: Color = MaterialTheme.colors.primary) {
 
     OutlinedTextField(
         modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp),
@@ -24,13 +25,16 @@ fun InputTextField(text: String, onValueChangeText: (String) -> Unit, labelText:
         value = text,
         onValueChange = onValueChangeText,
         label = { Text(labelText) },
-        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = Color.White)
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            cursorColor = textFieldColor,
+            focusedLabelColor = textFieldColor, focusedBorderColor = textFieldColor, textColor = Color.White)
     )
 
 }
 
 @Composable
-fun PasswordTextField(text: String, onValueChangeText: (String) -> Unit, labelText: String) {
+fun PasswordTextField(text: String, onValueChangeText: (String) -> Unit, labelText: String,
+                      textFieldColor: Color = MaterialTheme.colors.primary) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     OutlinedTextField(
@@ -42,7 +46,9 @@ fun PasswordTextField(text: String, onValueChangeText: (String) -> Unit, labelTe
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         label = { Text(labelText) },
-        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = Color.White),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            cursorColor = textFieldColor,
+            focusedLabelColor = textFieldColor, focusedBorderColor = textFieldColor ,textColor = Color.White),
         trailingIcon = {
             val image = if (passwordVisible)
                 R.drawable.ic_round_visibility

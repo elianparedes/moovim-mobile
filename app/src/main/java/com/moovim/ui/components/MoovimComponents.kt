@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.moovim.R
@@ -27,7 +28,7 @@ fun RoutineDropdown(expanded: Boolean, onDismissRequest: () -> Unit, onShareClic
         onDismissRequest = onDismissRequest) {
         DropdownMenuItem(onClick = {onShareClick()
                                     onDismissRequest() }){
-            Text("Compartir")
+            Text(stringResource(id = R.string.share))
         }
         DropdownMenuItem(onClick = {onFavClick()
                                     onDismissRequest()}){
@@ -35,7 +36,7 @@ fun RoutineDropdown(expanded: Boolean, onDismissRequest: () -> Unit, onShareClic
         }
         DropdownMenuItem(onClick = {onScoreClick()
                                     onDismissRequest()}){
-            Text("Calificar")
+            Text(stringResource(id = R.string.rate))
         }
     }
 }
@@ -106,7 +107,9 @@ fun MoovimSnackbar(
         hostState = snackbarHostState,
         snackbar = {snackbarData ->
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){

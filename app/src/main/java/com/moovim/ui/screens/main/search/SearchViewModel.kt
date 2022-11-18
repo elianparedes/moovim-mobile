@@ -101,4 +101,67 @@ class SearchViewModel @Inject constructor(
         state = state.copy(categoryId = categoryId, orderChanged = true)
         search(state.query)
     }
+
+    fun deleteRoutineFromFavourites(routineId: Int) {
+        viewModelScope.launch {
+            when (val result = routinesRepository.deleteRoutineFromFavourites(routineId)){
+                is Result.Success -> {
+                    state = state.copy(errorMessage= "Rutina borrada")
+                }
+                is Result.Error -> {
+                    state = state.copy(errorMessage = "Sin conexión")
+                }
+            }
+            state = state.copy(snackbar =true)
+        }
+    }
+
+    fun addRoutineFromFavourites(routineId: Int) {
+        viewModelScope.launch {
+            when (val result = routinesRepository.addRoutineToFavourites(routineId)) {
+                is Result.Success -> {
+                    state = state.copy(errorMessage= "Rutina añadida")
+                }
+                is Result.Error -> {
+                    if (result.code == 2){
+                        state = state.copy(errorMessage= "La rutina ya fue añadida")
+                    }
+                    else{
+                        state = state.copy(errorMessage= "Sin conexión")
+                    }
+                }
+            }
+            state = state.copy(snackbar = true)
+        }
+    }
+
+    fun addRoutineReview(routineId: Int, score: Int, review: String) {
+        viewModelScope.launch {
+            when (val result = routinesRepository.addRoutineReview(routineId, score, review)){
+                is Result.Success -> {
+                    state = state.copy(errorMessage = "Rutina calificada")
+                }
+                is Result.Error -> {
+                    state = state.copy(errorMessage = "Sin conexión")
+                }
+            }
+            state = state.copy(snackbar = true)
+        }
+    }
+
+    fun processFinished(){
+        state = state.copy(snackbar = false)
+    }
+
+    fun updateSelectedReviewId(routineReviewId: Int){
+        state = state.copy(selectedReviewId = routineReviewId)
+    }
+
+    fun openDisplay(){
+        state = state.copy(sheetDisplay = true)
+    }
+
+    fun closeDisplay(){
+        state = state.copy(sheetDisplay = false)
+    }
 }

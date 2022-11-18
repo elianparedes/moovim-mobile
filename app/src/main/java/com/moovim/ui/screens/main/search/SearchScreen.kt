@@ -2,7 +2,6 @@ package com.moovim.ui.screens.main;
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
@@ -30,11 +29,21 @@ import com.moovim.domain.model.Exercise
 import com.moovim.domain.model.Routine
 import com.moovim.ui.components.*
 import com.moovim.ui.screens.main.search.SearchViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AuxSearchScreen(navController: NavHostController, viewModel: SearchViewModel){
+fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel){
     val state = viewModel.state
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
+    )
+
+    //var score by remember { mutableStateOf(1) }
+    val coroutineScope = rememberCoroutineScope()
+
     Column(Modifier.padding(16.dp)) {
         SearchInput(
             value = state.query,
@@ -45,14 +54,43 @@ fun AuxSearchScreen(navController: NavHostController, viewModel: SearchViewModel
         Column( modifier = Modifier
             .verticalScroll(rememberScrollState())) {
             OrderByChips(navController = navController, viewModel=viewModel, onCategory = state.categoryId!=null)
-            RoutinesList(state.resultRoutines, navController)
+            RoutinesList(state.resultRoutines, navController, viewModel)
+        }
+
+        if (state.sheetDisplay) {
+            LaunchedEffect(Unit) {
+                sheetState.show()
+                viewModel.closeDisplay()
+            }
+        }
+
+    }
+
+    ScoreLayout(sheetState = sheetState, score = 1, viewModel = viewModel, coroutineScope = coroutineScope)
+
+    if (state.snackbar) {
+        LaunchedEffect(Unit) {
+            scaffoldState.snackbarHostState.showSnackbar(
+                message = state.errorMessage,
+            )
+            viewModel.processFinished()
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AuxCategoriesScreen(navController: NavHostController, viewModel: SearchViewModel){
+fun AuxCategoriesScreen(
+    scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel){
+
     val state = viewModel.state
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
+    )
+
+    val coroutineScope = rememberCoroutineScope()
+
     Column(Modifier.padding(16.dp)) {
         SearchInput(
             value = state.query,
@@ -62,8 +100,8 @@ fun AuxCategoriesScreen(navController: NavHostController, viewModel: SearchViewM
                 viewModel.categoryChange(null)
                 navController.navigate("search")
             })
-        SwitchChip(left = "Categorias",
-            right = "Descubrir",
+            SwitchChip(left = stringResource(id = R.string.categories),
+            right = stringResource(id = R.string.discover),
             onLeft = { viewModel.state = state.copy(chipSide = ChipSide.LEFT)},
             onRight = {viewModel.state = state.copy(chipSide = ChipSide.RIGHT)},
             chipSide = state.chipSide)
@@ -83,12 +121,28 @@ fun AuxCategoriesScreen(navController: NavHostController, viewModel: SearchViewM
             Column( modifier = Modifier
             ) {
                 OrderByChips(navController = navController, viewModel=viewModel, onCategory = false)
-                DiscoverScreen(state.resultRoutines, navController)
+                DiscoverScreen(state.resultRoutines, navController, viewModel, scaffoldState)
             }
         }
 
+        if (state.sheetDisplay) {
+            LaunchedEffect(Unit) {
+                sheetState.show()
+                viewModel.closeDisplay()
+            }
+        }
     }
 
+    ScoreLayout(sheetState = sheetState, score = 1, viewModel = viewModel, coroutineScope = coroutineScope)
+
+    if (state.snackbar) {
+        LaunchedEffect(Unit) {
+            scaffoldState.snackbarHostState.showSnackbar(
+                message = state.errorMessage,
+            )
+            viewModel.processFinished()
+        }
+    }
 }
 
 data class Objectives(
@@ -142,11 +196,15 @@ fun CategoriesScreen(navController: NavHostController, categoryChanged: (Int) ->
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DiscoverScreen(routines: List<Routine>, navController: NavHostController){
-        Text(text = stringResource(id = R.string.discover_msg), modifier = Modifier.padding(vertical = 16.dp))
+fun DiscoverScreen(routines: List<Routine>, navController: NavHostController, viewModel: SearchViewModel,
+                   scaffoldState:ScaffoldState){
+
+    Text(text = stringResource(id = R.string.discover_msg), modifier = Modifier.padding(vertical = 16.dp))
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        RoutinesList(routines = routines, navController = navController)
+        RoutinesList(routines = routines, navController = navController, viewModel)
+
     }
 
 }
@@ -189,7 +247,7 @@ fun SearchInput(value: TextFieldValue, onValueChange: (TextFieldValue) -> Unit, 
         onValueChange = onValueChange,
         label = {
             Text(
-                text = "Buscar rutinas"
+                text = stringResource(id = R.string.search_message)
             )
         },
         keyboardOptions = KeyboardOptions(
@@ -222,7 +280,7 @@ fun ExerciseList(exercises: List<Exercise>){
 }
 
 @Composable
-fun RoutinesList(routines: List<Routine>, navController: NavHostController) {
+fun RoutinesList(routines: List<Routine>, navController: NavHostController, viewModel : SearchViewModel) {
     val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier
@@ -238,12 +296,11 @@ fun RoutinesList(routines: List<Routine>, navController: NavHostController) {
                 avatarUrl = routine.avatarUrl,
                 onClickCard = { navController.navigate("routines/${routine.id}") },
                 onShareClick = { shareRoutine(context, routine.id) },
-                favText = "Añadir a favoritos",
-                onFavClick = { /*TODO*/ }) {
-
-            }
+                onFavClick = { viewModel.addRoutineFromFavourites(routine.id)},
+                onScoreClick = { viewModel.openDisplay()
+                                viewModel.updateSelectedReviewId(routine.id)},
+                favText = stringResource(id = R.string.add_to_fav))
         }
-
     }
 }
 
@@ -267,7 +324,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(0.dp,0.dp,4.dp,0.dp),
                 selected= state.orderBy=="date" && state.direction=="desc",
                 onClick = { viewModel.orderByChange("date","desc") },
-                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -284,7 +344,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(),
                 selected= state.orderBy=="date" && state.direction=="asc",
                 onClick = { viewModel.orderByChange("date", "asc") },
-                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -303,7 +366,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(0.dp,0.dp,4.dp,0.dp),
                 selected= state.orderBy=="score" && state.direction=="desc",
                 onClick = { viewModel.orderByChange("score","desc") },
-                leadingIcon = { Icon(Icons.Rounded.Star ,"Favorite",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.Star ,"Favorite",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -320,7 +386,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(),
                 selected= state.orderBy=="score" && state.direction=="asc",
                 onClick = { viewModel.orderByChange("score","asc") },
-                leadingIcon = { Icon(Icons.Rounded.Star, "Favorite",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.Star, "Favorite",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -339,7 +408,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(0.dp,0.dp,4.dp,0.dp),
                 selected= state.orderBy=="difficulty" && state.direction=="asc",
                 onClick = { viewModel.orderByChange("difficulty","asc") },
-                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -356,7 +428,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(),
                 selected= state.orderBy=="difficulty" && state.direction=="desc",
                 onClick = { viewModel.orderByChange("difficulty","desc") },
-                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -376,7 +451,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                     modifier = Modifier.padding(0.dp,0.dp,2.dp,0.dp),
                     selected = state.orderBy == "category" && state.direction == "asc",
                     onClick = { viewModel.orderByChange("category", "asc") },
-                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",Modifier.size(24.dp).padding(4.dp)) },
+                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",
+                        Modifier
+                            .size(24.dp)
+                            .padding(4.dp)) },
                     colors = ChipDefaults.outlinedFilterChipColors(
                         backgroundColor = Color.Transparent,
                         contentColor = Color.White,
@@ -393,7 +471,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                     modifier = Modifier.padding(),
                     selected = state.orderBy == "category" && state.direction == "desc",
                     onClick = { viewModel.orderByChange("category", "desc") },
-                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",Modifier.size(24.dp).padding(4.dp)) },
+                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",
+                        Modifier
+                            .size(24.dp)
+                            .padding(4.dp)) },
                     colors = ChipDefaults.outlinedFilterChipColors(
                         backgroundColor = Color.Transparent,
                         contentColor = Color.White,
@@ -413,22 +494,37 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
 
 }
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MoovimRoutineCard(name: String, onClick: () -> Unit){
-    Card(
-        modifier = Modifier
-            .height(200.dp)
-            .fillMaxWidth(),
-        onClick = onClick
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(name)
-        }
-
-    }
+fun ScoreLayout(
+    sheetState :  ModalBottomSheetState,
+    score : Int,
+    viewModel: SearchViewModel,
+    coroutineScope : CoroutineScope
+){
+    var layoutScore = score
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetContent = {
+            Column(
+                modifier = Modifier
+                    .padding(bottom = 40.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                RatingBar(
+                    rating = score,
+                    onScoreChange = { newScore -> layoutScore = newScore },
+                    onPublishClick = {
+                        coroutineScope.launch {
+                            viewModel.addRoutineReview(viewModel.state.selectedReviewId, layoutScore, "")
+                            sheetState.hide()
+                        }
+                    }
+                )
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    ){}
 }

@@ -6,5 +6,7 @@ data class LoginState(
     val user: String = String(),
     val password: String = String(),
     val token: String? = String(),
-    val isLoggedIn: Boolean = false
+    val isLoggedIn: Boolean = false,
+    val isError: Boolean = false,
+    val errorMessage: String = ""
 )

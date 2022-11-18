@@ -1,6 +1,7 @@
 package com.moovim.ui.nav.graphs
 
 
+import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,7 +15,7 @@ import com.moovim.ui.screens.main.AuxCategoriesScreen
 import com.moovim.ui.screens.main.AuxSearchScreen
 import com.moovim.ui.screens.main.search.SearchViewModel
 
-fun NavGraphBuilder.searchNavGraph(navController: NavHostController){
+fun NavGraphBuilder.searchNavGraph(scaffoldState: ScaffoldState, navController: NavHostController){
 
     navigation(
         route = Graph.SEARCH,
@@ -25,14 +26,14 @@ fun NavGraphBuilder.searchNavGraph(navController: NavHostController){
                 navController.getBackStackEntry("categories")
             }
             val searchViewModel = hiltViewModel<SearchViewModel>(parentEntry)
-            AuxCategoriesScreen(navController = navController,searchViewModel)
+            AuxCategoriesScreen(scaffoldState, navController,searchViewModel)
         }
         composable(route = "search"){navBackStackEntry ->
             val parentEntry = remember(navBackStackEntry) {
                 navController.getBackStackEntry("categories")
             }
             val searchViewModel = hiltViewModel<SearchViewModel>(parentEntry)
-            AuxSearchScreen(navController = navController,viewModel = searchViewModel)
+            AuxSearchScreen(scaffoldState, navController, searchViewModel)
         }
     }
 }

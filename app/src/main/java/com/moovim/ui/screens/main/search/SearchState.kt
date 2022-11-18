@@ -17,5 +17,9 @@ data class SearchState(
     val chipSide: ChipSide = ChipSide.LEFT,
     val categoryId: Int? = null,
     val orderChanged: Boolean = true,
-    val filter: Boolean = false
+    val filter: Boolean = false,
+    var snackbar: Boolean = false,
+    var errorMessage: String = "",
+    var sheetDisplay: Boolean = false,
+    val selectedReviewId: Int = 0
 )
