@@ -21,7 +21,8 @@ import kotlinx.coroutines.launch
 fun RoutinesScreen(
     scaffoldState: ScaffoldState,
     navController: NavHostController,
-    viewModel: MyRoutinesViewModel = hiltViewModel()
+    viewModel: MyRoutinesViewModel = hiltViewModel(),
+    onProfileClick: () -> Unit
 ) {
 
     val state = viewModel.state
@@ -49,7 +50,7 @@ fun RoutinesScreen(
             verticalAlignment = Alignment.CenterVertically
         ){
             Text(text = "Mis Rutinas", style = MaterialTheme.typography.h3)
-            IconButton(onClick = {  }) {
+            IconButton(onClick = { onProfileClick() }) {
                 Icon(
                     painterResource(R.drawable.ic_round_person),
                     contentDescription = "Perfil",

@@ -2,6 +2,8 @@ package com.moovim.data.repository
 
 import com.moovim.data.local.UserSharedPreferences
 import com.moovim.data.remote.dto.common.Api
+import com.moovim.data.remote.dto.toUser
+import com.moovim.domain.model.User
 import com.moovim.util.Result
 import com.moovim.util.handleApiResponse
 import java.lang.Exception
@@ -26,6 +28,11 @@ class UserRepository @Inject constructor(
 
     fun isUserLoggedIn(): Boolean {
         return userSharedPreferences.isUserLoggedIn()
+    }
+
+    suspend fun getCurrentUser() : Result<User>{
+        return  handleApiResponse({api.getCurrentUser()},
+            { it.toUser() })
     }
 
     fun getUserCurrentRoutineId(): Int{

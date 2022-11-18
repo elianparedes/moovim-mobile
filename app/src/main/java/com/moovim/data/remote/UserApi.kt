@@ -8,7 +8,7 @@ import retrofit2.http.*
 interface UserApi {
 
     @GET("users/current")
-    suspend fun getCurrentUser(): UserDto
+    suspend fun getCurrentUser(): Response<UserDto>
 
     @POST("users")
     suspend fun addUser(@Body user: UserDto): UserDto
