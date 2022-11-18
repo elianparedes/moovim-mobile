@@ -3,13 +3,15 @@ package com.moovim.ui.nav.graphs
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.moovim.ui.nav.NavigationItem
 import com.moovim.ui.screens.main.HomeScreen
 import com.moovim.ui.screens.main.routines.RoutinesScreen
-import com.moovim.ui.screens.main.SearchScreen
+import com.moovim.ui.screens.main.search.SearchViewModel
 
 @Composable
 fun MainNavGraph(scaffoldState: ScaffoldState, navController: NavHostController, paddingValues: PaddingValues) {
@@ -21,9 +23,9 @@ fun MainNavGraph(scaffoldState: ScaffoldState, navController: NavHostController,
         composable(NavigationItem.Home.route) {
             HomeScreen(navController, paddingValues)
         }
-        composable(NavigationItem.Search.route) {
-            SearchScreen(navController)
-        }
+
+        searchNavGraph(navController)
+
         composable(NavigationItem.Routines.route) {
             RoutinesScreen(scaffoldState, navController)
         }

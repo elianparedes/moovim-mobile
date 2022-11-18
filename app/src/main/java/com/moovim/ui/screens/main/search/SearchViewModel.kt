@@ -51,11 +51,11 @@ class SearchViewModel @Inject constructor(
             viewModelScope.launch {
                 state = state.copy(isLoading = true)
 
-                when (val response = routinesRepository.getAllRoutines(categoryId = categoryId)) {
+                when (val response = routinesRepository.getAllRoutines(categoryId = categoryId,orderBy = state.orderBy,direction = state.direction)) {
                     is Result.Success -> {
                         if (response.data != null) {
                             state = state.copy(resultRoutines = response.data, isLoading = false)
-                            state = state.copy(hasAllRoutines = true)
+                            state = state.copy(hasAllRoutines = false)
                         }
                     }
 
