@@ -48,7 +48,6 @@ class MyRoutinesViewModel @Inject constructor(
                         state = state.copy(favouriteRoutines = response.data, isLoading = false)
                     }
                 }
-
                 is Result.Error -> {
                     state = state.copy(isError = true, isLoading = false)
                 }
@@ -59,23 +58,53 @@ class MyRoutinesViewModel @Inject constructor(
 
     fun deleteRoutineFromFavourites(routineId: Int) {
         viewModelScope.launch {
-            repository.deleteRoutineFromFavourites(routineId)
+            when (val result = repository.deleteRoutineFromFavourites(routineId)){
+                is Result.Success -> {
+                    state = state.copy(errorMessage= "Rutina borrada")
+                }
+                is Result.Error -> {
+                    state = state.copy(errorMessage = "Sin conexión")
+                }
+            }
+            state = state.copy(snackbar =true)
         }
     }
 
     fun addRoutineFromFavourites(routineId: Int) {
         viewModelScope.launch {
             when (val result = repository.addRoutineToFavourites(routineId)) {
-                is Result.Success -> Log.d("MYR", "addRoutineFromFavourites: " + "GOD")
-                is Result.Error -> Log.d("MYR", "addRoutineFromFavourites: " + result.code)
+                is Result.Success -> {
+                    state = state.copy(errorMessage= "Rutina añadida")
+                }
+                is Result.Error -> {
+                    if (result.code == 2){
+                        state = state.copy(errorMessage= "La rutina ya fue añadida")
+                    }
+                    else{
+                        state = state.copy(errorMessage= "Sin conexión")
+                    }
+                }
             }
+            state = state.copy(snackbar = true)
         }
     }
 
     fun addRoutineReview(routineId: Int, score: Int, review: String) {
         viewModelScope.launch {
-            repository.addRoutineReview(routineId, score, review)
+            when (val result = repository.addRoutineReview(routineId, score, review)){
+                is Result.Success -> {
+                    state = state.copy(errorMessage = "Rutina calificada")
+                }
+                is Result.Error -> {
+                    state = state.copy(errorMessage = "Sin conexión")
+                }
+            }
+            state = state.copy(snackbar = true)
         }
+    }
+
+    fun processFinished(){
+        state = state.copy(snackbar = false)
     }
 
 }

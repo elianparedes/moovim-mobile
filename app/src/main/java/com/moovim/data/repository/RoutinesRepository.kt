@@ -66,16 +66,16 @@ class RoutinesRepository @Inject constructor(
         }
     }
 
-    suspend fun addRoutineToFavourites(routineId: Int): Result<Int> {
+    suspend fun addRoutineToFavourites(routineId: Int): Result<Unit> {
         return handleApiResponse ({
             api.addRoutineToFavourites(routineId)
-        }, { it })
+        }) { it }
     }
 
-    suspend fun deleteRoutineFromFavourites(routineId: Int): Result<Int> {
+    suspend fun deleteRoutineFromFavourites(routineId: Int): Result<Unit> {
         return handleApiResponse ({
             api.deleteRoutineFromFavourites(routineId)
-        }, { it })
+        }) { it }
     }
 
     suspend fun getAllRoutineReviews(routineId: Int): Result<List<RoutineReview>> {
@@ -88,10 +88,10 @@ class RoutinesRepository @Inject constructor(
         }
     }
 
-    suspend fun addRoutineReview(routineId: Int, score: Int, review: String): Result<Int> {
+    suspend fun addRoutineReview(routineId: Int, score: Int, review: String): Result<Unit> {
         return handleApiResponse ({
             api.addRoutineReview(routineId, NewRoutineReviewDto(score, review))
-        }, { it })
+        }, {it})
     }
 
     suspend fun getRoutineDetails(routineId: Int): Result<RoutineDetails> {

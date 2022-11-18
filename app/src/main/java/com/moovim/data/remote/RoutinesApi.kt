@@ -40,12 +40,12 @@ interface RoutinesApi {
     @POST("favourites/{routineId}")
     suspend fun addRoutineToFavourites(
         @Path("routineId") routineId: Int
-    ): Response<Int>
+    ): Response<Unit>
 
     @DELETE("favourites/{routineId}")
     suspend fun deleteRoutineFromFavourites(
         @Path("routineId") routineId: Int
-    ): Response<Int>
+    ): Response<Unit>
 
     @GET("reviews/{routineId}")
     suspend fun getAllRoutineReviews(
@@ -59,5 +59,5 @@ interface RoutinesApi {
     suspend fun addRoutineReview(
         @Path("routineId") routineId: Int,
         @Body routineReview: NewRoutineReviewDto
-    ): Response<Int>
+    ): Response<Unit>
 }

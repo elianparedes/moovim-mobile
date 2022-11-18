@@ -77,8 +77,7 @@ class SearchViewModel @Inject constructor(
                         state = state.copy(hasAllRoutines = false)
                     }
                 is Result.Error -> {
-                    state = state.copy(isError = true)
-                }
+                    state = state.copy(isError = true) }
                 }
             }
         }
@@ -87,4 +86,4 @@ class SearchViewModel @Inject constructor(
         state = state.copy(orderBy = orderBy, direction = direction)
         search(state.query)
     }
-    }
+}
