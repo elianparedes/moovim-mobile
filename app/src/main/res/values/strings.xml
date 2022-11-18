@@ -11,12 +11,12 @@
     <string name="objectives">Objetivos</string>
     <string name="muscles">Grupos musculares</string>
 
-    <string name="date_asc">Mas viejos</string>
-    <string name="date_desc">Mas nuevos</string>
+    <string name="date_asc">Más antiguos</string>
+    <string name="date_desc">Más recientes</string>
     <string name="score_asc">Menos populares</string>
-    <string name="score_desc">Mas populares</string>
-    <string name="difficulty_asc">Mas faciles</string>
-    <string name="difficulty_desc">Mas dificiles</string>
+    <string name="score_desc">Más populares</string>
+    <string name="difficulty_asc">Más faciles</string>
+    <string name="difficulty_desc">Más dificiles</string>
     <string name="category_asc">Categoria ascendente</string>
     <string name="category_desc">Categoria descendente</string>
 
@@ -54,5 +54,10 @@
         <item>Gemelos</item>
         <item>Abdominales</item>
     </string-array>
+
+    <string name="exercise_sec">Seg</string>
+    <string name="exercise_reps">Reps</string>
+
+    <string name="filters">Filtros</string>
 
 </resources>

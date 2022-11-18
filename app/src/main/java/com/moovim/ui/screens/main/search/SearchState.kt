@@ -10,11 +10,12 @@ data class SearchState(
     val resultRoutines: List<Routine> = emptyList(),
     val query: TextFieldValue = TextFieldValue(),
     val orderBy: String = "date",
-    val direction: String = "asc",
+    val direction: String = "desc",
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val hasAllRoutines: Boolean = false,
     val chipSide: ChipSide = ChipSide.LEFT,
     val categoryId: Int? = null,
     val orderChanged: Boolean = true,
+    val filter: Boolean = false
 )
