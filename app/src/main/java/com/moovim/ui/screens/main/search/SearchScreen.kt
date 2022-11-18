@@ -13,7 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +36,7 @@ import com.moovim.ui.screens.main.search.SearchViewModel
 fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel = hiltViewModel()) {
     val state = viewModel.state
     var onSearch by remember { mutableStateOf(false) }
+    var onOrder by remember { mutableStateOf(false) }
     var chipSide by remember { mutableStateOf(ChipSide.LEFT) }
     Column(Modifier.padding(16.dp)) {
         SearchInput(
@@ -44,8 +45,75 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel = 
             onSearch = {
                 viewModel.search(state.query)
                 onSearch = true
+                onOrder = true
             })
         if(onSearch){
+            if(onOrder){
+                Row() {
+                    FilterChip(
+                        selected= state.orderBy=="date" && state.direction=="asc",
+                        onClick = { viewModel.orderByChange("date", "asc") },
+                        leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange") },
+                        ) {
+                        Text( text = stringResource(id = R.string.date_asc) )
+                    }
+                    FilterChip(
+                        selected= state.orderBy=="date" && state.direction=="desc",
+                        onClick = { viewModel.orderByChange("date","desc") },
+                        leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange") },
+                        ) {
+                        Text( text = stringResource(id = R.string.date_desc) )
+                    }
+                }
+                Row() {
+                    FilterChip(
+                        selected= state.orderBy=="score" && state.direction=="desc",
+                        onClick = { viewModel.orderByChange("score","desc") },
+                        leadingIcon = { Icon(Icons.Rounded.Favorite, "Favorite") },
+                        ) {
+                        Text( text = stringResource(id = R.string.score_desc) )
+                    }
+                    FilterChip(
+                        selected= state.orderBy=="score" && state.direction=="asc",
+                        onClick = { viewModel.orderByChange("score","asc") },
+                        leadingIcon = { Icon(Icons.Rounded.Favorite, "Favorite") },
+                        ) {
+                        Text( text = stringResource(id = R.string.score_asc) )
+                    }
+                }
+                Row() {
+                    FilterChip(
+                        selected= state.orderBy=="difficulty" && state.direction=="asc",
+                        onClick = { viewModel.orderByChange("difficulty","asc") },
+                        leadingIcon = { Icon(Icons.Rounded.Warning, "Warning") },
+                        ) {
+                        Text( text = stringResource(id = R.string.difficulty_asc) )
+                    }
+                    FilterChip(
+                        selected= state.orderBy=="difficulty" && state.direction=="desc",
+                        onClick = { viewModel.orderByChange("difficulty","desc") },
+                        leadingIcon = { Icon(Icons.Rounded.Warning, "Warning") },
+                        ) {
+                        Text( text = stringResource(id = R.string.difficulty_desc) )
+                    }
+                }
+                Row() {
+                    FilterChip(
+                        selected= state.orderBy=="category" && state.direction=="asc",
+                        onClick = { viewModel.orderByChange("category","asc") },
+                        leadingIcon = { Icon(Icons.Rounded.Info, "Info") },
+                        ) {
+                        Text( text = stringResource(id = R.string.category_asc) )
+                    }
+                    FilterChip(
+                        selected= state.orderBy=="category" && state.direction=="desc",
+                        onClick = { viewModel.orderByChange("category","desc") },
+                        leadingIcon = { Icon(Icons.Rounded.Info, "Info") },
+                        ) {
+                        Text( text = stringResource(id = R.string.category_desc) )
+                    }
+                }
+            }
             RoutinesList(state.resultRoutines, navController)
         }
         else{
@@ -55,7 +123,11 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel = 
                 onRight = { chipSide = ChipSide.RIGHT },
                 chipSide = chipSide)
             if(chipSide == ChipSide.LEFT){
-                CategoriesScreen(navController)
+                CategoriesScreen(navController) { categoryId ->
+                    viewModel.getRoutinesByCategory(categoryId)
+                    onSearch = true
+                    onOrder = false
+                }
             } else
             {
                 viewModel.getAllRoutines()
@@ -68,6 +140,7 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel = 
 }
 
 data class Objectives(
+    val id: Int,
     val title: String,
     val description: String,
     val imageUrl: String
@@ -75,17 +148,17 @@ data class Objectives(
 
 
 @Composable
-fun CategoriesScreen(navController: NavHostController){
+fun CategoriesScreen(navController: NavHostController, getRoutinesByCategory: (Int) -> Unit){
 
     val objectivesTitles: Array<String> = stringArrayResource(id = R.array.objectives_titles)
     val objectivesDescriptions: Array<String> = stringArrayResource(id = R.array.objectives_descriptions)
     val objectivesImage: Array<String> = stringArrayResource(id = R.array.objectives_image_url)
 
     val objectives = listOf(
-        Objectives(title = objectivesTitles[0], description = objectivesDescriptions[0], imageUrl = objectivesImage[0]),
-        Objectives(title = objectivesTitles[1], description = objectivesDescriptions[1], imageUrl = objectivesImage[1]),
-        Objectives(title = objectivesTitles[2], description = objectivesDescriptions[2], imageUrl = objectivesImage[2]),
-        Objectives(title = objectivesTitles[3], description = objectivesDescriptions[3], imageUrl = objectivesImage[3])
+        Objectives(title = objectivesTitles[0], description = objectivesDescriptions[0], imageUrl = objectivesImage[0], id = 1),
+        Objectives(title = objectivesTitles[1], description = objectivesDescriptions[1], imageUrl = objectivesImage[1], id = 2),
+        Objectives(title = objectivesTitles[2], description = objectivesDescriptions[2], imageUrl = objectivesImage[2], id = 3),
+        Objectives(title = objectivesTitles[3], description = objectivesDescriptions[3], imageUrl = objectivesImage[3], id = 4)
     )
     val muscles: Array<String> = stringArrayResource(id = R.array.muscles_titles)
 
@@ -98,7 +171,7 @@ fun CategoriesScreen(navController: NavHostController){
             .horizontalScroll(rememberScrollState())
             .fillMaxWidth()
             .padding(0.dp, 16.dp)){
-            ObjectivesList(objectives = objectives,navController)
+            ObjectivesList(objectives = objectives,navController,getRoutinesByCategory)
         }
         Text(text = stringResource(id = R.string.muscles))
         Column(modifier = Modifier.padding(0.dp,16.dp)) {
@@ -113,7 +186,7 @@ fun DiscoverScreen(routines: List<Routine>, navController: NavHostController){
 }
 
 @Composable
-fun ObjectivesList(objectives: List<Objectives>, navController: NavHostController){
+fun ObjectivesList(objectives: List<Objectives>, navController: NavHostController, onClickCard: (Int) -> Unit){
     objectives.forEachIndexed { index ,objective ->
         val modifier: Modifier = if(index == objectives.size-1){
             Modifier
@@ -129,7 +202,7 @@ fun ObjectivesList(objectives: List<Objectives>, navController: NavHostControlle
                 description = objective.description,
                 imageUrl = objective.imageUrl,
                 modifier = modifier,
-                onClickCard = {}
+                onClickCard = {onClickCard.invoke(index+1)}
             )
         }
     }

@@ -8,6 +8,8 @@ data class RoutineDto(
     @SerializedName("category")
     val category: CategoryDto,
     @SerializedName("date")
+
+
     val date: Long,
     @SerializedName("detail")
     val detail: String,
@@ -15,6 +17,8 @@ data class RoutineDto(
     val difficulty: String,
     @SerializedName("id")
     val id: Int,
+
+
     @SerializedName("isPublic")
     val isPublic: Boolean,
     @SerializedName("metadata")
@@ -35,7 +39,8 @@ fun RoutineDto.toRoutine(): Routine {
         score = score,
         imageUrl = metadata.image,
         author = user.username,
-        avatarUrl = user.avatarUrl
+        avatarUrl = user.avatarUrl,
+        category = category.toCategory()
     )
 }
 
@@ -47,6 +52,7 @@ fun RoutineDto.toUserRoutine(): Routine {
         score = score,
         imageUrl = metadata.image,
         author = "",
-        avatarUrl = ""
+        avatarUrl = "",
+        category = category.toCategory()
     )
 }

@@ -47,20 +47,43 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun search(query: TextFieldValue){
-        viewModelScope.launch {
-            state = state.copy(isLoading = true)
+    fun getRoutinesByCategory(categoryId: Int){
+            viewModelScope.launch {
+                state = state.copy(isLoading = true)
 
-            when(val response = routinesRepository.getAllRoutines(query.text)){
-                is Result.Success -> {
-                    if (response.data != null)
-                        state = state.copy(resultRoutines = response.data, isLoading = false)
-                        state = state.copy(hasAllRoutines = false)
+                when (val response = routinesRepository.getAllRoutines(categoryId = categoryId)) {
+                    is Result.Success -> {
+                        if (response.data != null) {
+                            state = state.copy(resultRoutines = response.data, isLoading = false)
+                            state = state.copy(hasAllRoutines = true)
+                        }
                     }
+
                     is Result.Error -> {
                         state = state.copy(isError = true)
                     }
                 }
             }
+    }
+
+    fun search(query: TextFieldValue){
+        viewModelScope.launch {
+            state = state.copy(isLoading = true)
+
+            when(val response = routinesRepository.getAllRoutines(query.text,orderBy = state.orderBy,direction = state.direction)){
+                is Result.Success -> {
+                    if (response.data != null)
+                        state = state.copy(resultRoutines = response.data, isLoading = false)
+                        state = state.copy(hasAllRoutines = false)
+                    }
+                is Result.Error -> {
+                    state = state.copy(isError = true) }
+                }
+            }
         }
+
+    fun orderByChange(orderBy: String, direction: String){
+        state = state.copy(orderBy = orderBy, direction = direction)
+        search(state.query)
+    }
 }

@@ -24,7 +24,8 @@ interface RoutinesApi {
         @Query("size") size: Number = 10,
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc",
-        @Query("search") search: String? = null
+        @Query("search") search: String? = null,
+        @Query("categoryId") categoryId: Int? = null
     ): Response<ContentPaginationDto<RoutineDto>>
 
     @GET("routines/{routineId}")
