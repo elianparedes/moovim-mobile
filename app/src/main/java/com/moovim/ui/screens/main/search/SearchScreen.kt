@@ -61,8 +61,8 @@ fun AuxCategoriesScreen(navController: NavHostController, viewModel: SearchViewM
                 viewModel.categoryChange(null)
                 navController.navigate("search")
             })
-        SwitchChip(left = "Categorias",
-            right = "Descubrir",
+            SwitchChip(left = stringResource(id = R.string.categories),
+            right = stringResource(id = R.string.discover),
             onLeft = { viewModel.state = state.copy(chipSide = ChipSide.LEFT)},
             onRight = {viewModel.state = state.copy(chipSide = ChipSide.RIGHT)},
             chipSide = state.chipSide)
@@ -188,7 +188,7 @@ fun SearchInput(value: TextFieldValue, onValueChange: (TextFieldValue) -> Unit, 
         onValueChange = onValueChange,
         label = {
             Text(
-                text = "Buscar rutinas"
+                text = stringResource(id = R.string.search_message)
             )
         },
         keyboardOptions = KeyboardOptions(
@@ -236,7 +236,7 @@ fun RoutinesList(routines: List<Routine>, navController: NavHostController) {
                 avatarUrl = routine.avatarUrl,
                 onClickCard = { navController.navigate("routines/${routine.id}") },
                 onShareClick = { /*TODO*/ },
-                favText = "Añadir a favoritos",
+                favText = stringResource(id = R.string.add_to_fav),
                 onFavClick = { /*TODO*/ }) {
 
             }
@@ -265,7 +265,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(0.dp,0.dp,4.dp,0.dp),
                 selected= state.orderBy=="date" && state.direction=="desc",
                 onClick = { viewModel.orderByChange("date","desc") },
-                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -282,7 +285,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(),
                 selected= state.orderBy=="date" && state.direction=="asc",
                 onClick = { viewModel.orderByChange("date", "asc") },
-                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.DateRange, "DateRange",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -301,7 +307,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(0.dp,0.dp,4.dp,0.dp),
                 selected= state.orderBy=="score" && state.direction=="desc",
                 onClick = { viewModel.orderByChange("score","desc") },
-                leadingIcon = { Icon(Icons.Rounded.Star ,"Favorite",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.Star ,"Favorite",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -318,7 +327,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(),
                 selected= state.orderBy=="score" && state.direction=="asc",
                 onClick = { viewModel.orderByChange("score","asc") },
-                leadingIcon = { Icon(Icons.Rounded.Star, "Favorite",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.Star, "Favorite",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -337,7 +349,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(0.dp,0.dp,4.dp,0.dp),
                 selected= state.orderBy=="difficulty" && state.direction=="asc",
                 onClick = { viewModel.orderByChange("difficulty","asc") },
-                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -354,7 +369,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 modifier = Modifier.padding(),
                 selected= state.orderBy=="difficulty" && state.direction=="desc",
                 onClick = { viewModel.orderByChange("difficulty","desc") },
-                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",Modifier.size(24.dp).padding(4.dp)) },
+                leadingIcon = { Icon(Icons.Rounded.Warning, "Warning",
+                    Modifier
+                        .size(24.dp)
+                        .padding(4.dp)) },
                 colors = ChipDefaults.outlinedFilterChipColors(
                     backgroundColor = Color.Transparent,
                     contentColor = Color.White,
@@ -374,7 +392,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                     modifier = Modifier.padding(0.dp,0.dp,2.dp,0.dp),
                     selected = state.orderBy == "category" && state.direction == "asc",
                     onClick = { viewModel.orderByChange("category", "asc") },
-                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",Modifier.size(24.dp).padding(4.dp)) },
+                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",
+                        Modifier
+                            .size(24.dp)
+                            .padding(4.dp)) },
                     colors = ChipDefaults.outlinedFilterChipColors(
                         backgroundColor = Color.Transparent,
                         contentColor = Color.White,
@@ -391,7 +412,10 @@ Column(modifier = Modifier.padding(vertical = 8.dp)) {
                     modifier = Modifier.padding(),
                     selected = state.orderBy == "category" && state.direction == "desc",
                     onClick = { viewModel.orderByChange("category", "desc") },
-                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",Modifier.size(24.dp).padding(4.dp)) },
+                    leadingIcon = { Icon(Icons.Rounded.Info, "Info",
+                        Modifier
+                            .size(24.dp)
+                            .padding(4.dp)) },
                     colors = ChipDefaults.outlinedFilterChipColors(
                         backgroundColor = Color.Transparent,
                         contentColor = Color.White,

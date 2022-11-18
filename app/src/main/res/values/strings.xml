@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Moovim</string>
-    
+    <string name="app_name" translatable="false">Moovim</string>
+
     <string name="routines_exercises_amount_message">ejercicios</string>
     <string name="current_routine_title">Rutina actual</string>
     <string name="created_by_you">Creado por tí</string>
@@ -59,5 +59,11 @@
     <string name="exercise_reps">Reps</string>
 
     <string name="filters">Filtros</string>
+
+    <string name="search_message">Buscar rutinas</string>
+
+    <string name="add_to_fav">Añadir a favoritos</string>
+    <string name="share">Compartir</string>
+    <string name="rate">Calificar</string>
 
 </resources>
