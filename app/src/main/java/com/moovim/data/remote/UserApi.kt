@@ -2,12 +2,13 @@ package com.moovim.data.remote
 
 import com.moovim.data.remote.dto.UserDto
 import com.moovim.data.remote.dto.common.TokenDto
+import retrofit2.Response
 import retrofit2.http.*
 
 interface UserApi {
 
     @GET("users/current")
-    suspend fun getCurrentUser(): UserDto
+    suspend fun getCurrentUser(): Response<UserDto>
 
     @POST("users")
     suspend fun addUser(@Body user: UserDto): UserDto
@@ -24,5 +25,8 @@ interface UserApi {
         @Field("username") username: String,
         @Field("password") password: String
     ): TokenDto
+
+    @POST("users/logout")
+    suspend fun logout() : Response<Unit>
 
 }

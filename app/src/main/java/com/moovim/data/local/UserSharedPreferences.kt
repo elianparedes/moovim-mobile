@@ -32,4 +32,8 @@ class UserSharedPreferences
     fun setUserCurrentRoutineId(routineId: Int) {
         sharedPreferences.edit().putInt(userCurrentRoutineKey, routineId).apply()
     }
+
+    fun deleteUserToken(){
+        sharedPreferences.edit().remove(userTokenKey).apply()
+    }
 }

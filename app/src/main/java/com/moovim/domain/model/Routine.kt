@@ -1,5 +1,7 @@
 package com.moovim.domain.model
 
+import com.moovim.data.remote.dto.CategoryDto
+
 data class Routine(
     val id: Int,
     val name: String,
@@ -8,4 +10,5 @@ data class Routine(
     val imageUrl: String,
     val author: String,
     val avatarUrl: String,
+    val category: Category
 )

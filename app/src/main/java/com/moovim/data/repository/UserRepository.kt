@@ -2,7 +2,10 @@ package com.moovim.data.repository
 
 import com.moovim.data.local.UserSharedPreferences
 import com.moovim.data.remote.dto.common.Api
+import com.moovim.data.remote.dto.toUser
+import com.moovim.domain.model.User
 import com.moovim.util.Result
+import com.moovim.util.handleApiResponse
 import java.lang.Exception
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,12 +30,25 @@ class UserRepository @Inject constructor(
         return userSharedPreferences.isUserLoggedIn()
     }
 
+    suspend fun getCurrentUser() : Result<User>{
+        return  handleApiResponse({api.getCurrentUser()},
+            { it.toUser() })
+    }
+
     fun getUserCurrentRoutineId(): Int{
         return userSharedPreferences.getUserCurrentRoutineId()
     }
 
     fun setUserCurrentRoutineId(routineId: Int){
         return userSharedPreferences.setUserCurrentRoutineId(routineId)
+    }
+
+    suspend fun logout() : Result<Unit>{
+        val result : Result<Unit> = handleApiResponse({api.logout()}, { it })
+        if (result is Result.Success){
+            userSharedPreferences.deleteUserToken()
+        }
+        return result
     }
 
 }

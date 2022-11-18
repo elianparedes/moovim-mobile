@@ -40,4 +40,16 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun logout(){
+        viewModelScope.launch {
+            when (val response = repository.logout()){
+                is Result.Success -> {
+                    state = state.copy(token = "", isLoggedIn = false)
+                }
+                is Result.Error -> {
+                }
+            }
+        }
+    }
+
 }

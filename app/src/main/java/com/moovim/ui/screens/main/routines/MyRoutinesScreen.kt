@@ -7,9 +7,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.moovim.R
 import com.moovim.ui.components.*
 import kotlinx.coroutines.launch
 
@@ -18,7 +21,8 @@ import kotlinx.coroutines.launch
 fun RoutinesScreen(
     scaffoldState: ScaffoldState,
     navController: NavHostController,
-    viewModel: MyRoutinesViewModel = hiltViewModel()
+    viewModel: MyRoutinesViewModel = hiltViewModel(),
+    onProfileClick: () -> Unit
 ) {
 
     val state = viewModel.state
@@ -40,7 +44,21 @@ fun RoutinesScreen(
             .padding(top = 32.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(text = "Mis Rutinas", style = MaterialTheme.typography.h3)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Text(text = "Mis Rutinas", style = MaterialTheme.typography.h3)
+            IconButton(onClick = { onProfileClick() }) {
+                Icon(
+                    painterResource(R.drawable.ic_round_person),
+                    contentDescription = "Perfil",
+                    modifier = Modifier.size(44.dp),
+                    tint = Color.White,
+                    )
+            }
+        }
         SwitchChip(
             left = "Creado por ti",
             right = "Favoritos",
@@ -129,14 +147,15 @@ fun RoutinesScreen(
                 popupControl = false
             }
         }
-
     }
 
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
             Column(
-                modifier = Modifier.padding(bottom = 40.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(bottom = 40.dp)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -146,16 +165,7 @@ fun RoutinesScreen(
                     onPublishClick = {
                         coroutineScope.launch {
                             viewModel.addRoutineReview(selectedId, score, "")
-                            var snackbarMessage: String = ""
-                            if (viewModel.state.isError) {
-                                snackbarMessage = "Error al agregar favoritos"
-                            } else {
-                                snackbarMessage = "Agregado a favoritos"
-                            }
                             sheetState.hide()
-                            scaffoldState.snackbarHostState.showSnackbar(
-                                message = snackbarMessage,
-                            )
                         }
                     }
                 )
@@ -164,5 +174,13 @@ fun RoutinesScreen(
         modifier = Modifier.fillMaxSize()
     ) {}
 
+    if (state.snackbar) {
+        LaunchedEffect(Unit) {
+            scaffoldState.snackbarHostState.showSnackbar(
+                message = state.errorMessage,
+            )
+            viewModel.processFinished()
+        }
+    }
 }
 

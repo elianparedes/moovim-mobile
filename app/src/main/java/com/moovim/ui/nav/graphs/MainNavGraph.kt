@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import com.moovim.ui.nav.NavigationItem
 import com.moovim.ui.screens.main.HomeScreen
 import com.moovim.ui.screens.main.routines.RoutinesScreen
-import com.moovim.ui.screens.main.SearchScreen
+import com.moovim.ui.screens.main.profile.ProfileScreen
 
 @Composable
 fun MainNavGraph(scaffoldState: ScaffoldState, navController: NavHostController, paddingValues: PaddingValues) {
@@ -21,15 +21,28 @@ fun MainNavGraph(scaffoldState: ScaffoldState, navController: NavHostController,
         composable(NavigationItem.Home.route) {
             HomeScreen(navController, paddingValues)
         }
-        composable(NavigationItem.Search.route) {
-            SearchScreen(navController)
-        }
+
+        searchNavGraph(navController)
+
         composable(NavigationItem.Routines.route) {
-            RoutinesScreen(scaffoldState, navController)
+            RoutinesScreen(scaffoldState = scaffoldState,
+                navController =navController,
+                onProfileClick = {navController.navigate(NavigationItem.Profile.route)})
         }
         detailsNavGraph(navController)
         playerNavGraph(navController = navController)
+        authNavGraph(navController)
+        composable(route = NavigationItem.Profile.route){
+            ProfileScreen(scaffoldState, navController,
+            onLogoutClick = {
+                navController.navigate(Graph.AUTHENTICATION) {popUpTo(Graph.HOME) { inclusive = true }}
+            })
+        }
     }
 
+}
+
+sealed class MainScreen(val route: String, var title: String) {
+    object Profile : MainScreen(route = "profile", "Perfil")
 }
 

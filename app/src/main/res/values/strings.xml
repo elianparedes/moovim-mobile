@@ -4,9 +4,19 @@
     <string name="routines_exercises_amount_message">ejercicios</string>
     
     <string name="discover">Descubrir</string>
+    <string name="discover_msg">Rutinas creadas por otros usuarios</string>
     <string name="categories">Categorías</string>
     <string name="objectives">Objetivos</string>
     <string name="muscles">Grupos musculares</string>
+
+    <string name="date_asc">Mas viejos</string>
+    <string name="date_desc">Mas nuevos</string>
+    <string name="score_asc">Menos populares</string>
+    <string name="score_desc">Mas populares</string>
+    <string name="difficulty_asc">Mas faciles</string>
+    <string name="difficulty_desc">Mas dificiles</string>
+    <string name="category_asc">Categoria ascendente</string>
+    <string name="category_desc">Categoria descendente</string>
     
     <string-array name="objectives_titles">
         <item>Tonificación</item>
