@@ -6,8 +6,7 @@ import com.moovim.data.remote.dto.toExerciseImage
 import com.moovim.domain.model.Exercise
 import com.moovim.domain.model.ExerciseDetails
 import com.moovim.domain.model.ExerciseImage
-import com.moovim.util.Response
-import kotlinx.coroutines.async
+import com.moovim.util.Result
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,40 +15,40 @@ class ExercisesRepository @Inject constructor(
     private val api: Api
 ) {
 
-    suspend fun getAllExercises(query: String? = null): Response<List<Exercise>> {
+    suspend fun getAllExercises(query: String? = null): Result<List<Exercise>> {
         return try {
             val exercises = api.getAllExercises(search = query).content.map { it.toExercise() }
-            Response.Success(exercises)
+            Result.Success(exercises)
         } catch (e: Exception) {
-            Response.Error("Error message");
+            Result.Error("Error message",0);
         }
     }
 
-    suspend fun getExercise(exerciseId: Int): Response<Exercise> {
+    suspend fun getExercise(exerciseId: Int): Result<Exercise> {
         return try {
             val exercise = api.getExercise(exerciseId).toExercise()
-            Response.Success(exercise)
+            Result.Success(exercise)
         } catch (e: Exception) {
-            Response.Error("Error message")
+            Result.Error("Error message",0)
         }
     }
 
-    suspend fun getExerciseImages(exerciseId: Int): Response<List<ExerciseImage>> {
+    suspend fun getExerciseImages(exerciseId: Int): Result<List<ExerciseImage>> {
         return try {
             val exerciseImages = api.getExerciseImages(exerciseId).content.map { it.toExerciseImage() }
-            Response.Success(exerciseImages)
+            Result.Success(exerciseImages)
         } catch (e: Exception) {
-            Response.Error("Error message")
+            Result.Error("Error message",0)
         }
     }
 
-    suspend fun getExerciseDetails(exerciseId: Int): Response<ExerciseDetails> {
+    suspend fun getExerciseDetails(exerciseId: Int): Result<ExerciseDetails> {
         return try {
             val exercise = api.getExercise(exerciseId).toExercise()
             val images = api.getExerciseImages(exerciseId).content.map { it.toExerciseImage() }
-            Response.Success(ExerciseDetails(exercise, images))
+            Result.Success(ExerciseDetails(exercise, images))
         } catch (e: Exception){
-            Response.Error("Error message")
+            Result.Error("Error message",0)
         }
 
     }

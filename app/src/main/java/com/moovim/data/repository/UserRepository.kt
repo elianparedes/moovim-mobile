@@ -2,7 +2,7 @@ package com.moovim.data.repository
 
 import com.moovim.data.local.UserSharedPreferences
 import com.moovim.data.remote.dto.common.Api
-import com.moovim.util.Response
+import com.moovim.util.Result
 import java.lang.Exception
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,13 +13,13 @@ class UserRepository @Inject constructor(
     private val userSharedPreferences: UserSharedPreferences,
 ) {
 
-    suspend fun login(username: String, password: String): Response<String> {
+    suspend fun login(username: String, password: String): Result<String> {
         return try {
             val token = api.login(username, password).token
             userSharedPreferences.setUserToken(token)
-            Response.Success(token)
+            Result.Success(token)
         } catch (e: Exception){
-            Response.Error("Authentication failed")
+            Result.Error("Authentication failed",0)
         }
     }
 

@@ -6,7 +6,8 @@ import com.moovim.domain.model.Cycle
 import com.moovim.domain.model.Routine
 import com.moovim.domain.model.RoutineDetails
 import com.moovim.domain.model.RoutineReview
-import com.moovim.util.Response
+import com.moovim.util.Result
+import com.moovim.util.handleApiResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,35 +16,33 @@ class RoutinesRepository @Inject constructor(
     private val api: Api
 ) {
 
-    suspend fun getAllRoutines(query: String? = null): Response<List<Routine>> {
-        return try {
-            val routines = api.getAllRoutines(search = query).content.map { it.toRoutine() }
-            Response.Success(routines)
-        } catch (e: Exception) {
-            Response.Error("Error message")
-        }
+    suspend fun getAllRoutines(query: String? = null): Result<List<Routine>> {
+        return handleApiResponse({
+            api.getAllRoutines(search = query)
+        }, { data -> data.content.map { it.toRoutine() } })
     }
 
-    suspend fun getCurrentUserRoutines(): Response<List<Routine>> {
+
+    suspend fun getCurrentUserRoutines(): Result<List<Routine>> {
         return try {
             val currentUserRoutines =
                 api.getCurrentUserRoutines().content.map { it.toUserRoutine() }
-            Response.Success(currentUserRoutines)
+            Result.Success(currentUserRoutines)
         } catch (e: Exception) {
-            Response.Error("Error message")
+            Result.Error("Error message",0)
         }
     }
 
-    suspend fun getRoutine(routineId: Int): Response<Routine> {
+    suspend fun getRoutine(routineId: Int): Result<Routine> {
         return try {
             val routine = api.getRoutine(routineId).toRoutine()
-            Response.Success(routine)
+            Result.Success(routine)
         } catch (e: Exception) {
-            Response.Error("Error message")
+            Result.Error("Error message",0)
         }
     }
 
-    suspend fun getRoutineCycles(routineId: Int): Response<List<Cycle>> {
+    suspend fun getRoutineCycles(routineId: Int): Result<List<Cycle>> {
         return try {
             val cycles = api.getRoutineCycles(routineId).content.map { it.toCycle() }
 
@@ -51,60 +50,51 @@ class RoutinesRepository @Inject constructor(
                 cycle.cycleExercises =
                     api.getCycleExercises(cycle.id).content.map { it.toCycleExercise() }
 
-            Response.Success(cycles)
+            Result.Success(cycles)
         } catch (e: Exception) {
-            Response.Error("Error message")
+            Result.Error("Error message",0)
         }
 
     }
 
-    suspend fun getAllFavouriteRoutines(): Response<List<Routine>> {
+    suspend fun getAllFavouriteRoutines(): Result<List<Routine>> {
         return try {
             val favouriteRoutines = api.getAllFavouriteRoutines().content.map { it.toRoutine() }
-            Response.Success(favouriteRoutines)
+            Result.Success(favouriteRoutines)
         } catch (e: Exception) {
-            Response.Error("Error message")
+            Result.Error("Error message",0)
         }
     }
 
-    suspend fun addRoutineToFavourites(routineId: Int): Response<Int> {
-        return try {
+    suspend fun addRoutineToFavourites(routineId: Int): Result<Int> {
+        return handleApiResponse ({
             api.addRoutineToFavourites(routineId)
-            Response.Success(routineId)
-        } catch (e: Exception) {
-            Response.Error("Error message")
-        }
+        }, { it })
     }
 
-    suspend fun deleteRoutineFromFavourites(routineId: Int): Response<Int> {
-        return try {
+    suspend fun deleteRoutineFromFavourites(routineId: Int): Result<Int> {
+        return handleApiResponse ({
             api.deleteRoutineFromFavourites(routineId)
-            Response.Success(routineId)
-        } catch (e: Exception) {
-            Response.Error("Error message")
-        }
+        }, { it })
     }
 
-    suspend fun getAllRoutineReviews(routineId: Int): Response<List<RoutineReview>> {
+    suspend fun getAllRoutineReviews(routineId: Int): Result<List<RoutineReview>> {
         return try {
             val routineReviews =
                 api.getAllRoutineReviews(routineId).content.map { it.toRoutineReview() }
-            Response.Success(routineReviews)
+            Result.Success(routineReviews)
         } catch (e: Exception) {
-            Response.Error("Error message")
+            Result.Error("Error message",0)
         }
     }
 
-    suspend fun addRoutineReview(routineId: Int, score: Int, review: String): Response<Int> {
-        return try {
+    suspend fun addRoutineReview(routineId: Int, score: Int, review: String): Result<Int> {
+        return handleApiResponse ({
             api.addRoutineReview(routineId, NewRoutineReviewDto(score, review))
-            Response.Success(routineId)
-        } catch (e: Exception) {
-            Response.Error("Error message")
-        }
+        }, { it })
     }
 
-    suspend fun getRoutineDetails(routineId: Int): Response<RoutineDetails> {
+    suspend fun getRoutineDetails(routineId: Int): Result<RoutineDetails> {
         return try {
             val routine = api.getRoutine(routineId).toRoutine()
             val cycles = api.getRoutineCycles(routineId).content.map { it.toCycle() }
@@ -113,9 +103,9 @@ class RoutinesRepository @Inject constructor(
                 cycle.cycleExercises =
                     api.getCycleExercises(cycle.id).content.map { it.toCycleExercise() }
 
-            Response.Success(RoutineDetails(routine, cycles))
+            Result.Success(RoutineDetails(routine, cycles))
         } catch (e: Exception) {
-            Response.Error("Error message")
+            Result.Error("Error message",0)
         }
     }
 

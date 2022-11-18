@@ -10,8 +10,9 @@ data class SimplePlayerState(
     val time: String = "0s",
     val cycles: List<Cycle> = emptyList(),
     val paused: Boolean = true,
-    val currentCycleExercise: CycleExercise? = null,
+    val currentCycle: Cycle? = null,
+    val currentExercise: CycleExercise? = null,
     val isPlaylistVisible: Boolean = false,
     val isLoading: Boolean = true,
-    val isError: Boolean = false
+    val isError: Boolean = false,
 )

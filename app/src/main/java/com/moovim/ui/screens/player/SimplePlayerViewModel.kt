@@ -8,9 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
 import com.moovim.data.repository.UserRepository
+import com.moovim.domain.model.Cycle
 import com.moovim.domain.model.CycleExercise
 import com.moovim.util.ExtendedCountDownTimer
-import com.moovim.util.Response
+import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,7 +26,9 @@ class SimplePlayerViewModel @Inject constructor(
 
     var state by mutableStateOf(SimplePlayerState())
 
-    lateinit var iterator: ListIterator<CycleExercise>
+    private lateinit var exerciseIterator: ListIterator<CycleExercise>
+    private lateinit var cycleIterator: ListIterator<Cycle>
+
     lateinit var countdown: ExtendedCountDownTimer
 
     init {
@@ -34,22 +37,25 @@ class SimplePlayerViewModel @Inject constructor(
 
     private fun getRoutineCycles() {
         viewModelScope.launch {
-            when (val response = routineRepository.getRoutineCycles(1)) {
-                is Response.Success -> {
+            when (val response = routineRepository.getRoutineCycles(3)) {
+                is Result.Success -> {
                     if (response.data != null) {
                         val cycles = response.data
 
-                        iterator = cycles[0].cycleExercises.listIterator()
+                        exerciseIterator = cycles[0].cycleExercises.listIterator()
+                        cycleIterator = cycles.listIterator()
+
                         state = state.copy(
                             cycles = cycles,
-                            currentCycleExercise = iterator.next(),
-                            isLoading = false
+                            isLoading = false,
+                            currentCycle = cycleIterator.next()
                         )
+
                         getNextExercise()
                     }
                 }
 
-                is Response.Error -> {
+                is Result.Error -> {
                     state = state.copy(isError = true, isLoading = false)
                 }
             }
@@ -76,36 +82,89 @@ class SimplePlayerViewModel @Inject constructor(
 
     }
 
-    fun getNextExercise() {
-        if (iterator.hasNext()) {
-            val nextCycleExercise = iterator.next()
-            Log.d(TAG, "getNextExercise: " + nextCycleExercise.exercise.name)
-            state = state.copy(currentCycleExercise = nextCycleExercise)
-            countdown = newTimer(nextCycleExercise.duration * 1000L)
+    private fun getNextExercise() {
+        if (exerciseIterator.hasNext()) {
 
+            var nextExercise = exerciseIterator.next()
+            if (nextExercise == state.currentExercise)
+                if (exerciseIterator.hasNext())
+                    nextExercise = exerciseIterator.next()
+                else
+                    return
+
+            //countdown = newTimer(nextExercise.duration * 1000L)
+
+            state = state.copy(currentExercise = nextExercise)
+        } else {
+            if (cycleIterator.hasNext()) {
+
+                var nextCycle = cycleIterator.next()
+                if (nextCycle == state.currentCycle)
+                    if (cycleIterator.hasNext())
+                        nextCycle = cycleIterator.next()
+                    else
+                        return
+
+                exerciseIterator = nextCycle.cycleExercises.listIterator()
+
+                val nextExercise = exerciseIterator.next()
+                //countdown = newTimer(nextExercise.duration * 1000L)
+
+                Log.d(TAG, "getNextExercise: " + nextCycle.name)
+                state = state.copy(currentExercise = nextExercise, currentCycle = nextCycle)
+            }
         }
+
     }
 
-    fun getPreviousExercise() {
-        if (iterator.hasPrevious()) {
-            val previousCycleExercise = iterator.previous()
-            Log.d(TAG, "getPreviousExercise: " + previousCycleExercise.exercise.name)
-            state = state.copy(currentCycleExercise = previousCycleExercise)
-            countdown = newTimer(previousCycleExercise.duration * 1000L)
+    private fun getPreviousExercise() {
+        if (exerciseIterator.hasPrevious() && exerciseIterator.previousIndex() != 0) {
 
+            var prevExercise = exerciseIterator.previous()
+            if (prevExercise == state.currentExercise)
+                if (exerciseIterator.hasPrevious())
+                    prevExercise = exerciseIterator.previous()
+                else {
+                    Log.d(TAG, "getPreviousExercise: A")
+                    return
+                }
+
+
+            //countdown = newTimer(prevExercise.duration * 1000L)
+
+            state = state.copy(currentExercise = prevExercise)
+        } else {
+            if (cycleIterator.hasPrevious()) {
+                var prevCycle = cycleIterator.previous()
+                if (prevCycle == state.currentCycle)
+                    if (cycleIterator.hasPrevious())
+                        prevCycle = cycleIterator.previous()
+                    else {
+                        Log.d(TAG, "getPreviousExercise: B")
+                        return
+                    }
+                exerciseIterator =
+                    prevCycle.cycleExercises.listIterator(prevCycle.cycleExercises.size)
+
+                val prevExercise = exerciseIterator.previous()
+                //countdown = newTimer(prevExercise.duration * 1000L)
+
+                Log.d(TAG, "getPreviousExercise: " + prevCycle.name)
+                state = state.copy(currentExercise = prevExercise, currentCycle = prevCycle)
+            }
         }
     }
 
     fun skipPrevious() {
-        countdown.restart()
+        //countdown.restart()
         getPreviousExercise()
-        countdown.start()
+        //countdown.start()
     }
 
     fun skipNext() {
-        countdown.restart()
+        //countdown.restart()
         getNextExercise()
-        countdown.start()
+        //countdown.start()
     }
 
     fun setPaused(paused: Boolean) {

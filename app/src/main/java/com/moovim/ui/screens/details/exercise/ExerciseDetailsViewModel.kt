@@ -7,9 +7,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.ExercisesRepository
-import com.moovim.util.Response
+import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,7 +30,7 @@ class ExerciseDetailsViewModel @Inject constructor(
 
             val exerciseId = savedStateHandle.get<Int>("exerciseId") ?: return@launch
             when(val response = exercisesRepository.getExerciseDetails(exerciseId)){
-                is Response.Success -> {
+                is Result.Success -> {
                     val exerciseDetails = response.data
 
                     if (exerciseDetails != null) {
@@ -49,7 +48,7 @@ class ExerciseDetailsViewModel @Inject constructor(
                     }
                 }
 
-                is Response.Error -> {
+                is Result.Error -> {
                     state = state.copy(isError = true, isLoading = false)
                 }
             }

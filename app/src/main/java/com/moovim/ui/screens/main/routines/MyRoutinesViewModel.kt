@@ -1,12 +1,13 @@
 package com.moovim.ui.screens.main.routines
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
-import com.moovim.util.Response
+import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,12 +27,12 @@ class MyRoutinesViewModel @Inject constructor(
     fun getCurrentUserRoutines() {
         viewModelScope.launch {
             when (val response = repository.getCurrentUserRoutines()) {
-                is Response.Success -> {
+                is Result.Success -> {
                     if (response.data != null) {
                         state = state.copy(userRoutines = response.data, isLoading = false)
                     }
                 }
-                is Response.Error -> {
+                is Result.Error -> {
                     state = state.copy(isError = true, isLoading = false)
                 }
             }
@@ -42,13 +43,13 @@ class MyRoutinesViewModel @Inject constructor(
     fun getAllFavouriteRoutines() {
         viewModelScope.launch {
             when (val response = repository.getAllFavouriteRoutines()) {
-                is Response.Success -> {
+                is Result.Success -> {
                     if (response.data != null) {
                         state = state.copy(favouriteRoutines = response.data, isLoading = false)
                     }
                 }
-                
-                is Response.Error -> {
+
+                is Result.Error -> {
                     state = state.copy(isError = true, isLoading = false)
                 }
             }
@@ -64,7 +65,10 @@ class MyRoutinesViewModel @Inject constructor(
 
     fun addRoutineFromFavourites(routineId: Int) {
         viewModelScope.launch {
-            repository.addRoutineToFavourites(routineId)
+            when (val result = repository.addRoutineToFavourites(routineId)) {
+                is Result.Success -> Log.d("MYR", "addRoutineFromFavourites: " + "GOD")
+                is Result.Error -> Log.d("MYR", "addRoutineFromFavourites: " + result.code)
+            }
         }
     }
 
