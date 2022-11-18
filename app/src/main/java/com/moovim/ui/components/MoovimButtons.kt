@@ -19,6 +19,7 @@ import com.moovim.ui.theme.MoovimTheme
 @Composable
 fun MoovimButton(buttonOnClick: () -> Unit, buttonText: String) {
     Button(
+        elevation =null,
         modifier = Modifier
             .padding(horizontal = 24.dp)
             .fillMaxWidth(),
@@ -32,6 +33,7 @@ fun MoovimButton(buttonOnClick: () -> Unit, buttonText: String) {
 @Composable
 fun MoovimButtonModifier(modifier: Modifier, buttonOnClick: () -> Unit, buttonText: String) {
     Button(
+        elevation =null,
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         onClick = buttonOnClick,
