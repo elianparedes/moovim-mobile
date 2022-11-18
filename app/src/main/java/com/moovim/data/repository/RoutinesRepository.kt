@@ -15,14 +15,16 @@ class RoutinesRepository @Inject constructor(
     private val api: Api
 ) {
 
-    suspend fun getAllRoutines(query: String? = null): Response<List<Routine>> {
+    suspend fun getAllRoutines(query: String? = null, categoryId: Int? = null): Response<List<Routine>> {
         return try {
-            val routines = api.getAllRoutines(search = query).content.map { it.toRoutine() }
+            val routines = api.getAllRoutines(search = query, categoryId = categoryId).content.map { it.toRoutine() }
             Response.Success(routines)
         } catch (e: Exception) {
             Response.Error("Error message")
         }
     }
+
+
 
     suspend fun getCurrentUserRoutines(): Response<List<Routine>> {
         return try {

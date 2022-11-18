@@ -55,7 +55,10 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel = 
                 onRight = { chipSide = ChipSide.RIGHT },
                 chipSide = chipSide)
             if(chipSide == ChipSide.LEFT){
-                CategoriesScreen(navController)
+                CategoriesScreen(navController) { categoryId ->
+                    viewModel.getRoutinesByCategory(categoryId)
+                    onSearch = true
+                }
             } else
             {
                 viewModel.getAllRoutines()
@@ -68,6 +71,7 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel = 
 }
 
 data class Objectives(
+    val id: Int,
     val title: String,
     val description: String,
     val imageUrl: String
@@ -75,17 +79,17 @@ data class Objectives(
 
 
 @Composable
-fun CategoriesScreen(navController: NavHostController){
+fun CategoriesScreen(navController: NavHostController, getRoutinesByCategory: (Int) -> Unit){
 
     val objectivesTitles: Array<String> = stringArrayResource(id = R.array.objectives_titles)
     val objectivesDescriptions: Array<String> = stringArrayResource(id = R.array.objectives_descriptions)
     val objectivesImage: Array<String> = stringArrayResource(id = R.array.objectives_image_url)
 
     val objectives = listOf(
-        Objectives(title = objectivesTitles[0], description = objectivesDescriptions[0], imageUrl = objectivesImage[0]),
-        Objectives(title = objectivesTitles[1], description = objectivesDescriptions[1], imageUrl = objectivesImage[1]),
-        Objectives(title = objectivesTitles[2], description = objectivesDescriptions[2], imageUrl = objectivesImage[2]),
-        Objectives(title = objectivesTitles[3], description = objectivesDescriptions[3], imageUrl = objectivesImage[3])
+        Objectives(title = objectivesTitles[0], description = objectivesDescriptions[0], imageUrl = objectivesImage[0], id = 1),
+        Objectives(title = objectivesTitles[1], description = objectivesDescriptions[1], imageUrl = objectivesImage[1], id = 2),
+        Objectives(title = objectivesTitles[2], description = objectivesDescriptions[2], imageUrl = objectivesImage[2], id = 3),
+        Objectives(title = objectivesTitles[3], description = objectivesDescriptions[3], imageUrl = objectivesImage[3], id = 4)
     )
     val muscles: Array<String> = stringArrayResource(id = R.array.muscles_titles)
 
@@ -98,7 +102,7 @@ fun CategoriesScreen(navController: NavHostController){
             .horizontalScroll(rememberScrollState())
             .fillMaxWidth()
             .padding(0.dp, 16.dp)){
-            ObjectivesList(objectives = objectives,navController)
+            ObjectivesList(objectives = objectives,navController,getRoutinesByCategory)
         }
         Text(text = stringResource(id = R.string.muscles))
         Column(modifier = Modifier.padding(0.dp,16.dp)) {
@@ -113,7 +117,7 @@ fun DiscoverScreen(routines: List<Routine>, navController: NavHostController){
 }
 
 @Composable
-fun ObjectivesList(objectives: List<Objectives>, navController: NavHostController){
+fun ObjectivesList(objectives: List<Objectives>, navController: NavHostController, onClickCard: (Int) -> Unit){
     objectives.forEachIndexed { index ,objective ->
         val modifier: Modifier = if(index == objectives.size-1){
             Modifier
@@ -129,7 +133,7 @@ fun ObjectivesList(objectives: List<Objectives>, navController: NavHostControlle
                 description = objective.description,
                 imageUrl = objective.imageUrl,
                 modifier = modifier,
-                onClickCard = {}
+                onClickCard = {onClickCard.invoke(index+1)}
             )
         }
     }

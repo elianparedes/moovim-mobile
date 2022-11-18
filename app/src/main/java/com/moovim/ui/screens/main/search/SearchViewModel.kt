@@ -49,6 +49,25 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun getRoutinesByCategory(categoryId: Int){
+            viewModelScope.launch {
+                state = state.copy(isLoading = true)
+
+                when (val response = routinesRepository.getAllRoutines(categoryId = categoryId)) {
+                    is Response.Success -> {
+                        if (response.data != null) {
+                            state = state.copy(resultRoutines = response.data, isLoading = false)
+                            state = state.copy(hasAllRoutines = true)
+                        }
+                    }
+
+                    is Response.Error -> {
+                        state = state.copy(isError = true)
+                    }
+                }
+            }
+    }
+
     fun search(query: TextFieldValue){
         viewModelScope.launch {
             state = state.copy(isLoading = true)
