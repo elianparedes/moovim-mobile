@@ -32,14 +32,14 @@ class SearchViewModel @Inject constructor(
                 state = state.copy(isLoading = true)
 
                 when (val response = routinesRepository.getAllRoutines()) {
-                    is Response.Success -> {
+                    is Result.Success -> {
                         if (response.data != null) {
                             state = state.copy(resultRoutines = response.data, isLoading = false)
                             state = state.copy(hasAllRoutines = true)
                         }
                     }
 
-                    is Response.Error -> {
+                    is Result.Error -> {
                         state = state.copy(isError = true)
                     }
                 }
@@ -57,13 +57,10 @@ class SearchViewModel @Inject constructor(
                         state = state.copy(resultRoutines = response.data, isLoading = false)
                         state = state.copy(hasAllRoutines = false)
                     }
-                }
-
-                is Result.Error -> {
-                    state = state.copy(isError = true)
+                    is Result.Error -> {
+                        state = state.copy(isError = true)
+                    }
                 }
             }
         }
-    }
-
 }
