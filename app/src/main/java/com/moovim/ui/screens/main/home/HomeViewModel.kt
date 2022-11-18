@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
 import com.moovim.data.repository.UserRepository
+import com.moovim.domain.model.Cycle
 import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -58,8 +59,9 @@ class HomeViewModel @Inject constructor(
             when (val response = routinesRepository.getRoutineCycles(routineId)){
                 is Result.Success -> {
                     if (response.data != null){
+                        val cycles = response.data
                         state = state.copy(
-                            cycles = response.data, isLoading = false
+                            cycles = cycles, isLoading = false, exerciseCount = getExercisesCount(cycles)
                         )
                     }
                 }
@@ -68,6 +70,13 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getExercisesCount(cycles: List<Cycle>): Int{
+        var exerciseCount = 0
+        for (cycle in cycles)
+            exerciseCount += cycle.cycleExercises.size
+        return exerciseCount
     }
 
 }

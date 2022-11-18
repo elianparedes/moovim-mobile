@@ -30,7 +30,8 @@ import com.moovim.ui.screens.main.home.HomeViewModel
 fun HomeScreen(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    setShowFab: (Boolean) -> Unit
 ) {
     val state = viewModel.state
     val scrollState = rememberScrollState()
@@ -38,6 +39,8 @@ fun HomeScreen(
     var expanded by remember {
         mutableStateOf(false)
     }
+
+    setShowFab(state.cycles.isNotEmpty() && state.exerciseCount > 0)
 
     Column(
         modifier = Modifier
@@ -54,7 +57,11 @@ fun HomeScreen(
                 IconButton(onClick = {
                     expanded = true
                 }) {
-                    Icon(Icons.Rounded.ArrowDropDown, "arrowDropDown", Modifier.size(32.dp))
+                    Icon(
+                        Icons.Rounded.ArrowDropDown,
+                        "arrowDropDown",
+                        Modifier.size(32.dp)
+                    )
                 }
 
                 DropdownMenu(

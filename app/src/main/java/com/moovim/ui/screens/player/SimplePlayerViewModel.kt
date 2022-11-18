@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
 import com.moovim.data.repository.UserRepository
+import com.moovim.domain.model.Cycle
 import com.moovim.util.ExtendedCountDownTimer
 import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -110,12 +111,13 @@ class SimplePlayerViewModel @Inject constructor(
         } else {
             if (currentCycleIndex < state.cycles.lastIndex) {
 
-                val nextCycle = state.cycles[++currentCycleIndex]
+                lateinit var nextCycle: Cycle
+                do{
+                    nextCycle = state.cycles[++currentCycleIndex]
+                } while (nextCycle.cycleExercises.isEmpty() && currentCycleIndex < state.cycles.lastIndex)
+
                 val nextExercise = nextCycle.cycleExercises[0]
                 currentExerciseIndex = 0
-
-                if (nextExercise.duration > 0)
-                    countdown = newTimer(nextExercise.duration * 1000L)
 
                 state = state.copy(
                     currentCycle = nextCycle, currentExercise = nextExercise,
@@ -147,7 +149,11 @@ class SimplePlayerViewModel @Inject constructor(
 
         } else {
             if (currentCycleIndex > 0) {
-                val nextCycle = state.cycles[--currentCycleIndex]
+
+                lateinit var nextCycle: Cycle
+                do{
+                    nextCycle = state.cycles[--currentCycleIndex]
+                } while (nextCycle.cycleExercises.isEmpty() && currentCycleIndex > 0)
 
                 currentExerciseIndex = nextCycle.cycleExercises.lastIndex
                 val nextExercise = nextCycle.cycleExercises[currentExerciseIndex]
@@ -168,15 +174,19 @@ class SimplePlayerViewModel @Inject constructor(
     }
 
     fun skipPrevious() {
-        countdown.restart()
+        restartTimer()
         getPreviousExercise()
-        countdown.start()
+
+        if (state.currentExercise!!.duration > 0)
+            countdown = newTimer(state.currentExercise!!.duration * 1000L)
     }
 
     fun skipNext() {
-        countdown.restart()
+        restartTimer()
         getNextExercise()
-        countdown.start()
+
+        if (state.currentExercise!!.duration > 0)
+            countdown = newTimer(state.currentExercise!!.duration * 1000L)
     }
 
     fun setPaused(paused: Boolean) {
@@ -197,11 +207,12 @@ class SimplePlayerViewModel @Inject constructor(
 
     fun restartTimer() {
         countdown.restart()
-        state = state.copy(paused = false)
+        state = state.copy(paused = true, time = "0s", progress = 0f)
     }
 
     fun setPlaylistVisible(value: Boolean) {
         state = state.copy(isPlaylistVisible = value)
     }
+
 
 }

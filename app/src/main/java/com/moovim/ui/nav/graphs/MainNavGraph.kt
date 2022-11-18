@@ -12,14 +12,14 @@ import com.moovim.ui.screens.main.routines.RoutinesScreen
 import com.moovim.ui.screens.main.profile.ProfileScreen
 
 @Composable
-fun MainNavGraph(scaffoldState: ScaffoldState, navController: NavHostController, paddingValues: PaddingValues) {
+fun MainNavGraph(scaffoldState: ScaffoldState, navController: NavHostController, paddingValues: PaddingValues, setShowFab: (Boolean) -> Unit) {
     NavHost(
         navController = navController,
         startDestination = NavigationItem.Home.route,
         route = Graph.HOME
     ) {
         composable(NavigationItem.Home.route) {
-            HomeScreen(navController, paddingValues)
+            HomeScreen(navController, paddingValues, setShowFab = setShowFab)
         }
 
         searchNavGraph(scaffoldState, navController)

@@ -46,9 +46,12 @@ abstract class ExtendedCountDownTimer(var millisInFuture: Long, var countDownInt
     }
 
     fun restart() {
-        countDownTimer.cancel()
-        remainingMillis = millisInFuture
-        isPaused = true
+        if (!isPaused){
+            countDownTimer.cancel()
+            remainingMillis = millisInFuture
+            isPaused = true
+        }
+
     }
 
     abstract fun onTimerTick(millisUntilFinished: Long)
