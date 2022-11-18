@@ -637,11 +637,12 @@ fun WideRoutineCard(
                     .padding(16.dp, 4.dp, 16.dp, 16.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
+                if (avatarUrl != null && author != null) {
                 Column(
                     verticalArrangement = Arrangement.Bottom,
                     modifier = Modifier.requiredSize(16.dp)
                 ) {
-                    if (avatarUrl != null && author != null) {
+
                         Card(
                             shape = RoundedCornerShape(100),
                             modifier = Modifier
@@ -664,12 +665,23 @@ fun WideRoutineCard(
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.Bottom
                 ) {
-                    Text(
-                        modifier = Modifier.padding(8.dp, 0.dp),
-                        text = author ?: stringResource(R.string.created_by_you),
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onBackground
-                    )
+                    if(author != null && avatarUrl != null){
+                        Text(
+                            modifier = Modifier.padding(8.dp,0.dp),
+                            text = author ?: stringResource(R.string.created_by_you),
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.onBackground
+                        )
+                    } else
+                    {
+                        Text(
+                            modifier = Modifier.padding(0.dp),
+                            text = author ?: stringResource(R.string.created_by_you),
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.onBackground
+                        )
+                    }
+
                 }
             }
         }
