@@ -1,6 +1,5 @@
 package com.moovim.ui.screens.player
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
 import com.moovim.data.repository.UserRepository
-import com.moovim.domain.model.Cycle
-import com.moovim.domain.model.CycleExercise
 import com.moovim.util.ExtendedCountDownTimer
 import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,8 +23,8 @@ class SimplePlayerViewModel @Inject constructor(
 
     var state by mutableStateOf(SimplePlayerState())
 
-    private lateinit var exerciseIterator: ListIterator<CycleExercise>
-    private lateinit var cycleIterator: ListIterator<Cycle>
+    private var currentExerciseIndex = 0
+    private var currentCycleIndex = 0
 
     lateinit var countdown: ExtendedCountDownTimer
 
@@ -36,22 +33,30 @@ class SimplePlayerViewModel @Inject constructor(
     }
 
     private fun getRoutineCycles() {
+        val userCurrentRoutineId = userRepository.getUserCurrentRoutineId();
+        if (userCurrentRoutineId == -1)
+            return
+
         viewModelScope.launch {
-            when (val response = routineRepository.getRoutineCycles(3)) {
+            when (val response = routineRepository.getRoutineCycles(userCurrentRoutineId)) {
                 is Result.Success -> {
                     if (response.data != null) {
                         val cycles = response.data
 
-                        exerciseIterator = cycles[0].cycleExercises.listIterator()
-                        cycleIterator = cycles.listIterator()
+                        val firstExercise = cycles.first().cycleExercises.first()
+                        if (firstExercise.duration > 0)
+                            countdown = newTimer(firstExercise.duration * 1000L)
 
                         state = state.copy(
                             cycles = cycles,
                             isLoading = false,
-                            currentCycle = cycleIterator.next()
+                            currentCycle = cycles.first(),
+                            currentExercise = cycles.first().cycleExercises.first(),
+                            remainingExercises = cycles.first().cycleExercises.slice(
+                                1..
+                                        cycles.first().cycleExercises.lastIndex
+                            )
                         )
-
-                        getNextExercise()
                     }
                 }
 
@@ -83,88 +88,95 @@ class SimplePlayerViewModel @Inject constructor(
     }
 
     private fun getNextExercise() {
-        if (exerciseIterator.hasNext()) {
+        if (state.currentCycle == null)
+            return
 
-            var nextExercise = exerciseIterator.next()
-            if (nextExercise == state.currentExercise)
-                if (exerciseIterator.hasNext())
-                    nextExercise = exerciseIterator.next()
-                else
-                    return
+        if (currentExerciseIndex < state.currentCycle!!.cycleExercises.lastIndex) {
 
-            //countdown = newTimer(nextExercise.duration * 1000L)
+            val nextExercise = state.currentCycle!!.cycleExercises[++currentExerciseIndex];
 
-            state = state.copy(currentExercise = nextExercise)
+            if (nextExercise.duration > 0)
+                countdown = newTimer(nextExercise.duration * 1000L)
+
+
+            state =
+                state.copy(
+                    currentExercise = nextExercise,
+                    remainingExercises = state.currentCycle!!.cycleExercises.slice(
+                        currentExerciseIndex + 1..
+                                state.currentCycle!!.cycleExercises.lastIndex
+                    )
+                )
         } else {
-            if (cycleIterator.hasNext()) {
+            if (currentCycleIndex < state.cycles.lastIndex) {
 
-                var nextCycle = cycleIterator.next()
-                if (nextCycle == state.currentCycle)
-                    if (cycleIterator.hasNext())
-                        nextCycle = cycleIterator.next()
-                    else
-                        return
+                val nextCycle = state.cycles[++currentCycleIndex]
+                val nextExercise = nextCycle.cycleExercises[0]
+                currentExerciseIndex = 0
 
-                exerciseIterator = nextCycle.cycleExercises.listIterator()
+                if (nextExercise.duration > 0)
+                    countdown = newTimer(nextExercise.duration * 1000L)
 
-                val nextExercise = exerciseIterator.next()
-                //countdown = newTimer(nextExercise.duration * 1000L)
-
-                Log.d(TAG, "getNextExercise: " + nextCycle.name)
-                state = state.copy(currentExercise = nextExercise, currentCycle = nextCycle)
+                state = state.copy(
+                    currentCycle = nextCycle, currentExercise = nextExercise,
+                    remainingExercises = nextCycle.cycleExercises.slice(
+                        currentExerciseIndex + 1..nextCycle.cycleExercises.lastIndex
+                    )
+                )
             }
         }
-
     }
 
     private fun getPreviousExercise() {
-        if (exerciseIterator.hasPrevious() && exerciseIterator.previousIndex() != 0) {
+        if (state.currentCycle == null)
+            return
 
-            var prevExercise = exerciseIterator.previous()
-            if (prevExercise == state.currentExercise)
-                if (exerciseIterator.hasPrevious())
-                    prevExercise = exerciseIterator.previous()
-                else {
-                    Log.d(TAG, "getPreviousExercise: A")
-                    return
-                }
+        if (currentExerciseIndex > 0) {
+            val nextExercise = state.currentCycle!!.cycleExercises[--currentExerciseIndex]
 
+            if (nextExercise.duration > 0)
+                countdown = newTimer(nextExercise.duration * 1000L)
 
-            //countdown = newTimer(prevExercise.duration * 1000L)
+            state = state.copy(
+                currentExercise = nextExercise,
+                remainingExercises = state.currentCycle!!.cycleExercises.slice(
+                    currentExerciseIndex + 1..
+                            state.currentCycle!!.cycleExercises.lastIndex
+                )
+            )
 
-            state = state.copy(currentExercise = prevExercise)
         } else {
-            if (cycleIterator.hasPrevious()) {
-                var prevCycle = cycleIterator.previous()
-                if (prevCycle == state.currentCycle)
-                    if (cycleIterator.hasPrevious())
-                        prevCycle = cycleIterator.previous()
-                    else {
-                        Log.d(TAG, "getPreviousExercise: B")
-                        return
-                    }
-                exerciseIterator =
-                    prevCycle.cycleExercises.listIterator(prevCycle.cycleExercises.size)
+            if (currentCycleIndex > 0) {
+                val nextCycle = state.cycles[--currentCycleIndex]
 
-                val prevExercise = exerciseIterator.previous()
-                //countdown = newTimer(prevExercise.duration * 1000L)
+                currentExerciseIndex = nextCycle.cycleExercises.lastIndex
+                val nextExercise = nextCycle.cycleExercises[currentExerciseIndex]
 
-                Log.d(TAG, "getPreviousExercise: " + prevCycle.name)
-                state = state.copy(currentExercise = prevExercise, currentCycle = prevCycle)
+                if (nextExercise.duration > 0)
+                    countdown = newTimer(nextExercise.duration * 1000L)
+
+                state = state.copy(
+                    currentCycle = nextCycle,
+                    currentExercise = nextExercise,
+                    remainingExercises = nextCycle.cycleExercises.slice(
+                        currentExerciseIndex + 1..
+                                nextCycle.cycleExercises.lastIndex
+                    )
+                )
             }
         }
     }
 
     fun skipPrevious() {
-        //countdown.restart()
+        countdown.restart()
         getPreviousExercise()
-        //countdown.start()
+        countdown.start()
     }
 
     fun skipNext() {
-        //countdown.restart()
+        countdown.restart()
         getNextExercise()
-        //countdown.start()
+        countdown.start()
     }
 
     fun setPaused(paused: Boolean) {

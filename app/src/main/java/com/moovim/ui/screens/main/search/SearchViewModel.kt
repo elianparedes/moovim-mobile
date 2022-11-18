@@ -18,28 +18,28 @@ class SearchViewModel @Inject constructor(
     private val routinesRepository: RoutinesRepository,
     private val exercisesRepository: ExercisesRepository,
 
-): ViewModel() {
+    ) : ViewModel() {
 
     var state by mutableStateOf(SearchState())
 
-    fun onQueryChange(query: TextFieldValue){
+    fun onQueryChange(query: TextFieldValue) {
         state = state.copy(query = query);
     }
 
-    fun getAllRoutines(){
-        if(!state.hasAllRoutines) {
+    fun getAllRoutines() {
+        if (!state.hasAllRoutines) {
             viewModelScope.launch {
                 state = state.copy(isLoading = true)
 
                 when (val response = routinesRepository.getAllRoutines()) {
-                    is Response.Success -> {
+                    is Result.Success -> {
                         if (response.data != null) {
                             state = state.copy(resultRoutines = response.data, isLoading = false)
                             state = state.copy(hasAllRoutines = true)
                         }
                     }
 
-                    is Response.Error -> {
+                    is Result.Error -> {
                         state = state.copy(isError = true)
                     }
                 }
@@ -47,16 +47,15 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun search(query: TextFieldValue){
+    fun search(query: TextFieldValue) {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
 
-            when(val response = routinesRepository.getAllRoutines(query.text)){
+            when (val response = routinesRepository.getAllRoutines(query.text)) {
                 is Result.Success -> {
                     if (response.data != null)
                         state = state.copy(resultRoutines = response.data, isLoading = false)
-                        state = state.copy(hasAllRoutines = false)
-                    }
+                    state = state.copy(hasAllRoutines = false)
                 }
 
                 is Result.Error -> {
@@ -65,5 +64,6 @@ class SearchViewModel @Inject constructor(
             }
         }
     }
+
 
 }

@@ -15,4 +15,5 @@ data class SimplePlayerState(
     val isPlaylistVisible: Boolean = false,
     val isLoading: Boolean = true,
     val isError: Boolean = false,
+    val remainingExercises: List<CycleExercise> = emptyList()
 )
