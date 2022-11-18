@@ -1,7 +1,43 @@
 <resources>
     <string name="app_name">Moovim</string>
+    
     <string name="routines_exercises_amount_message">ejercicios</string>
-    <string name="obj_tonificacion">Tonificación</string>
-    <string name="obj_tonificacion_det">Rutinas para aumentar el volumen y el tamaño de tus musculos</string>
-    <string name="muscles_group_tren_sup">Tren Superior</string>
+    
+    <string name="discover">Descubrir</string>
+    <string name="categories">Categorías</string>
+    <string name="objectives">Objetivos</string>
+    <string name="muscles">Grupos musculares</string>
+    
+    <string-array name="objectives_titles">
+        <item>Tonificación</item>
+        <item>Resistencia</item>
+        <item>Masa Muscular</item>
+        <item>Relajación</item>
+    </string-array>
+    
+    <string-array name="objectives_descriptions">
+        <item>Rutinas para alcanzar un cuerpo esculpido y tonificado</item>
+        <item>Rutinas para mejorar tu resistencia muscular y aeróbica</item>
+        <item>Rutinas para aumentar el volumen y el tamaño de tus músculos</item>
+        <item>Rutinas para elongar y relajar tus músculos</item>
+    </string-array>
+
+    <string-array name="objectives_image_url">
+        <item>https://images.pexels.com/photos/700446/pexels-photo-700446.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1260&amp;h=750&amp;dpr=1</item>
+        <item>https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1260&amp;h=750&amp;dpr=1</item>
+        <item>https://images.pexels.com/photos/38630/bodybuilder-weight-training-stress-38630.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1260&amp;h=750&amp;dpr=1</item>
+        <item>https://images.pexels.com/photos/3757377/pexels-photo-3757377.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1260&amp;h=750&amp;dpr=1</item>
+    </string-array>
+
+    <string-array name="muscles_titles">
+        <item>Pectorales</item>
+        <item>Espalda</item>
+        <item>Hombros</item>
+        <item>Tríceps</item>
+        <item>Bíceps</item>
+        <item>Piernas</item>
+        <item>Gemelos</item>
+        <item>Abdominales</item>
+    </string-array>
+
 </resources>
