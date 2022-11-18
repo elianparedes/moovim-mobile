@@ -1,5 +1,7 @@
 package com.moovim.ui.components
 
+import android.content.Context
+import android.content.Intent
 import android.view.MotionEvent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -15,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.moovim.R
 
 @Composable
@@ -118,5 +121,21 @@ fun MoovimSnackbar(
                 }
             },
         modifier = modifier
+    )
+}
+
+fun shareRoutine(context: Context, routineId: Int){
+    val type = "text/plain"
+    val extraText = "https://moovim.app/$routineId"
+    val shareWith = "Compartir rutina con..."
+
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.type = type
+    intent.putExtra(Intent.EXTRA_TEXT, extraText)
+
+    ContextCompat.startActivity(
+        context,
+        Intent.createChooser(intent, shareWith),
+        null
     )
 }
