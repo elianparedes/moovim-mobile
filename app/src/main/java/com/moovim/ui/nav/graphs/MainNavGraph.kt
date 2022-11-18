@@ -22,7 +22,7 @@ fun MainNavGraph(scaffoldState: ScaffoldState, navController: NavHostController,
             HomeScreen(navController, paddingValues)
         }
 
-        searchNavGraph(navController)
+        searchNavGraph(scaffoldState, navController)
 
         composable(NavigationItem.Routines.route) {
             RoutinesScreen(scaffoldState = scaffoldState,
