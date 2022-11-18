@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import com.moovim.ui.nav.NavigationItem
 import com.moovim.ui.screens.main.HomeScreen
 import com.moovim.ui.screens.main.routines.RoutinesScreen
-import com.moovim.ui.screens.main.SearchScreen
 import com.moovim.ui.screens.main.profile.ProfileScreen
 
 @Composable
@@ -22,9 +21,9 @@ fun MainNavGraph(scaffoldState: ScaffoldState, navController: NavHostController,
         composable(NavigationItem.Home.route) {
             HomeScreen(navController, paddingValues)
         }
-        composable(NavigationItem.Search.route) {
-            SearchScreen(navController)
-        }
+
+        searchNavGraph(navController)
+
         composable(NavigationItem.Routines.route) {
             RoutinesScreen(scaffoldState = scaffoldState,
                 navController =navController,
