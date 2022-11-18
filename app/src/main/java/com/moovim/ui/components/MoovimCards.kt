@@ -192,7 +192,7 @@ fun RoutineCard(
                                 .aspectRatio(1F)
                                 .requiredSize(16.dp)
                         ) {
-                            if (avatarUrl == "") {
+                            if (avatarUrl != "") {
                                 AsyncImage(
                                     model = avatarUrl,
                                     contentDescription = "Foto de perfil",

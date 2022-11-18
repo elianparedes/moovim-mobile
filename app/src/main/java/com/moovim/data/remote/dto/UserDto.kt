@@ -17,13 +17,13 @@ data class UserDto(
     @SerializedName("email")
     val email: String,
     @SerializedName("firstName")
-    val firstName: String,
+    val firstName: String? = "",
     @SerializedName("gender")
-    val gender: String,
+    val gender: String? = "",
     @SerializedName("lastActivity")
     val lastActivity: Long,
     @SerializedName("lastName")
-    val lastName: String,
+    val lastName: String? = "",
     @SerializedName("metadata")
     val metadata: Any,
     @SerializedName("phone")
@@ -37,11 +37,12 @@ data class UserDto(
 fun UserDto.toUser(): User {
     return User(
         id = id,
+        email = email,
         username = username,
-        firstName = firstName,
-        lastName = lastName,
+        firstName = firstName ?: "",
+        lastName = lastName ?: "",
         avatarUrl = avatarUrl,
-        gender = gender,
+        gender = gender ?:"",
         isVerified = verified
     )
 }
