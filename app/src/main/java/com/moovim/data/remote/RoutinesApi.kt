@@ -12,7 +12,7 @@ interface RoutinesApi {
     @GET("users/current/routines")
     suspend fun getCurrentUserRoutines(
         @Query("page") page: Number = 0,
-        @Query("size") size: Number = 10,
+        @Query("size") size: Number = 100,
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc"
     ): ContentPaginationDto<RoutineDto>
@@ -21,7 +21,7 @@ interface RoutinesApi {
     @GET("routines")
     suspend fun getAllRoutines(
         @Query("page") page: Number = 0,
-        @Query("size") size: Number = 10,
+        @Query("size") size: Number = 100,
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc",
         @Query("search") search: String? = null,
@@ -34,7 +34,7 @@ interface RoutinesApi {
     @GET("favourites")
     suspend fun getAllFavouriteRoutines(
         @Query("page") page: Number = 0,
-        @Query("size") size: Number = 10,
+        @Query("size") size: Number = 100,
     ): ContentPaginationDto<RoutineDto>
 
     @POST("favourites/{routineId}")
@@ -50,7 +50,7 @@ interface RoutinesApi {
     @GET("reviews/{routineId}")
     suspend fun getAllRoutineReviews(
         @Path("routineId") routineId: Int, @Query("page") page: Number = 0,
-        @Query("size") size: Number = 10,
+        @Query("size") size: Number = 100,
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc",
     ): ContentPaginationDto<RoutineReviewDto>
