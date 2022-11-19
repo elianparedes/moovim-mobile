@@ -12,7 +12,7 @@ interface ExercisesApi {
     @GET("exercises")
     suspend fun getAllExercises(
         @Query("page") page: Number = 0,
-        @Query("size") size: Number = 10,
+        @Query("size") size: Number = 100,
         @Query("orderBy") orderBy: String = "date",
         @Query("direction") direction: String = "asc",
         @Query("search") search: String? = null

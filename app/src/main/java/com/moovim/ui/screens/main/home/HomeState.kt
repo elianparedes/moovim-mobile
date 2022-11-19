@@ -12,4 +12,5 @@ data class HomeState(
     val routines: List<Routine> = emptyList(),
     val isLoading: Boolean = true,
     val isError: Boolean = false,
+    val exerciseCount: Int = 0
 )

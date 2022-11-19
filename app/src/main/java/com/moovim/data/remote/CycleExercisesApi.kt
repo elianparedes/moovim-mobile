@@ -13,7 +13,7 @@ interface CycleExercisesApi {
     suspend fun getCycleExercises(
         @Path("cycleId") cycleId: Int,
         @Query("page") page: Number = 0,
-        @Query("size") size: Number = 10,
+        @Query("size") size: Number = 100,
         @Query("orderBy") orderBy: String = "order",
         @Query("direction") direction: String = "asc"
     ): ContentPaginationDto<CycleExerciseDto>

@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
@@ -31,16 +28,24 @@ import com.moovim.ui.theme.NoRippleTheme
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
     val scaffoldState = rememberScaffoldState()
+
+    val (showFab, setShowFab) = remember { mutableStateOf(false) }
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController = navController) },
-        floatingActionButton = { FloatingActionButton(navController = navController) },
+        floatingActionButton = { FloatingActionButton(navController = navController, showFab) },
         backgroundColor = MaterialTheme.colors.background,
         isFloatingActionButtonDocked = true,
         scaffoldState = scaffoldState,
-        snackbarHost = {MoovimSnackbar(snackbarHostState = scaffoldState.snackbarHostState)}
+        snackbarHost = { MoovimSnackbar(snackbarHostState = scaffoldState.snackbarHostState) }
     ) { paddingValues ->
         Box {
-            MainNavGraph(scaffoldState, navController = navController, paddingValues = paddingValues)
+            MainNavGraph(
+                scaffoldState,
+                navController = navController,
+                paddingValues = paddingValues,
+                setShowFab = setShowFab
+            )
         }
 
     }
@@ -48,7 +53,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-private fun FloatingActionButton(navController: NavHostController) {
+private fun FloatingActionButton(navController: NavHostController, show: Boolean? = true) {
     val items = listOf(
         NavigationItem.Home,
     )
@@ -56,7 +61,7 @@ private fun FloatingActionButton(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val fabDestination = items.any { it.route == currentDestination?.route }
+    val fabDestination = items.any { it.route == currentDestination?.route && show == true }
 
     AnimatedVisibility(
         visible = fabDestination,
@@ -64,7 +69,7 @@ private fun FloatingActionButton(navController: NavHostController) {
         exit = scaleOut()
     ) {
         FloatingActionButton(
-            onClick = { navController.navigate("player/1/simple") },
+            onClick = { navController.navigate("player/0/simple") },
             backgroundColor = MaterialTheme.colors.primary
         ) {
             Icon(

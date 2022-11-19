@@ -12,7 +12,7 @@ interface RoutinesCyclesApi {
     suspend fun getRoutineCycles(
         @Path("routineId") routineId: Int,
         @Query("page") page: Number = 0,
-        @Query("size") size: Number = 10,
+        @Query("size") size: Number = 100,
         @Query("orderBy") orderBy: String = "order",
         @Query("direction") direction: String = "asc"
     ): ContentPaginationDto<CycleDto>
