@@ -8,5 +8,5 @@ data class LoginState(
     val token: String? = String(),
     val isLoggedIn: Boolean = false,
     val isError: Boolean = false,
-    val errorMessage: String = ""
+    val errorMessageId: Int = -1
 )

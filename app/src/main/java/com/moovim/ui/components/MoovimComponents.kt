@@ -93,7 +93,7 @@ fun RatingBar(
                     )
                 }
             }
-            MoovimButtonModifier(Modifier.padding(top = 16.dp), onPublishClick, "Publicar")
+            MoovimButtonModifier(Modifier.padding(top = 16.dp), onPublishClick, stringResource(id = R.string.post))
         }
     }
 }

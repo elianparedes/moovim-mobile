@@ -50,5 +50,32 @@
     <string name="add_to_fav">Add to favourites</string>
     <string name="share">Share</string>
     <string name="rate">Rate</string>
+    <string name="my_routines">My Routines</string>
+    <string name="create_by_you">Made by you</string>
+    <string name="favourites">Favourites</string>
+    <string name="rem_fav">Remove from favourites</string>
+    <string name="nothing_here">Ups! Nothing here…</string>
+    <string name="no_routines_by_you">Create your first routine to enjoy Moovim to the fullest.</string>
+    <string name="no_favourites">Add a routine to favourites to access it more easily</string>
+    <string name="account">Account</string>
+    <string name="username_input_label">Username</string>
+    <string name="email_input_label">Email</string>
+    <string name="logout">Log out</string>
+    <string name="continue_msg">Continue</string>
+    <string name="sign_up_msg">Sign up in Moovim</string>
+    <string name="sign_up_motivational_msg">Overcome yourself.</string>
+    <string name="recover_password">Recover password</string>
+    <string name="log_in">Log in</string>
+    <string name="log_in_msg">Log into Moovim</string>
+    <string name="log_in_motivational_msg">Get started with your routines today.</string>
+    <string name="password">Password</string>
+    <string name="moovim_mkting_msg">Create, share and search routines at your fingertips.</string>
+    <string name="routine_add">Routine added</string>
+    <string name="routine_add_error">The routine is already added</string>
+    <string name="no_connection">No connection</string>
+    <string name="rate_routine">Routine rated</string>
+    <string name="routine_removed">Routine removed</string>
+    <string name="user_pass_error">Invalid username or password</string>
+    <string name="post">Post</string>
 
 </resources>

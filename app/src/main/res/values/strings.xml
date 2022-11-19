@@ -63,7 +63,46 @@
     <string name="search_message">Buscar rutinas</string>
 
     <string name="add_to_fav">Añadir a favoritos</string>
+    <string name="rem_fav">Quitar de favoritos</string>
     <string name="share">Compartir</string>
     <string name="rate">Calificar</string>
+
+    <string name="create_by_you">Creado por ti</string>
+    <string name="favourites">Favoritos</string>
+    <string name="my_routines">Mis Rutinas</string>
+
+    <string name="nothing_here">Vaya! No hay nada por aquí…</string>
+    <string name="no_routines_by_you">Crea tu primer rutina para disfrutar de Moovim al máximo.</string>
+    <string name="no_favourites">Agrega una rutina a Favoritos para poder acceder a ella más facilmente.</string>
+
+    <string name="account">Cuenta</string>
+    <string name="username_input_label">Nombre de usuario</string>
+    <string name="email_input_label">Correo electrónico</string>
+    <string name="logout">Cerrar sesión</string>
+
+    <string name="continue_msg">Continuar</string>
+    <string name="sign_up_msg">Regístrate en Moovim.</string>
+    <string name="sign_up_motivational_msg">Supérate a ti mismo.</string>
+
+    <string name="recover_password">Recuperar contraseña</string>
+
+    <string name="log_in">Iniciar sesión</string>
+    <string name="log_in_msg">Inicia sesión en Moovim.</string>
+    <string name="log_in_motivational_msg">Comienza con tus rutinas hoy.</string>
+
+    <string name="password">Contraseña</string>
+
+    <string name="moovim_mkting_msg">Crear, compartir y buscar rutinas al alcance de tu mano.</string>
+    
+    <string name="routine_add">Rutina añadida</string>
+    <string name="routine_add_error">La rutina ya fue añadida</string>
+    <string name="no_connection">Sin conexión</string>
+
+    <string name="rate_routine">Rutina calificada</string>
+    <string name="routine_removed">Rutina eliminada</string>
+
+    <string name="user_pass_error">"Usuario o contraseña inválidos"</string>
+
+    <string name="post">Publicar</string>
 
 </resources>

@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moovim.R
 import com.moovim.data.repository.RoutinesRepository
 import com.moovim.data.repository.UserRepository
 import com.moovim.util.Result
@@ -63,10 +65,10 @@ class MyRoutinesViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = repository.deleteRoutineFromFavourites(routineId)){
                 is Result.Success -> {
-                    state = state.copy(errorMessage= "Rutina borrada")
+                    state = state.copy(errorMessageId= R.string.routine_removed)
                 }
                 is Result.Error -> {
-                    state = state.copy(errorMessage = "Sin conexión")
+                    state = state.copy(errorMessageId = R.string.rate_routine)
                 }
             }
             state = state.copy(snackbar =true)
@@ -77,14 +79,14 @@ class MyRoutinesViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = repository.addRoutineToFavourites(routineId)) {
                 is Result.Success -> {
-                    state = state.copy(errorMessage= "Rutina añadida")
+                    state = state.copy(errorMessageId = R.string.routine_add)
                 }
                 is Result.Error -> {
                     if (result.code == 2){
-                        state = state.copy(errorMessage= "La rutina ya fue añadida")
+                        state = state.copy(errorMessageId = R.string.routine_add_error)
                     }
                     else{
-                        state = state.copy(errorMessage= "Sin conexión")
+                        state = state.copy(errorMessageId = R.string.no_connection)
                     }
                 }
             }
@@ -96,10 +98,10 @@ class MyRoutinesViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = repository.addRoutineReview(routineId, score, review)){
                 is Result.Success -> {
-                    state = state.copy(errorMessage = "Rutina calificada")
+                    state = state.copy(errorMessageId = R.string.rate_routine)
                 }
                 is Result.Error -> {
-                    state = state.copy(errorMessage = "Sin conexión")
+                    state = state.copy(errorMessageId = R.string.no_connection)
                 }
             }
             state = state.copy(snackbar = true)

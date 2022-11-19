@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -84,13 +85,10 @@ fun RoutinesScreen(
                     }
                 }
             }
-
-
-
         }
         SwitchChip(
-            left = "Creado por ti",
-            right = "Favoritos",
+            left = stringResource(id = R.string.create_by_you),
+            right = stringResource(id = R.string.favourites),
             onLeft = { chipSide = ChipSide.LEFT },
             onRight = { chipSide = ChipSide.RIGHT },
             chipSide = chipSide
@@ -108,12 +106,12 @@ fun RoutinesScreen(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Vaya! No hay nada por aquí...",
+                            text = stringResource(id = R.string.nothing_here),
                             style = MaterialTheme.typography.h2,
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
                         Text(
-                            text = "Crea tu primer rutina para disfrutar de Moovim al máximo.",
+                            text = stringResource(id = R.string.no_routines_by_you),
                             style = MaterialTheme.typography.body1
                         )
                     }
@@ -130,7 +128,7 @@ fun RoutinesScreen(
                                 navController.navigate("routines/${routine.id}")
                             },
                             onShareClick = { shareRoutine(context, routine.id) },
-                            favText = "Añadir a favoritos",
+                            favText = stringResource(id = R.string.add_to_fav),
                             onFavClick = { viewModel.addRoutineFromFavourites(routine.id) },
                             onScoreClick = {
                                 popupControl = true
@@ -152,12 +150,12 @@ fun RoutinesScreen(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Vaya! No hay nada por aquí...",
+                            text = stringResource(id = R.string.nothing_here),
                             style = MaterialTheme.typography.h2,
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
                         Text(
-                            text = "Agrega una rutina a Favoritos para poder acceder a ella más facilmente.",
+                            text = stringResource(id = R.string.no_favourites),
                             style = MaterialTheme.typography.body1
                         )
                     }
@@ -172,7 +170,7 @@ fun RoutinesScreen(
                             avatarUrl = routine.avatarUrl,
                             onClickCard = { navController.navigate("routines/${routine.id}") },
                             onShareClick = { shareRoutine(context, routine.id) },
-                            favText = "Quitar de favoritos",
+                            favText = stringResource(id = R.string.rem_fav),
                             onFavClick = { viewModel.deleteRoutineFromFavourites(routine.id) },
                             onScoreClick = {
                                 popupControl = true
@@ -218,7 +216,7 @@ fun RoutinesScreen(
     if (state.snackbar) {
         LaunchedEffect(Unit) {
             scaffoldState.snackbarHostState.showSnackbar(
-                message = state.errorMessage,
+                message = context.getString(state.errorMessageId),
             )
             viewModel.processFinished()
         }
