@@ -79,5 +79,7 @@
     <string name="post">Post</string>
     <string name="no_routines_error">It looks like you haven\'t created any routine yet.</string>
     <string name="no_routines_message">Enter Moovim and start chasing your goals.</string>
+    <string name="current_exercise">"Current"</string>
+    <string name="remaining_exercises">"Remaining"</string>
 
 </resources>

@@ -107,5 +107,6 @@
 
     <string name="no_routines_error">Parece que aún no has creado ninguna rutina</string>
     <string name="no_routines_message">"Ingresa a Moovim y comienza con tus objetivos hoy.</string>
-
+    <string name="current_exercise">"Actual"</string>
+    <string name="remaining_exercises">"Restantes"</string>
 </resources>

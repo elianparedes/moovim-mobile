@@ -119,7 +119,8 @@ fun AuxCategoriesScreen(
             }
         } else
         {
-            viewModel.getAllRoutines()
+            //viewModel.state = state.copy(orderBy = "date", direction = "desc", categoryId = null)
+            viewModel.getAllRoutinesDiscover(false)
             Column( modifier = Modifier
             ) {
                 OrderByChips(navController = navController, viewModel=viewModel, onCategory = false)

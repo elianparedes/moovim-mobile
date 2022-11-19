@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -138,8 +139,9 @@ fun SimplePlayer(
                         if (isPlaylistVisible && state.currentExercise != null) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Row(modifier = Modifier
-                                        .height(64.dp)
-                                        .fillMaxWidth().offset(x = (-16).dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically )  {
+                                    .height(64.dp)
+                                    .fillMaxWidth()
+                                    .offset(x = (-16).dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically )  {
                                     Column(verticalArrangement = Arrangement.Center) {
                                         TimeIndicator(progress = state.progress, size = 400, stroke = 3, textSize = 0)
                                     }
@@ -600,7 +602,7 @@ fun ExercisePlaylist(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
         ) {
-            Text("Actual")
+            Text(stringResource(R.string.current_exercise))
         }
 
         ExerciseRoutineCard(
@@ -616,7 +618,7 @@ fun ExercisePlaylist(
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp)
             ) {
-                Text("Restantes")
+                Text(stringResource(R.string.remaining_exercises))
             }
 
             remainingExercises.forEach { cycleExercise ->
