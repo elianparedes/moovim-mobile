@@ -43,6 +43,7 @@ fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostControll
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
     )
 
+    val context = LocalContext.current
     //var score by remember { mutableStateOf(1) }
     val coroutineScope = rememberCoroutineScope()
 
