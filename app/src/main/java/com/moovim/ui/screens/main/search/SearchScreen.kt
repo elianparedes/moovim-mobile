@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel, paddingValues: PaddingValues){
+    val context = LocalContext.current
     val state = viewModel.state
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
