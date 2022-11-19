@@ -33,7 +33,9 @@ class HomeViewModel @Inject constructor(
                         val routines = response.data
                         state = state.copy(routines = routines, isLoading = false)
 
-                        onRoutineSelect(routines[0].id, 0)
+                        if (routines.isNotEmpty())
+                            onRoutineSelect(routines[0].id, 0)
+
                     }
 
                 }

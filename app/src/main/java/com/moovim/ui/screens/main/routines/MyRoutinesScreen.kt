@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -64,7 +65,7 @@ fun RoutinesScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Mis Rutinas", style = MaterialTheme.typography.h3)
+            Text(text = stringResource(R.string.my_routines), style = MaterialTheme.typography.h3)
 
             Box(){
                 if (state.avatarUrl != null){
@@ -72,7 +73,10 @@ fun RoutinesScreen(
                         model = state.avatarUrl,
                         contentDescription = "profile image",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(32.dp).clip(CircleShape).clickable { onProfileClick() },
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .clickable { onProfileClick() },
                     )
                 } else {
                     IconButton(onClick = { onProfileClick() }) {
@@ -101,14 +105,16 @@ fun RoutinesScreen(
             } else {
                 if (viewModel.state.userRoutines.isEmpty()) {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
                     ) {
                         Text(
                             text = stringResource(id = R.string.nothing_here),
                             style = MaterialTheme.typography.h2,
-                            modifier = Modifier.padding(bottom = 16.dp)
+                            fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = stringResource(id = R.string.no_routines_by_you),
@@ -145,14 +151,16 @@ fun RoutinesScreen(
             } else
                 if (viewModel.state.favouriteRoutines.isEmpty()) {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
                     ) {
                         Text(
                             text = stringResource(id = R.string.nothing_here),
                             style = MaterialTheme.typography.h2,
-                            modifier = Modifier.padding(bottom = 16.dp)
+                            fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = stringResource(id = R.string.no_favourites),

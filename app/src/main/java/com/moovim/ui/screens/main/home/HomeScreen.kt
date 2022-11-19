@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,101 +43,115 @@ fun HomeScreen(
 
     setShowFab(state.cycles.isNotEmpty() && state.exerciseCount > 0)
 
-    Column(
-        modifier = Modifier
-            .padding(16.dp, 16.dp, 16.dp, 0.dp)
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
+    if (state.routines.isEmpty()){
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(32.dp), verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically), horizontalAlignment = Alignment.CenterHorizontally) {
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Text(stringResource(R.string.no_routines_error), style = MaterialTheme.typography.h2, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.no_routines_message))
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .padding(16.dp, 16.dp, 16.dp, 0.dp)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Box {
-                IconButton(onClick = {
-                    expanded = true
-                }) {
-                    Icon(
-                        Icons.Rounded.ArrowDropDown,
-                        "arrowDropDown",
-                        Modifier.size(32.dp)
-                    )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Box {
+                    IconButton(onClick = {
+                        expanded = true
+                    }) {
+                        Icon(
+                            Icons.Rounded.ArrowDropDown,
+                            "arrowDropDown",
+                            Modifier.size(32.dp)
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = {
+                            expanded = false
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(0.924f)
+                            .height(232.dp)
+                            .background(MaterialTheme.colors.secondary),
+                        offset = DpOffset(x = 0.dp, y = 16.dp)
+                    ) {
+                        state.routines.forEachIndexed { itemIndex, routine ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    expanded = false
+                                    viewModel.onRoutineSelect(routineId = routine.id, itemIndex)
+                                },
+                                modifier = if (itemIndex == state.selectedRoutineMenuIndex) Modifier.background(
+                                    Color(
+                                        0xff4f4f4f
+                                    )
+                                ) else Modifier
+                            ) {
+                                Text(text = routine.name)
+                            }
+                        }
+                    }
+
                 }
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.924f)
-                        .height(232.dp)
-                        .background(MaterialTheme.colors.secondary),
-                    offset = DpOffset(x = 0.dp, y = 16.dp)
-                ) {
-                    state.routines.forEachIndexed { itemIndex, routine ->
-                        DropdownMenuItem(
-                            onClick = {
-                                expanded = false
-                                viewModel.onRoutineSelect(routineId = routine.id, itemIndex)
-                            },
-                            modifier = if (itemIndex == state.selectedRoutineMenuIndex) Modifier.background(
-                                Color(
-                                    0xff4f4f4f
-                                )
-                            ) else Modifier
-                        ) {
-                            Text(text = routine.name)
-                        }
+                if (state.selectedRoutine != null) {
+                    Column {
+                        Text(stringResource(R.string.current_routine_title), style = MaterialTheme.typography.body2)
+                        Text(state.selectedRoutine.name, style = MaterialTheme.typography.h3)
                     }
                 }
 
             }
+
 
             if (state.selectedRoutine != null) {
-                Column {
-                    Text(stringResource(R.string.current_routine_title), style = MaterialTheme.typography.body2)
-                    Text(state.selectedRoutine.name, style = MaterialTheme.typography.h3)
-                }
-            }
+                WideRoutineCard(
+                    title = state.selectedRoutine.name,
+                    description = state.selectedRoutine.detail,
+                    imageUrl = state.selectedRoutine.imageUrl,
+                    exercisesCount = 10,
+                    onClickCard = {}
+                )
 
-        }
-
-        if (state.selectedRoutine != null) {
-            WideRoutineCard(
-                title = state.selectedRoutine.name,
-                description = state.selectedRoutine.detail,
-                imageUrl = state.selectedRoutine.imageUrl,
-                exercisesCount = 10,
-                onClickCard = {}
-            )
-
-            if (state.isLoading) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    Skeleton { loading ->
-                        Spacer(modifier = Modifier.height(24.dp))
-                        listOf(1, 2, 3, 4, 5, 6, 7, 8).forEach {
-                            SkeletonExerciseCardLoader(loading = loading)
+                if (state.isLoading) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        Skeleton { loading ->
+                            Spacer(modifier = Modifier.height(24.dp))
+                            listOf(1, 2, 3, 4, 5, 6, 7, 8).forEach {
+                                SkeletonExerciseCardLoader(loading = loading)
+                            }
                         }
-                    }
 
-                }
-            } else {
-                if (state.cycles.isNotEmpty()) {
-                    state.cycles.forEach { cycle ->
-                        CycleExercisesList(cycle)
                     }
                 } else {
-                    NoContentCard(stringResource(R.string.no_cycles_message))
+                    if (state.cycles.isNotEmpty()) {
+                        state.cycles.forEach { cycle ->
+                            CycleExercisesList(cycle)
+                        }
+                    } else {
+                        NoContentCard(stringResource(R.string.no_cycles_message))
+                    }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+            Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+        }
     }
+
+
 
 
 }
