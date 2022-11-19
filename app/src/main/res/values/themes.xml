@@ -3,5 +3,6 @@
 
     <style name="Theme.Moovim" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/statusBar</item>
+        <item name="android:windowBackground">@color/statusBar</item>
     </style>
 </resources>

@@ -48,7 +48,7 @@ fun RoutineDetailsScreen(
                     author = state.author,
                     imageUrl = state.imageUrl,
                     avatarUrl = state.avatarUrl,
-                    exercisesCount = 10, onClickArrow = { navController.popBackStack() }
+                    exercisesCount = state.exerciseCount, onClickArrow = { navController.popBackStack() }
                 )
             }) { paddingValues ->
                 Box(

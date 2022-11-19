@@ -11,4 +11,5 @@ data class RoutineDetailsState(
     val cycles: List<Cycle> = emptyList(),
     val isLoading: Boolean = true,
     val isError : Boolean = false,
+    val exerciseCount: Int = 0
 )

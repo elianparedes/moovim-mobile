@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
+import com.moovim.domain.model.Cycle
 import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -31,6 +32,8 @@ class RoutineDetailsViewModel @Inject constructor(
                         val routine = routineDetails.routine
                         val cycles = routineDetails.cycles
 
+
+
                         state = state.copy(
                             name = routine.name,
                             detail = routine.detail,
@@ -38,7 +41,8 @@ class RoutineDetailsViewModel @Inject constructor(
                             author = routine.author,
                             avatarUrl = routine.avatarUrl,
                             cycles = cycles,
-                            isLoading = false
+                            isLoading = false,
+                            exerciseCount = getExercisesCount(cycles)
                         )
                     }
                 }
@@ -48,6 +52,13 @@ class RoutineDetailsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getExercisesCount(cycles: List<Cycle>): Int{
+        var exerciseCount = 0
+        for (cycle in cycles)
+            exerciseCount += cycle.cycleExercises.size
+        return exerciseCount
     }
 
 }

@@ -43,7 +43,7 @@ fun HomeScreen(
 
     setShowFab(state.cycles.isNotEmpty() && state.exerciseCount > 0)
 
-    if (state.routines.isEmpty()){
+    if (!state.isLoading && state.routines.isEmpty() ){
         Column(
             Modifier
                 .fillMaxSize()
@@ -120,7 +120,7 @@ fun HomeScreen(
                     title = state.selectedRoutine.name,
                     description = state.selectedRoutine.detail,
                     imageUrl = state.selectedRoutine.imageUrl,
-                    exercisesCount = 10,
+                    exercisesCount = state.exerciseCount,
                     onClickCard = {}
                 )
 
