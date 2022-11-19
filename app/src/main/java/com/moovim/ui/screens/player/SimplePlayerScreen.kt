@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,10 +33,12 @@ import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.*
 import com.moovim.R
 import com.moovim.domain.model.CycleExercise
+import com.moovim.ui.components.ExerciseDetailedRoutineCard
 import com.moovim.ui.components.ExerciseRoutineCard
 import com.moovim.ui.theme.NoRippleTheme
 import com.moovim.ui.util.WindowInfo
 import com.moovim.ui.util.rememberWindowInfo
+import java.sql.Time
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -133,11 +136,23 @@ fun SimplePlayer(
                         targetState = state.isPlaylistVisible,
                     ) { isPlaylistVisible ->
                         if (isPlaylistVisible && state.currentExercise != null) {
-                            ExercisePlaylist(
-                                state.currentExercise,
-                                state.remainingExercises,
-                                paddingValues
-                            )
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Row(modifier = Modifier
+                                        .height(64.dp)
+                                        .fillMaxWidth().offset(x = (-16).dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically )  {
+                                    Column(verticalArrangement = Arrangement.Center) {
+                                        TimeIndicator(progress = state.progress, size = 400, stroke = 3, textSize = 0)
+                                    }
+                                    Column(verticalArrangement = Arrangement.Center) {
+                                        Text(text = state.time, style = MaterialTheme.typography.h1, textAlign = TextAlign.End)
+                                    }
+                                }
+                                ExercisePlaylist(
+                                    state.currentExercise,
+                                    state.remainingExercises,
+                                    paddingValues
+                                )
+                            }
                         } else {
                             state.currentExercise?.let {
                                 ExerciseView(
@@ -261,7 +276,6 @@ fun TimeIndicator(
         targetValue = progress,
         animationSpec = FloatTweenSpec(1000, 0, FastOutSlowInEasing)
     )
-
 
     Box(
         Modifier

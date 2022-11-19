@@ -105,4 +105,7 @@
 
     <string name="post">Publicar</string>
 
+    <string name="no_routines_error">Parece que aún no has creado ninguna rutina</string>
+    <string name="no_routines_message">"Ingresa a Moovim y comienza con tus objetivos hoy.</string>
+
 </resources>

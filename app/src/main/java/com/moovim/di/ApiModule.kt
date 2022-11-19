@@ -1,5 +1,6 @@
 package com.moovim.di
 
+import com.moovim.BuildConfig
 import com.moovim.data.remote.dto.common.Api
 import dagger.Module
 import dagger.Provides
@@ -17,7 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApiModule {
 
-    private const val BASE_URL = "https://moovim-api-dev.up.railway.app/api/"
+    private const val BASE_URL = BuildConfig.API_REMOTE_BASE_URL
 
     @Provides
     @Singleton
