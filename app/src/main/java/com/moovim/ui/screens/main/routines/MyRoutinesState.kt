@@ -8,7 +8,7 @@ data class MyRoutinesState(
     val favouriteRoutines: List<Routine> = emptyList(),
     val isLoading: Boolean = true,
     var snackbar: Boolean = false,
-    var errorMessage: String = "",
+    var errorMessageId: Int = -1,
     var isError: Boolean = false,
     var loading: Boolean = false,
     var avatarUrl: String? = null

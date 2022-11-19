@@ -19,7 +19,7 @@ data class SearchState(
     val orderChanged: Boolean = true,
     val filter: Boolean = false,
     var snackbar: Boolean = false,
-    var errorMessage: String = "",
+    var errorMessageId: Int = -1,
     var sheetDisplay: Boolean = false,
     val selectedReviewId: Int = 0
 )

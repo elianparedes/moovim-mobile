@@ -42,6 +42,7 @@ fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostControll
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
     )
 
+    val context = LocalContext.current
     //var score by remember { mutableStateOf(1) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -72,7 +73,7 @@ fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostControll
     if (state.snackbar) {
         LaunchedEffect(Unit) {
             scaffoldState.snackbarHostState.showSnackbar(
-                message = state.errorMessage,
+                message = context.getString(state.errorMessageId)
             )
             viewModel.processFinished()
         }
@@ -84,12 +85,12 @@ fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostControll
 fun AuxCategoriesScreen(
     scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel, paddingValues: PaddingValues){
 
+    val context = LocalContext.current
     val state = viewModel.state
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
     )
-
     val coroutineScope = rememberCoroutineScope()
 
     Column(Modifier.padding(16.dp)) {
@@ -139,7 +140,7 @@ fun AuxCategoriesScreen(
     if (state.snackbar) {
         LaunchedEffect(Unit) {
             scaffoldState.snackbarHostState.showSnackbar(
-                message = state.errorMessage,
+                message = context.getString(state.errorMessageId),
             )
             viewModel.processFinished()
         }
