@@ -27,6 +27,27 @@ class SearchViewModel @Inject constructor(
         state = state.copy(query = query);
     }
 
+    fun getAllRoutinesDiscover(inSearch: Boolean){
+        if(!state.hasAllRoutines || inSearch) {
+            viewModelScope.launch {
+                state = state.copy(isLoading = true)
+
+                when (val response = routinesRepository.getAllRoutines(orderBy = state.orderBy, direction = state.direction)) {
+                    is Result.Success -> {
+                        if (response.data != null) {
+                            state = state.copy(resultRoutines = response.data, isLoading = false)
+                            state = state.copy(hasAllRoutines = true, orderChanged = false)
+                        }
+                    }
+
+                    is Result.Error -> {
+                        state = state.copy(isError = true)
+                    }
+                }
+            }
+        }
+    }
+
     fun getAllRoutines(){
         if(!state.hasAllRoutines || state.orderChanged) {
             viewModelScope.launch {
@@ -36,7 +57,7 @@ class SearchViewModel @Inject constructor(
                     is Result.Success -> {
                         if (response.data != null) {
                             state = state.copy(resultRoutines = response.data, isLoading = false)
-                            state = state.copy(hasAllRoutines = true, orderChanged = false)
+                            state = state.copy(hasAllRoutines = false, orderChanged = false)
                         }
                     }
 
@@ -69,7 +90,12 @@ class SearchViewModel @Inject constructor(
 
     fun search(query: TextFieldValue) {
         if (query.text.isEmpty()) {
-            getAllRoutines()
+            if(state.categoryId == null){
+                getAllRoutinesDiscover(true)
+            } else
+            {
+                getAllRoutines()
+            }
         } else {
             viewModelScope.launch {
                 state = state.copy(isLoading = true)
