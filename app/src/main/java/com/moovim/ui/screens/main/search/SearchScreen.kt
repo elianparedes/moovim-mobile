@@ -1,5 +1,6 @@
 package com.moovim.ui.screens.main;
 
+import android.widget.Space
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel){
+fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel, paddingValues: PaddingValues){
     val state = viewModel.state
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -54,7 +55,7 @@ fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostControll
         Column( modifier = Modifier
             .verticalScroll(rememberScrollState())) {
             OrderByChips(navController = navController, viewModel=viewModel, onCategory = state.categoryId!=null)
-            RoutinesList(state.resultRoutines, navController, viewModel)
+            RoutinesList(state.resultRoutines, navController, viewModel, paddingValues)
         }
 
         if (state.sheetDisplay) {
@@ -81,7 +82,7 @@ fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostControll
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AuxCategoriesScreen(
-    scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel){
+    scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel, paddingValues: PaddingValues){
 
     val state = viewModel.state
     val sheetState = rememberModalBottomSheetState(
@@ -113,7 +114,7 @@ fun AuxCategoriesScreen(
                         viewModel.categoryChange(categoryId)
                         viewModel.onQueryChange(TextFieldValue())
                         navController.navigate("search")
-                    })
+                    }, paddingValues)
             }
         } else
         {
@@ -121,7 +122,7 @@ fun AuxCategoriesScreen(
             Column( modifier = Modifier
             ) {
                 OrderByChips(navController = navController, viewModel=viewModel, onCategory = false)
-                DiscoverScreen(state.resultRoutines, navController, viewModel, scaffoldState)
+                DiscoverScreen(state.resultRoutines, navController, viewModel, scaffoldState, paddingValues)
             }
         }
 
@@ -154,7 +155,7 @@ data class Objectives(
 
 
 @Composable
-fun CategoriesScreen(navController: NavHostController, categoryChanged: (Int) -> Unit){
+fun CategoriesScreen(navController: NavHostController, categoryChanged: (Int) -> Unit, paddingValues: PaddingValues){
 
     val objectivesTitles: Array<String> = stringArrayResource(id = R.array.objectives_titles)
     val objectivesDescriptions: Array<String> = stringArrayResource(id = R.array.objectives_descriptions)
@@ -175,7 +176,9 @@ fun CategoriesScreen(navController: NavHostController, categoryChanged: (Int) ->
         .verticalScroll(rememberScrollState())
         ) {
 
-        ObjectivesList(objectives = objectives,navController,categoryChanged)
+        ObjectivesList(objectives = objectives,navController,categoryChanged, paddingValues)
+        Spacer(modifier = Modifier.height(64.dp))
+
         //TODO: Descomentar al implementar listas de ejercicios y vistas de detalle de los mismos
         /*
         Row(modifier = Modifier
@@ -199,18 +202,18 @@ fun CategoriesScreen(navController: NavHostController, categoryChanged: (Int) ->
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DiscoverScreen(routines: List<Routine>, navController: NavHostController, viewModel: SearchViewModel,
-                   scaffoldState:ScaffoldState){
+                   scaffoldState:ScaffoldState, paddingValues: PaddingValues){
 
     Text(text = stringResource(id = R.string.discover_msg), modifier = Modifier.padding(vertical = 16.dp))
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        RoutinesList(routines = routines, navController = navController, viewModel)
+        RoutinesList(routines = routines, navController = navController, viewModel, paddingValues)
 
     }
 
 }
 
 @Composable
-fun ObjectivesList(objectives: List<Objectives>, navController: NavHostController, onClickCard: (Int) -> Unit){
+fun ObjectivesList(objectives: List<Objectives>, navController: NavHostController, onClickCard: (Int) -> Unit, paddingValues: PaddingValues){
     objectives.forEachIndexed { index ,objective ->
         val modifier: Modifier = if(index == objectives.size-1){
             Modifier
@@ -230,6 +233,7 @@ fun ObjectivesList(objectives: List<Objectives>, navController: NavHostControlle
             )
         }
     }
+
 }
 
 @Composable
@@ -280,7 +284,7 @@ fun ExerciseList(exercises: List<Exercise>){
 }
 
 @Composable
-fun RoutinesList(routines: List<Routine>, navController: NavHostController, viewModel : SearchViewModel) {
+fun RoutinesList(routines: List<Routine>, navController: NavHostController, viewModel : SearchViewModel, paddingValues: PaddingValues) {
     val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier
@@ -301,6 +305,7 @@ fun RoutinesList(routines: List<Routine>, navController: NavHostController, view
                                 viewModel.updateSelectedReviewId(routine.id)},
                 favText = stringResource(id = R.string.add_to_fav))
         }
+        Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding() + 32.dp))
     }
 }
 

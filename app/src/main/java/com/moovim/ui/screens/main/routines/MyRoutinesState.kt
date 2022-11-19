@@ -10,5 +10,6 @@ data class MyRoutinesState(
     var snackbar: Boolean = false,
     var errorMessage: String = "",
     var isError: Boolean = false,
-    var loading: Boolean = false
+    var loading: Boolean = false,
+    var avatarUrl: String? = null
 )

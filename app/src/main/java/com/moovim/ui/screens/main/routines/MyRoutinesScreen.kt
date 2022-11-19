@@ -1,8 +1,10 @@
 package com.moovim.ui.screens.main.routines
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -12,11 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.moovim.R
 import com.moovim.ui.components.*
 import com.moovim.ui.screens.main.Skeleton
@@ -28,6 +32,7 @@ fun RoutinesScreen(
     scaffoldState: ScaffoldState,
     navController: NavHostController,
     viewModel: MyRoutinesViewModel = hiltViewModel(),
+    paddingValues: PaddingValues,
     onProfileClick: () -> Unit
 ) {
 
@@ -59,14 +64,29 @@ fun RoutinesScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Mis Rutinas", style = MaterialTheme.typography.h3)
-            IconButton(onClick = { onProfileClick() }) {
-                Icon(
-                    painterResource(R.drawable.ic_round_person),
-                    contentDescription = "Perfil",
-                    modifier = Modifier.size(44.dp),
-                    tint = Color.White,
-                )
+
+            Box(){
+                if (state.avatarUrl != null){
+                    AsyncImage(
+                        model = state.avatarUrl,
+                        contentDescription = "profile image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.size(32.dp).clip(CircleShape).clickable { onProfileClick() },
+                    )
+                } else {
+                    IconButton(onClick = { onProfileClick() }) {
+                        Icon(
+                            painterResource(R.drawable.ic_round_person),
+                            contentDescription = "Perfil",
+                            modifier = Modifier.size(32.dp),
+                            tint = Color.White,
+                        )
+                    }
+                }
             }
+
+
+
         }
         SwitchChip(
             left = "Creado por ti",
@@ -117,6 +137,7 @@ fun RoutinesScreen(
                                 selectedId = routine.id
                             })
                     }
+                    Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding() - 64.dp))
                 }
             }
         } else {
@@ -158,6 +179,7 @@ fun RoutinesScreen(
                                 selectedId = routine.id
                             })
                     }
+                    Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding() - 64.dp))
                 }
         }
         if (popupControl) {

@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moovim.data.repository.RoutinesRepository
+import com.moovim.data.repository.UserRepository
 import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,12 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyRoutinesViewModel @Inject constructor(
-    private val repository: RoutinesRepository
+    private val repository: RoutinesRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(MyRoutinesState())
 
     init {
+        getCurrentUser()
         getCurrentUserRoutines()
         getAllFavouriteRoutines()
     }
@@ -105,6 +108,22 @@ class MyRoutinesViewModel @Inject constructor(
 
     fun processFinished(){
         state = state.copy(snackbar = false)
+    }
+
+    fun getCurrentUser() {
+        viewModelScope.launch {
+            when (val response = userRepository.getCurrentUser()) {
+                is Result.Success -> {
+                    if (response.data != null) {
+                        state = state.copy(avatarUrl = response.data.avatarUrl)
+                    }
+                }
+                is Result.Error -> {
+                    state = state.copy(isError = true, isLoading = false)
+                }
+            }
+
+        }
     }
 
 }
