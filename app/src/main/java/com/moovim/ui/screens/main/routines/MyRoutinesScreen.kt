@@ -68,7 +68,7 @@ fun RoutinesScreen(
             Text(text = stringResource(R.string.my_routines), style = MaterialTheme.typography.h3)
 
             Box(){
-                if (state.avatarUrl != null){
+                if (state.avatarUrl != null && state.avatarUrl!!.contains("http")){
                     AsyncImage(
                         model = state.avatarUrl,
                         contentDescription = "profile image",

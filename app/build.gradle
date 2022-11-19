@@ -25,7 +25,23 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "API_BASE_URL",
+                    "\"http://10.0.2.2:8080/api/\""
+
+            buildConfigField "String", "API_REMOTE_BASE_URL",
+                    "\"https://moovim-api-dev.up.railway.app/api/\""
         }
+        debug {
+            // No usar localhost o la IP 127.0.0.1 porque es la interfaz de loopback
+            // del emulador. La forma de salir del emulador para acceder al localhost
+            // de host del mismo es usando la IP 10.0.2.2.
+            buildConfigField "String", "API_BASE_URL",
+                    "\"http://10.0.2.2:8080/api/\""
+
+            buildConfigField "String", "API_REMOTE_BASE_URL",
+                    "\"https://moovim-api-dev.up.railway.app/api/\""
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

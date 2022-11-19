@@ -45,7 +45,7 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            if (state.avatarUrl != "") {
+            if (state.avatarUrl.contains("http")) {
                 AsyncImage(
                     model = state.avatarUrl,
                     contentDescription = "Foto de perfil",
