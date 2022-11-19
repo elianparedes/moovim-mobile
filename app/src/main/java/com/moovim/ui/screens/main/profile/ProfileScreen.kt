@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -49,24 +50,30 @@ fun ProfileScreen(
                     model = state.avatarUrl,
                     contentDescription = "Foto de perfil",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(128.dp).clip(CircleShape).border(1.dp, Color.White, CircleShape)
+                    modifier = Modifier
+                        .size(128.dp)
+                        .clip(CircleShape)
+                        .border(1.dp, Color.White, CircleShape)
                 )
             } else {
                 Image(
                     painterResource(id = R.drawable.ic_round_person),
                     contentDescription = "Foto de perfil",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(128.dp).clip(CircleShape).border(1.dp, Color.White, CircleShape)
+                    modifier = Modifier
+                        .size(128.dp)
+                        .clip(CircleShape)
+                        .border(1.dp, Color.White, CircleShape)
                 )
             }
         }
-        Text(text = "Cuenta", style = MaterialTheme.typography.h3)
-        ReadInputTextField(state.username, {}, "Nombre de usuario")
-        ReadInputTextField(state.email, {}, "Correo electrónico")
+        Text(text = stringResource(id = R.string.account), style = MaterialTheme.typography.h3)
+        ReadInputTextField(state.username, {}, stringResource(id = R.string.username_input_label))
+        ReadInputTextField(state.email, {}, stringResource(id = R.string.email_input_label))
         MoovimButton({
                     viewModel.logout()
                     onLogoutClick()
-                     }, "Cerrar sesión")
+                     }, stringResource(id = R.string.logout))
     }
 }
 

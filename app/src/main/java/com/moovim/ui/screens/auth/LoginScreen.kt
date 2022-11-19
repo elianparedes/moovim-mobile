@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -55,12 +56,12 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    "Comienza con tus rutinas hoy.",
+                    stringResource(id = R.string.log_in_motivational_msg),
                     modifier = Modifier.padding(24.dp, 8.dp, 24.dp, 16.dp),
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold
                 )
-                MoovimButton({ onClick() }, "Iniciar sesión")
+                MoovimButton({ onClick() }, stringResource(id = R.string.log_in))
                 //OutlinedMoovimButton({ onSignUpClick() }, "Crear cuenta")
             }
     }

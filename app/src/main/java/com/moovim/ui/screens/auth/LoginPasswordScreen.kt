@@ -9,9 +9,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.moovim.ui.components.MoovimButton
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.moovim.R
 import com.moovim.ui.components.PasswordTextField
 
 @Composable
@@ -38,24 +40,26 @@ fun LoginPasswordScreen(
         Spacer(
             modifier = Modifier.weight(1f)
         )
-        Text("Inicia sesión en Moovim.",
+        Text(
+            stringResource(id = R.string.log_in_msg),
             modifier = Modifier
                 .padding(bottom = 16.dp, start = 24.dp)
                 .align(Alignment.Start),
             style = MaterialTheme.typography.h3,
             color = Color.White)
-        Text("Crear, compartir y buscar rutinas al alcance de tu mano.",
+        Text(
+            stringResource(id = R.string.moovim_mkting_msg),
             modifier = Modifier
                 .padding(bottom = 16.dp, start = 24.dp, end = 24.dp)
                 .align(Alignment.Start),
             style = MaterialTheme.typography.body1,
             color = Color.White)
         PasswordTextField(state.password, { newValue -> viewModel.onPasswordChange(newValue)},
-            "Contraseña", textFieldColor)
+            stringResource(id = R.string.password),textFieldColor)
         if (state.isError){
             textFieldColor = MaterialTheme.colors.error
             Text(
-                text = state.errorMessage,
+                text = stringResource(id = state.errorMessageId),
                 color = MaterialTheme.colors.error,
                 style = MaterialTheme.typography.body2,
             )
@@ -67,7 +71,7 @@ fun LoginPasswordScreen(
             modifier = Modifier.padding(bottom = 16.dp),
             color = MaterialTheme.colors.background
         ){
-            MoovimButton({viewModel.login(state.user, state.password)}, "Iniciar sesión")
+            MoovimButton({viewModel.login(state.user, state.password)}, stringResource(id = R.string.log_in))
         }
     }
 }

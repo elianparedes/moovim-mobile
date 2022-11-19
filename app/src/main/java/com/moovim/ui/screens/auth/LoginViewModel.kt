@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moovim.R
 import com.moovim.data.repository.UserRepository
 import com.moovim.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,10 +35,10 @@ class LoginViewModel @Inject constructor(
                 }
                 is Result.Error -> {
                     if (response.code == 4) {
-                        state = state.copy(errorMessage = "Usuario o contraseña inválidos")
+                        state = state.copy(errorMessageId = R.string.user_pass_error)
                     }
                     else {
-                        state = state.copy(errorMessage = "Sin conexión")
+                        state = state.copy(errorMessageId = R.string.no_connection)
                     }
                     state = state.copy(isError = true)
                     return@launch

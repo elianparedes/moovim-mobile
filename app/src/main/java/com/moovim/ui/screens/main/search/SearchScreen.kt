@@ -35,6 +35,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel){
+
+    val context = LocalContext.current
     val state = viewModel.state
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -71,7 +73,7 @@ fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostControll
     if (state.snackbar) {
         LaunchedEffect(Unit) {
             scaffoldState.snackbarHostState.showSnackbar(
-                message = state.errorMessage,
+                message = context.getString(state.errorMessageId)
             )
             viewModel.processFinished()
         }
@@ -83,12 +85,12 @@ fun AuxSearchScreen(scaffoldState: ScaffoldState, navController: NavHostControll
 fun AuxCategoriesScreen(
     scaffoldState: ScaffoldState, navController: NavHostController, viewModel: SearchViewModel){
 
+    val context = LocalContext.current
     val state = viewModel.state
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
     )
-
     val coroutineScope = rememberCoroutineScope()
 
     Column(Modifier.padding(16.dp)) {
@@ -138,7 +140,7 @@ fun AuxCategoriesScreen(
     if (state.snackbar) {
         LaunchedEffect(Unit) {
             scaffoldState.snackbarHostState.showSnackbar(
-                message = state.errorMessage,
+                message = context.getString(state.errorMessageId),
             )
             viewModel.processFinished()
         }
